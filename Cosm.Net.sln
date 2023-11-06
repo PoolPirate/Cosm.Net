@@ -13,12 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{27417F6C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{0E7EC6FA-D760-43E5-A7A2-68BCB9EB3489}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		lib\secp256k1.dll = lib\secp256k1.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bench", "bench", "{6EC174ED-9705-412B-9306-F672609D0F57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Bench", "bench\Cosm.Net.Bench.csproj", "{06120BF0-2A47-4BC3-900C-F592A89C7DA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Bench", "bench\Cosm.Net.Bench.csproj", "{06120BF0-2A47-4BC3-900C-F592A89C7DA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
