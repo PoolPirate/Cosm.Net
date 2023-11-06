@@ -1,9 +1,39 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Cosm.Net</Title>
+    <Authors>Playwo</Authors>
+    <Company></Company>
+    <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.25.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.58.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.59.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Secp256k1.Net" Version="1.2.0" />
+  </ItemGroup>
+
+
+	<ItemGroup>
+		<Protobuf Include="../lib/protobuf/gogoproto/**/*.proto" AdditionalImportDirs="../lib/protobuf" OutputDir="$(Protobuf_OutputPath)%(RelativeDir)" GrpcServices="None" />
+		<Protobuf Include="../lib/cosmos-proto/proto/**/*.proto" AdditionalImportDirs="../lib/cosmos-proto/proto;../lib/cosmos-sdk/proto;../lib/protobuf;../lib/googleapis" OutputDir="$(Protobuf_OutputPath)%(RelativeDir)" GrpcServices="None" />
+		<Protobuf Include="../lib/cosmos-sdk/proto/**/*.proto" AdditionalImportDirs="../lib/cosmos-proto/proto;../lib/cosmos-sdk/proto;../lib/protobuf;../lib/googleapis" OutputDir="$(Protobuf_OutputPath)%(RelativeDir)" GrpcServices="Client" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="../lib/secp256k1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>
