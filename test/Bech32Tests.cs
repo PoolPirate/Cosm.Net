@@ -1,5 +1,4 @@
 using Cosm.Net.Encoding;
-using Nano.Bech32;
 
 namespace Cosm.Net.Test;
 
@@ -14,11 +13,11 @@ public class Bech32Tests
     [Fact]
     public void TryDecodeAddress_Returns_True_On_Valid_Address()
     {
-        var output = new byte[ValidUserAddressBytes.Length];
+        byte[] output = new byte[ValidUserAddressBytes.Length];
 
         Assert.True(Bech32.TryDecodeAddress(ValidUserAddress, output));
 
-        for (int i = 0; i < ValidUserAddressBytes.Length; i++)
+        for(int i = 0; i < ValidUserAddressBytes.Length; i++)
         {
             byte expected = ValidUserAddressBytes[i];
             byte actual = output[i];
@@ -32,14 +31,14 @@ public class Bech32Tests
     [Fact]
     public void TryDecodeAddress_Returns_False_On_Valid_BadChecksum()
     {
-        var output = new byte[ValidUserAddressBytes.Length];
+        byte[] output = new byte[ValidUserAddressBytes.Length];
         Assert.False(Bech32.TryDecodeAddress(InvalidAddressBadChecksum, output));
     }
 
     [Fact]
     public void TryDecodeAddress_Returns_False_On_Valid_NoPrefix()
     {
-        var output = new byte[ValidUserAddressBytes.Length];
+        byte[] output = new byte[ValidUserAddressBytes.Length];
         Assert.False(Bech32.TryDecodeAddress(InvalidAddressNoPrefix, output));
     }
 }

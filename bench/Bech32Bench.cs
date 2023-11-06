@@ -1,11 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Cosm.Net.Encoding;
-using Nano.Bech32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cosm.Net.Bench;
 [MemoryDiagnoser]
@@ -17,14 +11,14 @@ public class Bech32Bench
     [Benchmark]
     public byte[] DecodeAddress()
     {
-        Bech32.TryDecodeAddress(Address, Buffer);
+        _ = Bech32.TryDecodeAddress(Address, Buffer);
         return Buffer;
     }
 
     [Benchmark]
     public byte[] DecodeAddressNano()
     {
-        Bech32Encoder.Decode(Address, out string? prefix, out byte[]? data);
+        Bech32Encoder.Decode(Address, out _, out byte[]? data);
         return data!;
     }
 }

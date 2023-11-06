@@ -23,7 +23,7 @@
 */
 using System.Diagnostics;
 
-namespace Nano.Bech32;
+namespace Cosm.Net;
 
 public static class Bech32Encoder
 {
@@ -56,13 +56,17 @@ public static class Bech32Encoder
     public static uint PolyMod(byte[] values)
     {
         uint chk = 1;
-        foreach (var value in values)
+        foreach(byte value in values)
         {
-            var top = chk >> 25;
-            chk = (chk & 0x1ffffff) << 5 ^ value;
-            for (var i = 0; i < 5; ++i)
-                if (((top >> i) & 1) == 1)
+            uint top = chk >> 25;
+            chk = ((chk & 0x1ffffff) << 5) ^ value;
+            for(int i = 0; i < 5; ++i)
+            {
+                if(((top >> i) & 1) == 1)
+                {
                     chk ^= Generator[i];
+                }
+            }
         }
 
         return chk;
@@ -71,8 +75,8 @@ public static class Bech32Encoder
     // on error, data == null
     public static void Decode(string encoded, out string? hrp, out byte[]? data)
     {
-        DecodeSquashed(encoded, out hrp, out var squashed);
-        if (squashed == null!)
+        DecodeSquashed(encoded, out hrp, out byte[]? squashed);
+        if(squashed == null!)
         {
             data = null!;
             return;
@@ -84,8 +88,8 @@ public static class Bech32Encoder
     // on error, data == null
     private static void DecodeSquashed(string address, out string? hrp, out byte[]? data)
     {
-        var adr = CheckAndFormat(address);
-        if (adr == null!)
+        string? adr = CheckAndFormat(address);
+        if(adr == null!)
         {
             data = null!;
             hrp = null!;
@@ -93,8 +97,8 @@ public static class Bech32Encoder
         }
 
         // find the last "1" and split there
-        var splitLoc = adr.LastIndexOf("1", StringComparison.Ordinal);
-        if (splitLoc == -1)
+        int splitLoc = adr.LastIndexOf("1", StringComparison.Ordinal);
+        if(splitLoc == -1)
         {
             Debug.WriteLine("1 separator not present in address");
             data = null;
@@ -103,18 +107,18 @@ public static class Bech32Encoder
         }
 
         // hrp comes before the split
-        hrp = adr.Substring(0, splitLoc);
+        hrp = adr[..splitLoc];
 
         // get squashed data
-        var squashed = StringToSquashedBytes(adr[(splitLoc + 1)..]);
-        if (squashed == null)
+        byte[]? squashed = StringToSquashedBytes(adr[(splitLoc + 1)..]);
+        if(squashed == null)
         {
             data = null;
             return;
         }
 
         // make sure checksum works
-        if (!VerifyChecksum(hrp, squashed))
+        if(!VerifyChecksum(hrp, squashed))
         {
             Debug.WriteLine("Checksum invalid");
             data = null;
@@ -122,7 +126,7 @@ public static class Bech32Encoder
         }
 
         // chop off checksum to return only payload
-        var length = squashed.Length - 6;
+        int length = squashed.Length - 6;
         data = new byte[length];
         Array.Copy(squashed, 0, data, 0, length);
     }
@@ -131,11 +135,11 @@ public static class Bech32Encoder
     private static string? CheckAndFormat(string adr)
     {
         // make an all lowercase and all uppercase version of the input string
-        var lowAdr = adr.ToLower();
-        var highAdr = adr.ToUpper();
+        string lowAdr = adr.ToLower();
+        string highAdr = adr.ToUpper();
 
         // if there's mixed case, that's not OK
-        if (adr != lowAdr && adr != highAdr)
+        if(adr != lowAdr && adr != highAdr)
         {
             Debug.WriteLine("mixed case address");
             return null;
@@ -147,8 +151,8 @@ public static class Bech32Encoder
 
     private static bool VerifyChecksum(string hrp, byte[] data)
     {
-        var values = HrpExpand(hrp).Concat(data).ToArray();
-        var checksum = PolyMod(values);
+        byte[] values = HrpExpand(hrp).Concat(data).ToArray();
+        uint checksum = PolyMod(values);
         // make sure it's 1 (from the LSB flip in CreateChecksum
         return checksum == 1;
     }
@@ -156,19 +160,19 @@ public static class Bech32Encoder
     // on error, return null
     private static byte[]? StringToSquashedBytes(string input)
     {
-        var squashed = new byte[input.Length];
+        byte[] squashed = new byte[input.Length];
 
-        for (var i = 0; i < input.Length; i++)
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            var buffer = icharset[c];
-            if (buffer == -1)
+            char c = input[i];
+            short buffer = icharset[c];
+            if(buffer == -1)
             {
                 Debug.WriteLine("contains invalid character " + c);
                 return null;
             }
 
-            squashed[i] = (byte)buffer;
+            squashed[i] = (byte) buffer;
         }
 
         return squashed;
@@ -177,38 +181,38 @@ public static class Bech32Encoder
     // we encode the data and the human readable prefix
     public static string? Encode(string hrp, byte[] data)
     {
-        var base5 = Bytes8To5(data);
-        return base5 == null ? string.Empty : EncodeSquashed(hrp, base5);
+        byte[]? base5 = Bytes8To5(data);
+        return base5 == null ? String.Empty : EncodeSquashed(hrp, base5);
     }
 
     // on error, return null
     private static string? EncodeSquashed(string hrp, byte[] data)
     {
-        var checksum = CreateChecksum(hrp, data);
-        var combined = data.Concat(checksum).ToArray();
+        byte[] checksum = CreateChecksum(hrp, data);
+        byte[] combined = data.Concat(checksum).ToArray();
 
         // Should be squashed, return empty string if it's not.
-        var encoded = SquashedBytesToString(combined);
+        string? encoded = SquashedBytesToString(combined);
         return encoded == null ? null : hrp + "1" + encoded;
     }
 
     private static byte[] CreateChecksum(string hrp, byte[] data)
     {
-        var values = HrpExpand(hrp).Concat(data).ToArray();
+        byte[] values = HrpExpand(hrp).Concat(data).ToArray();
         // put 6 zero bytes on at the end
         values = values.Concat(new byte[6]).ToArray();
         //get checksum for whole slice
 
         // flip the LSB of the checksum data after creating it
-        var checksum = PolyMod(values) ^ 1;
+        uint checksum = PolyMod(values) ^ 1;
 
-        var ret = new byte[6];
-        for (var i = 0; i < 6; i++)
+        byte[] ret = new byte[6];
+        for(int i = 0; i < 6; i++)
         {
             // note that this is NOT the same as converting 8 to 5
             // this is it's own expansion to 6 bytes from 4, chopping
             // off the MSBs.
-            ret[i] = (byte)(checksum >> (5 * (5 - i)) & 0x1f);
+            ret[i] = (byte) ((checksum >> (5 * (5 - i))) & 0x1f);
         }
 
         return ret;
@@ -217,14 +221,14 @@ public static class Bech32Encoder
     // HRPExpand turns the human readable part into 5bit-bytes for later processing
     private static byte[] HrpExpand(string input)
     {
-        var output = new byte[(input.Length * 2) + 1];
+        byte[] output = new byte[(input.Length * 2) + 1];
 
         // first half is the input string shifted down 5 bits.
         // not much is going on there in terms of data / entropy
-        for (var i = 0; i < input.Length; i++)
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            output[i] = (byte)(c >> 5);
+            char c = input[i];
+            output[i] = (byte) (c >> 5);
         }
 
         // then there's a 0 byte separator
@@ -232,10 +236,10 @@ public static class Bech32Encoder
 
         // second half is the input string, with the top 3 bits zeroed.
         // most of the data / entropy will live here.
-        for (var i = 0; i < input.Length; i++)
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            output[i + input.Length + 1] = (byte)(c & 0x1f);
+            char c = input[i];
+            output[i + input.Length + 1] = (byte) (c & 0x1f);
         }
 
         return output;
@@ -243,11 +247,11 @@ public static class Bech32Encoder
 
     private static string? SquashedBytesToString(byte[] input)
     {
-        var s = string.Empty;
-        for (var i = 0; i < input.Length; i++)
+        string s = String.Empty;
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            if ((c & 0xe0) != 0)
+            byte c = input[i];
+            if((c & 0xe0) != 0)
             {
                 Debug.WriteLine("high bits set at position {0}: {1}", i, c);
                 return null;
@@ -270,15 +274,15 @@ public static class Bech32Encoder
     // when going from 5 to 8
     private static byte[]? ByteSquasher(byte[] input, int inputWidth, int outputWidth)
     {
-        var bitStash = 0;
-        var accumulator = 0;
+        int bitStash = 0;
+        int accumulator = 0;
         var output = new List<byte>();
-        var maxOutputValue = (1 << outputWidth) - 1;
+        int maxOutputValue = (1 << outputWidth) - 1;
 
-        for (var i = 0; i < input.Length; i++)
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            if (c >> inputWidth != 0)
+            byte c = input[i];
+            if(c >> inputWidth != 0)
             {
                 Debug.WriteLine("byte {0} ({1}) high bits set", i, c);
                 return null;
@@ -286,20 +290,22 @@ public static class Bech32Encoder
 
             accumulator = (accumulator << inputWidth) | c;
             bitStash += inputWidth;
-            while (bitStash >= outputWidth)
+            while(bitStash >= outputWidth)
             {
                 bitStash -= outputWidth;
-                output.Add((byte)((accumulator >> bitStash) & maxOutputValue));
+                output.Add((byte) ((accumulator >> bitStash) & maxOutputValue));
             }
         }
 
         // pad if going from 8 to 5
-        if (inputWidth == 8 && outputWidth == 5)
+        if(inputWidth == 8 && outputWidth == 5)
         {
-            if (bitStash != 0)
-                output.Add((byte)(accumulator << (outputWidth - bitStash) & maxOutputValue));
+            if(bitStash != 0)
+            {
+                output.Add((byte) ((accumulator << (outputWidth - bitStash)) & maxOutputValue));
+            }
         }
-        else if (bitStash >= inputWidth || ((accumulator << (outputWidth - bitStash)) & maxOutputValue) != 0)
+        else if(bitStash >= inputWidth || ((accumulator << (outputWidth - bitStash)) & maxOutputValue) != 0)
         {
             // no pad from 5 to 8 allowed
             Debug.WriteLine("invalid padding from {0} to {1} bits", inputWidth, outputWidth);

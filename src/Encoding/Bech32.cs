@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Cosm.Net.Encoding;
+﻿namespace Cosm.Net.Encoding;
 public static class Bech32
 {
     private const int ChecksumByteLength = 6;
@@ -36,13 +34,17 @@ public static class Bech32
     private static uint PolyMod(ReadOnlySpan<byte> data)
     {
         uint chk = 1;
-        foreach (var value in data)
+        foreach(byte value in data)
         {
-            var top = chk >> 25;
+            uint top = chk >> 25;
             chk = ((chk & 0x1ffffff) << 5) ^ value;
-            for (var i = 0; i < 5; ++i)
-                if (((top >> i) & 1) == 1)
+            for(int i = 0; i < 5; ++i)
+            {
+                if(((top >> i) & 1) == 1)
+                {
                     chk ^= Generator[i];
+                }
+            }
         }
 
         return chk;
@@ -50,7 +52,7 @@ public static class Bech32
 
     public static bool TryDecodeAddress(ReadOnlySpan<char> address, Span<byte> dataOutput)
     {
-        if (IsMixedCase(address))
+        if(IsMixedCase(address))
         {
             //Invalid address format, must not be mixed case
             return false;
@@ -58,12 +60,12 @@ public static class Bech32
 
         int splitIndex = address.LastIndexOf('1');
 
-        if (splitIndex == -1)
+        if(splitIndex == -1)
         {
             //Invalid address format, no prefix delimiter
             return false;
         }
-        if (address.Length - splitIndex < ChecksumByteLength + 6)
+        if(address.Length - splitIndex < ChecksumByteLength + 6)
         {
             //Invalid address format, length after prefix too small
             return false;
@@ -74,37 +76,33 @@ public static class Bech32
 
         Span<byte> buffer = stackalloc byte[(prefix.Length * 2) + address.Length - splitIndex];
 
-        HrpExpand(prefix, buffer); //Uses first (prefix.Length * 2) + 1 of buffer
+        _ = HrpExpand(prefix, buffer); //Uses first (prefix.Length * 2) + 1 of buffer
 
-        if (!TrySquashBase32Bytes(payload, buffer[((prefix.Length * 2) + 1)..]))
+        if(!TrySquashBase32Bytes(payload, buffer[((prefix.Length * 2) + 1)..]))
         {
             return false;
         }
-        if (!VerifyChecksum(buffer))
+        if(!VerifyChecksum(buffer))
         {
             return false;
         }
         //
         return ByteSquasher(buffer.Slice(
-            (prefix.Length * 2) + 1, 
-            buffer.Length - (prefix.Length * 2) - 1 - ChecksumByteLength), 
+            (prefix.Length * 2) + 1,
+            buffer.Length - (prefix.Length * 2) - 1 - ChecksumByteLength),
             dataOutput, 5, 8);
     }
 
-    private static bool IsMixedCase(ReadOnlySpan<char> address)
-    {
-        return 
-            address.IndexOfAny(LowerCharacters) != -1 && 
+    private static bool IsMixedCase(ReadOnlySpan<char> address) => address.IndexOfAny(LowerCharacters) != -1 &&
             address.IndexOfAny(UpperCharacters) != -1;
-    }
 
     //Both need the same length
     private static bool TrySquashBase32Bytes(ReadOnlySpan<char> data, Span<byte> squashedDataOutput)
     {
-        for (var i = 0; i < data.Length; i++)
+        for(int i = 0; i < data.Length; i++)
         {
-            var buffer = icharset[data[i]];
-            if (buffer == 255)
+            byte buffer = icharset[data[i]];
+            if(buffer == 255)
             {
                 //Invalid character
                 return false;
@@ -118,7 +116,7 @@ public static class Bech32
 
     private static bool VerifyChecksum(ReadOnlySpan<byte> data)
     {
-        var checksum = PolyMod(data);
+        uint checksum = PolyMod(data);
         return checksum == 1;
     }
 
@@ -126,10 +124,10 @@ public static class Bech32
     {
         // first half is the input string shifted down 5 bits.
         // not much is going on there in terms of data / entropy
-        for (var i = 0; i < input.Length; i++)
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            output[i] = (byte)(c >> 5);
+            char c = input[i];
+            output[i] = (byte) (c >> 5);
         }
 
         // then there's a 0 byte separator
@@ -137,10 +135,10 @@ public static class Bech32
 
         // second half is the input string, with the top 3 bits zeroed.
         // most of the data / entropy will live here.
-        for (var i = 0; i < input.Length; i++)
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            output[i + input.Length + 1] = (byte)(c & 0x1f);
+            char c = input[i];
+            output[i + input.Length + 1] = (byte) (c & 0x1f);
         }
 
         return output;
@@ -153,16 +151,16 @@ public static class Bech32
     // when going from 5 to 8
     private static bool ByteSquasher(Span<byte> input, Span<byte> output, int inputWidth, int outputWidth)
     {
-        var bitStash = 0;
-        var accumulator = 0;
-        var maxOutputValue = (1 << outputWidth) - 1;
+        int bitStash = 0;
+        int accumulator = 0;
+        int maxOutputValue = (1 << outputWidth) - 1;
 
         int outputIndex = 0;
 
-        for (var i = 0; i < input.Length; i++)
+        for(int i = 0; i < input.Length; i++)
         {
-            var c = input[i];
-            if (c >> inputWidth != 0)
+            byte c = input[i];
+            if(c >> inputWidth != 0)
             {
                 return false;
             }
@@ -171,28 +169,30 @@ public static class Bech32
             bitStash += inputWidth;
             for(; bitStash >= outputWidth; outputIndex++)
             {
-                if (outputIndex >= output.Length)
+                if(outputIndex >= output.Length)
                 {
                     return false;
                 }
 
                 bitStash -= outputWidth;
-                output[outputIndex] = (byte)((accumulator >> bitStash) & maxOutputValue);
+                output[outputIndex] = (byte) ((accumulator >> bitStash) & maxOutputValue);
             }
         }
 
         // pad if going from 8 to 5
-        if (inputWidth == 8 && outputWidth == 5)
+        if(inputWidth == 8 && outputWidth == 5)
         {
-            if (outputIndex >= output.Length)
+            if(outputIndex >= output.Length)
             {
                 return false;
             }
 
-            if (bitStash != 0)
-                output[outputIndex++] = (byte)((accumulator << (outputWidth - bitStash)) & maxOutputValue);
+            if(bitStash != 0)
+            {
+                output[outputIndex++] = (byte) ((accumulator << (outputWidth - bitStash)) & maxOutputValue);
+            }
         }
-        else if (bitStash >= inputWidth || ((accumulator << (outputWidth - bitStash)) & maxOutputValue) != 0)
+        else if(bitStash >= inputWidth || ((accumulator << (outputWidth - bitStash)) & maxOutputValue) != 0)
         {
             return false;
         }
