@@ -5,7 +5,11 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net", "src\Cosm.Net.csproj", "{CCB77128-CF1C-4E59-B9E9-A2419A035D88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Test", "test\Cosm.Net.Test.csproj", "{10FFBD7E-0CFB-4C4E-A18E-F9F39EA5EB34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Test", "test\Cosm.Net.Test.csproj", "{10FFBD7E-0CFB-4C4E-A18E-F9F39EA5EB34}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5CA21658-0440-4F13-BB84-4D0365D5F796}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{27417F6C-7217-41BC-973E-CA365C515456}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCB77128-CF1C-4E59-B9E9-A2419A035D88} = {5CA21658-0440-4F13-BB84-4D0365D5F796}
+		{10FFBD7E-0CFB-4C4E-A18E-F9F39EA5EB34} = {27417F6C-7217-41BC-973E-CA365C515456}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
