@@ -1,4 +1,6 @@
-﻿namespace Cosm.Net.Encoding;
+﻿using System.Text;
+
+namespace Cosm.Net.Encoding;
 public static class Bech32
 {
     private const int ChecksumByteLength = 6;
@@ -50,12 +52,12 @@ public static class Bech32
         return chk;
     }
 
-    public static bool TryDecodeAddress(ReadOnlySpan<char> address, Span<byte> dataOutput)
+    public static int TryDecodeAddress(ReadOnlySpan<char> address, Span<byte> dataOutput)
     {
         if(IsMixedCase(address))
         {
             //Invalid address format, must not be mixed case
-            return false;
+            return -1;
         }
 
         int splitIndex = address.LastIndexOf('1');
@@ -63,12 +65,12 @@ public static class Bech32
         if(splitIndex == -1)
         {
             //Invalid address format, no prefix delimiter
-            return false;
+            return -1;
         }
         if(address.Length - splitIndex < ChecksumByteLength + 6)
         {
             //Invalid address format, length after prefix too small
-            return false;
+            return -1;
         }
 
         var prefix = address[..splitIndex];
@@ -76,22 +78,111 @@ public static class Bech32
 
         Span<byte> buffer = stackalloc byte[(prefix.Length * 2) + address.Length - splitIndex];
 
-        _ = HrpExpand(prefix, buffer); //Uses first (prefix.Length * 2) + 1 of buffer
+        HrpExpand(prefix, buffer); //Uses first (prefix.Length * 2) + 1 of buffer
 
         if(!TrySquashBase32Bytes(payload, buffer[((prefix.Length * 2) + 1)..]))
         {
-            return false;
+            return -1;
         }
         if(!VerifyChecksum(buffer))
         {
-            return false;
+            return -1;
         }
         //
-        return ByteSquasher(buffer.Slice(
+        return ExpandBytes(buffer.Slice(
             (prefix.Length * 2) + 1,
             buffer.Length - (prefix.Length * 2) - 1 - ChecksumByteLength),
-            dataOutput, 5, 8);
+            dataOutput);
     }
+
+    public static byte[] DecodeAddress(ReadOnlySpan<char> address)
+    {
+        if(IsMixedCase(address))
+        {
+            throw new InvalidOperationException("Decoding Address failed, mixed case detected");
+        }
+
+        int splitIndex = address.LastIndexOf('1');
+
+        if(splitIndex == -1)
+        {
+            throw new InvalidOperationException("Decoding Address failed, not prefix found");
+        }
+        if(address.Length - splitIndex < ChecksumByteLength + 6)
+        {
+            throw new InvalidOperationException("Decoding Address failed, Address too short");
+        }
+
+        var prefix = address[..splitIndex];
+        var payload = address[(splitIndex + 1)..];
+
+        Span<byte> buffer = stackalloc byte[(prefix.Length * 2) + address.Length - splitIndex];
+
+        HrpExpand(prefix, buffer); //Uses first (prefix.Length * 2) + 1 of buffer
+
+        if(!TrySquashBase32Bytes(payload, buffer[((prefix.Length * 2) + 1)..]))
+        {
+            throw new InvalidOperationException("Decoding Address failed, Address contains invalid character");
+        }
+        if(!VerifyChecksum(buffer))
+        {
+            throw new InvalidOperationException("Decoding Address failed, Checksum check failed");
+        }
+        //
+
+        var squashedInput = buffer.Slice(
+            (prefix.Length * 2) + 1,
+            buffer.Length - (prefix.Length * 2) - 1 - ChecksumByteLength);
+
+        int outputSize = (squashedInput.Length * 5 / 8)
+            + ((squashedInput.Length * 5 % 8) != 0 ? 1 : 0);
+        byte[] dataOutput = new byte[outputSize];
+
+        _ = ExpandBytes(squashedInput,
+            dataOutput);
+
+        return dataOutput;
+    }
+
+    public static bool TryEncodeAddress(string prefix, ReadOnlySpan<byte> data, out string? address)
+    {
+        int outputSize = (data.Length * 8 / 5)
+            + ((data.Length * 8 % 5) != 0 ? 1 : 0);
+
+        Span<byte> buffer = stackalloc byte[outputSize + 6];
+
+        if(SquashBytes(data, buffer[..^6]) != buffer.Length - 6)
+        {
+            address = null;
+            return false;
+        }
+
+        CreateChecksum(prefix, buffer[..^6], buffer[^6..]);
+
+        var sb = new StringBuilder();
+
+        _ = sb.Append(prefix);
+        _ = sb.Append('1');
+
+        for(int i = 0; i < buffer.Length; i++)
+        {
+            byte c = buffer[i];
+
+            if((c & 0xe0) != 0)
+            {
+                throw new InvalidOperationException("Invalid address");
+            }
+
+            _ = sb.Append(Charset[c]);
+        }
+
+        address = sb.ToString();
+        return true;
+    }
+
+    public static string? EncodeAddress(string prefix, ReadOnlySpan<byte> data) => TryEncodeAddress(prefix, data, out string? address)
+            ? address
+            : throw new InvalidOperationException("Failed to encode address");
 
     private static bool IsMixedCase(ReadOnlySpan<char> address) => address.IndexOfAny(LowerCharacters) != -1 &&
             address.IndexOfAny(UpperCharacters) != -1;
@@ -120,191 +211,124 @@ public static class Bech32
         return checksum == 1;
     }
 
-    private static Span<byte> HrpExpand(ReadOnlySpan<char> input, Span<byte> output)
+    private static void HrpExpand(ReadOnlySpan<char> input, Span<byte> output)
     {
-        // first half is the input string shifted down 5 bits.
-        // not much is going on there in terms of data / entropy
         for(int i = 0; i < input.Length; i++)
         {
             char c = input[i];
             output[i] = (byte) (c >> 5);
         }
 
-        // then there's a 0 byte separator
-        // don't need to set 0 byte in the middle, as it starts out that way
-
-        // second half is the input string, with the top 3 bits zeroed.
-        // most of the data / entropy will live here.
         for(int i = 0; i < input.Length; i++)
         {
             char c = input[i];
             output[i + input.Length + 1] = (byte) (c & 0x1f);
         }
-
-        return output;
     }
 
-    // ByteSquasher squashes full-width (8-bit) bytes into "squashed" 5-bit bytes,
-    // and vice versa. It can operate on other widths but in this package only
-    // goes 5 to 8 and back again. It can return null if the squashed input
-    // you give it isn't actually squashed, or if there is padding (trailing q characters)
-    // when going from 5 to 8
-    private static bool ByteSquasher(Span<byte> input, Span<byte> output, int inputWidth, int outputWidth)
+    //squashes full-width (8-bit) bytes into "squashed" 5-bit bytes
+    public static int SquashBytes(ReadOnlySpan<byte> input, Span<byte> output)
     {
-        int bitStash = 0;
-        int accumulator = 0;
-        int maxOutputValue = (1 << outputWidth) - 1;
+        int outputSize = (input.Length * 8 / 5)
+            + ((input.Length * 8 % 5) != 0 ? 1 : 0);
 
+        if(output.Length != outputSize)
+        {
+            return -1;
+        }
+
+        int accumulator = 0;
+        int bitsStashed = 0;
         int outputIndex = 0;
 
         for(int i = 0; i < input.Length; i++)
         {
             byte c = input[i];
-            if(c >> inputWidth != 0)
+            accumulator = (accumulator << 8) | c;
+
+            if(bitsStashed >= 2)
             {
-                return false;
+                output[outputIndex] = (byte) ((accumulator >> (bitsStashed + 3)) & 31);
+                output[outputIndex + 1] = (byte) ((accumulator >> (bitsStashed - 2)) & 31);
+
+                bitsStashed -= 2;
+                outputIndex += 2;
             }
-
-            accumulator = (accumulator << inputWidth) | c;
-            bitStash += inputWidth;
-            for(; bitStash >= outputWidth; outputIndex++)
+            else
             {
-                if(outputIndex >= output.Length)
-                {
-                    return false;
-                }
+                output[outputIndex] = (byte) ((accumulator >> (bitsStashed + 3)) & 31);
 
-                bitStash -= outputWidth;
-                output[outputIndex] = (byte) ((accumulator >> bitStash) & maxOutputValue);
+                bitsStashed += 3;
+                outputIndex += 1;
             }
         }
 
-        // pad if going from 8 to 5
-        if(inputWidth == 8 && outputWidth == 5)
+        if(bitsStashed != 0)
         {
-            if(outputIndex >= output.Length)
-            {
-                return false;
-            }
-
-            if(bitStash != 0)
-            {
-                output[outputIndex++] = (byte) ((accumulator << (outputWidth - bitStash)) & maxOutputValue);
-            }
-        }
-        else if(bitStash >= inputWidth || ((accumulator << (outputWidth - bitStash)) & maxOutputValue) != 0)
-        {
-            return false;
+            output[outputIndex] = (byte) ((accumulator << (5 - bitsStashed)) & 31);
         }
 
-        return true;
+        return outputSize;
     }
 
-    //// we encode the data and the human readable prefix
-    //public static string? Encode(string hrp, byte[] data)
-    //{
-    //    var base5 = Bytes8To5(data);
-    //    return base5 == null ? string.Empty : EncodeSquashed(hrp, base5);
-    //}
+    //expands "squashed" 5-bit bytes into full-width (8-bit) bytes
+    public static int ExpandBytes(ReadOnlySpan<byte> input, Span<byte> output)
+    {
+        int outputSize = (input.Length * 5 / 8)
+            + ((input.Length * 5 % 8) != 0 ? 1 : 0);
 
-    //// on error, return null
-    //private static string? EncodeSquashed(string hrp, byte[] data)
-    //{
-    //    var checksum = CreateChecksum(hrp, data);
-    //    var combined = data.Concat(checksum).ToArray();
+        if(output.Length < outputSize)
+        {
+            return -1;
+        }
 
-    //    // Should be squashed, return empty string if it's not.
-    //    var encoded = SquashedBytesToString(combined);
-    //    return encoded == null ? null : hrp + "1" + encoded;
-    //}
+        int accumulator = 0;
+        int bitsStashed = 0;
+        int outputIndex = 0;
 
-    //private static byte[] CreateChecksum(string hrp, byte[] data)
-    //{
-    //    var values = HrpExpand(hrp).Concat(data).ToArray();
-    //    // put 6 zero bytes on at the end
-    //    values = values.Concat(new byte[6]).ToArray();
-    //    //get checksum for whole slice
+        for(int i = 0; i < input.Length; i++)
+        {
+            byte c = input[i];
 
-    //    // flip the LSB of the checksum data after creating it
-    //    var checksum = PolyMod(values) ^ 1;
+            if(c > 31)
+            {
+                return -1;
+            }
 
-    //    var ret = new byte[6];
-    //    for (var i = 0; i < 6; i++)
-    //    {
-    //        // note that this is NOT the same as converting 8 to 5
-    //        // this is it's own expansion to 6 bytes from 4, chopping
-    //        // off the MSBs.
-    //        ret[i] = (byte)(checksum >> (5 * (5 - i)) & 0x1f);
-    //    }
+            accumulator = (accumulator << 5) | c;
 
-    //    return ret;
-    //}
+            if(bitsStashed >= 3)
+            {
+                output[outputIndex] = (byte) (accumulator >> (bitsStashed - 3));
 
-    //private static string? SquashedBytesToString(byte[] input)
-    //{
-    //    var s = string.Empty;
-    //    for (var i = 0; i < input.Length; i++)
-    //    {
-    //        var c = input[i];
-    //        if ((c & 0xe0) != 0)
-    //        {
-    //            Debug.WriteLine("high bits set at position {0}: {1}", i, c);
-    //            return null;
-    //        }
+                bitsStashed -= 3;
+                outputIndex += 1;
+            }
+            else
+            {
+                bitsStashed += 5;
+            }
+        }
 
-    //        s += Charset[c];
-    //    }
+        return bitsStashed >= 5 || ((accumulator << (8 - bitsStashed)) & 255) != 0
+            ? -1
+            : outputIndex;
+    }
 
-    //    return s;
-    //}
+    private static void CreateChecksum(string prefix, ReadOnlySpan<byte> data, Span<byte> checksumOut)
+    {
+        Span<byte> buffer = stackalloc byte[(prefix.Length * 2) + 1 + data.Length + 6];
 
-    //private static byte[]? Bytes8To5(byte[] data) => ByteSquasher(data, 8, 5);
+        HrpExpand(prefix, buffer); //Uses first (prefix.Length * 2) + 1 of buffer
 
-    //private static byte[]? Bytes5To8(byte[] data) => ByteSquasher(data, 5, 8);
+        data.CopyTo(buffer[((prefix.Length * 2) + 1)..]);
 
-    //// ByteSquasher squashes full-width (8-bit) bytes into "squashed" 5-bit bytes,
-    //// and vice versa. It can operate on other widths but in this package only
-    //// goes 5 to 8 and back again. It can return null if the squashed input
-    //// you give it isn't actually squashed, or if there is padding (trailing q characters)
-    //// when going from 5 to 8
-    //private static byte[]? ByteSquasher(byte[] input, int inputWidth, int outputWidth)
-    //{
-    //    var bitStash = 0;
-    //    var accumulator = 0;
-    //    var output = new List<byte>();
-    //    var maxOutputValue = (1 << outputWidth) - 1;
+        // flip the LSB of the checksum data after creating it
+        uint checksum = PolyMod(buffer) ^ 1;
 
-    //    for (var i = 0; i < input.Length; i++)
-    //    {
-    //        var c = input[i];
-    //        if (c >> inputWidth != 0)
-    //        {
-    //            Debug.WriteLine("byte {0} ({1}) high bits set", i, c);
-    //            return null;
-    //        }
-
-    //        accumulator = (accumulator << inputWidth) | c;
-    //        bitStash += inputWidth;
-    //        while (bitStash >= outputWidth)
-    //        {
-    //            bitStash -= outputWidth;
-    //            output.Add((byte)((accumulator >> bitStash) & maxOutputValue));
-    //        }
-    //    }
-
-    //    // pad if going from 8 to 5
-    //    if (inputWidth == 8 && outputWidth == 5)
-    //    {
-    //        if (bitStash != 0)
-    //            output.Add((byte)(accumulator << (outputWidth - bitStash) & maxOutputValue));
-    //    }
-    //    else if (bitStash >= inputWidth || ((accumulator << (outputWidth - bitStash)) & maxOutputValue) != 0)
-    //    {
-    //        // no pad from 5 to 8 allowed
-    //        Debug.WriteLine("invalid padding from {0} to {1} bits", inputWidth, outputWidth);
-    //        return null;
-    //    }
-
-    //    return output.ToArray();
-    //}
+        for(int i = 0; i < 6; i++)
+        {
+            checksumOut[i] = (byte) ((checksum >> (5 * (5 - i))) & 0x1f);
+        }
+    }
 }

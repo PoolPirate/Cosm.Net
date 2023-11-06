@@ -15,7 +15,7 @@ public class Bech32Tests
     {
         byte[] output = new byte[ValidUserAddressBytes.Length];
 
-        Assert.True(Bech32.TryDecodeAddress(ValidUserAddress, output));
+        Assert.True(Bech32.TryDecodeAddress(ValidUserAddress, output) > 0);
 
         for(int i = 0; i < ValidUserAddressBytes.Length; i++)
         {
@@ -32,13 +32,20 @@ public class Bech32Tests
     public void TryDecodeAddress_Returns_False_On_Valid_BadChecksum()
     {
         byte[] output = new byte[ValidUserAddressBytes.Length];
-        Assert.False(Bech32.TryDecodeAddress(InvalidAddressBadChecksum, output));
+        Assert.False(Bech32.TryDecodeAddress(InvalidAddressBadChecksum, output) > 0);
     }
 
     [Fact]
     public void TryDecodeAddress_Returns_False_On_Valid_NoPrefix()
     {
         byte[] output = new byte[ValidUserAddressBytes.Length];
-        Assert.False(Bech32.TryDecodeAddress(InvalidAddressNoPrefix, output));
+        Assert.False(Bech32.TryDecodeAddress(InvalidAddressNoPrefix, output) > 0);
+    }
+
+    [Fact]
+    public void TryEncodeAddress_Returns_Address_On_Valid_Bytes()
+    {
+        string address = Bech32.EncodeAddress("osmo", ValidUserAddressBytes);
+        Assert.Equal(ValidUserAddress, address);
     }
 }

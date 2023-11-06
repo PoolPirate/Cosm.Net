@@ -196,7 +196,7 @@ public static class Bech32Encoder
         return encoded == null ? null : hrp + "1" + encoded;
     }
 
-    private static byte[] CreateChecksum(string hrp, byte[] data)
+    public static byte[] CreateChecksum(string hrp, byte[] data)
     {
         byte[] values = HrpExpand(hrp).Concat(data).ToArray();
         // put 6 zero bytes on at the end
@@ -263,9 +263,9 @@ public static class Bech32Encoder
         return s;
     }
 
-    private static byte[]? Bytes8To5(byte[] data) => ByteSquasher(data, 8, 5);
+    public static byte[]? Bytes8To5(byte[] data) => ByteSquasher(data, 8, 5);
 
-    private static byte[]? Bytes5To8(byte[] data) => ByteSquasher(data, 5, 8);
+    public static byte[]? Bytes5To8(byte[] data) => ByteSquasher(data, 5, 8);
 
     // ByteSquasher squashes full-width (8-bit) bytes into "squashed" 5-bit bytes,
     // and vice versa. It can operate on other widths but in this package only
