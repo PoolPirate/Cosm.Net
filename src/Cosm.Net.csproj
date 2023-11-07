@@ -14,6 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="dotnetstandard-bip32" Version="1.0.0" />
+    <PackageReference Include="dotnetstandard-bip39" Version="1.0.2" />
     <PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
     <PackageReference Include="Google.Protobuf" Version="3.25.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.58.0" />
@@ -21,6 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Secp256k1.Net" Version="1.2.0" />
   </ItemGroup>
 
@@ -32,8 +35,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="../lib/secp256k1.dll">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<None Update="secp256k1.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 </Project>

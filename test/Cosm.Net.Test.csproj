@@ -26,4 +26,9 @@
     <ProjectReference Include="..\src\Cosm.Net.csproj" />
   </ItemGroup>
 
+    <ItemGroup>
+	    <None Update="secp256k1.dll">
+	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    </None>
+    </ItemGroup>
 </Project>
