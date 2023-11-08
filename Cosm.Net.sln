@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net", "src\Cosm.Net.csproj", "{CCB77128-CF1C-4E59-B9E9-A2419A035D88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net", "src\core\Cosm.Net.csproj", "{CCB77128-CF1C-4E59-B9E9-A2419A035D88}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Test", "test\Cosm.Net.Test.csproj", "{10FFBD7E-0CFB-4C4E-A18E-F9F39EA5EB34}"
 EndProject
@@ -20,6 +20,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bench", "bench", "{6EC174ED-9705-412B-9306-F672609D0F57}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Bench", "bench\Cosm.Net.Bench.csproj", "{06120BF0-2A47-4BC3-900C-F592A89C7DA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Generators", "gen\Cosm.Net.Generators.csproj", "{68201963-7DE8-497B-87AE-0727F3EA6719}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gen", "gen", "{51E53C22-CDD0-450C-BA6E-4215C0A32965}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Client", "src\grpc\Cosm.Net.Client.csproj", "{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +45,14 @@ Global
 		{06120BF0-2A47-4BC3-900C-F592A89C7DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06120BF0-2A47-4BC3-900C-F592A89C7DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06120BF0-2A47-4BC3-900C-F592A89C7DA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68201963-7DE8-497B-87AE-0727F3EA6719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68201963-7DE8-497B-87AE-0727F3EA6719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68201963-7DE8-497B-87AE-0727F3EA6719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68201963-7DE8-497B-87AE-0727F3EA6719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +61,8 @@ Global
 		{CCB77128-CF1C-4E59-B9E9-A2419A035D88} = {5CA21658-0440-4F13-BB84-4D0365D5F796}
 		{10FFBD7E-0CFB-4C4E-A18E-F9F39EA5EB34} = {27417F6C-7217-41BC-973E-CA365C515456}
 		{06120BF0-2A47-4BC3-900C-F592A89C7DA5} = {6EC174ED-9705-412B-9306-F672609D0F57}
+		{68201963-7DE8-497B-87AE-0727F3EA6719} = {51E53C22-CDD0-450C-BA6E-4215C0A32965}
+		{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6} = {5CA21658-0440-4F13-BB84-4D0365D5F796}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}

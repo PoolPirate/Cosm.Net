@@ -180,8 +180,9 @@ public static class Bech32
         return true;
     }
 
-    public static string? EncodeAddress(string prefix, ReadOnlySpan<byte> data) => TryEncodeAddress(prefix, data, out string? address)
-            ? address
+    public static string EncodeAddress(string prefix, ReadOnlySpan<byte> data)
+        => TryEncodeAddress(prefix, data, out string? address)
+            ? address!
             : throw new InvalidOperationException("Failed to encode address");
 
     private static bool IsMixedCase(ReadOnlySpan<char> address) => address.IndexOfAny(LowerCharacters) != -1 &&

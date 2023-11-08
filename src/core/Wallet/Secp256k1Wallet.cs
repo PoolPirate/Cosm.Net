@@ -1,13 +1,14 @@
-﻿using Cosm.Net.Encoding;
+﻿using Cosm.Net.Crypto;
+using Cosm.Net.Encoding;
 using dotnetstandard_bip39;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Utilities.Encoders;
 using Secp256k1Net;
 using System.Security.Cryptography;
 
-namespace Cosm.Net.Crypto;
+namespace Cosm.Net.Wallet;
 
-public sealed class Secp256k1Wallet
+public sealed class Secp256k1Wallet : IOfflineSigner
 {
     private static readonly Secp256k1 Secp256k1 = new Secp256k1();
 
@@ -15,7 +16,6 @@ public sealed class Secp256k1Wallet
     public byte[] PublicKey { get; }
 
     private readonly byte[] UncompressedPublicKey;
-
     private readonly byte[] AddressBytes;
 
     public Secp256k1Wallet(Span<byte> privateKey)
@@ -68,7 +68,7 @@ public sealed class Secp256k1Wallet
         return key;
     }
 
-    public void SignMessage(Span<byte> signatureOutput, ReadOnlySpan<byte> message)
+    public void SignMessage(ReadOnlySpan<byte> message, Span<byte> signatureOutput)
     {
         if(signatureOutput.Length != Secp256k1.SERIALIZED_SIGNATURE_SIZE)
         {

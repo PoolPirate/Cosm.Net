@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Cosm.Net</Title>
+    <Authors>Playwo</Authors>
+    <Company></Company>
+    <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dotnetstandard-bip39" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <PackageReference Include="Secp256k1.Net" Version="1.2.0" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\grpc\Cosm.Net.Client.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="secp256k1.dll">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

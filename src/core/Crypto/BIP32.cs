@@ -19,14 +19,14 @@ public static partial class BIP32
     {
         Span<byte> buffer = stackalloc byte[64];
 
-        HMACSHA512.HashData(System.Text.Encoding.ASCII.GetBytes(curve), seed, buffer);
+        _ = HMACSHA512.HashData(System.Text.Encoding.ASCII.GetBytes(curve), seed, buffer);
 
         var il = buffer[..32];
         var ir = buffer[32..];
 
         var ilNum = new BigInteger(il, isUnsigned: true, isBigEndian: true);
 
-        if (curve != BIP32Curves.ED25519 && (IsZeroPrivateKey(il) || IsGteNPrivateKey(ilNum, curve)))
+        if(curve != BIP32Curves.ED25519 && (IsZeroPrivateKey(il) || IsGteNPrivateKey(ilNum, curve)))
         {
             GetMasterKeyFromSeed(buffer, curve, il, ir);
         }
@@ -40,7 +40,7 @@ public static partial class BIP32
 
     private static bool IsGteNPrivateKey(BigInteger privateKey, string curve)
         => privateKey >= N(curve);
-    
+
     private static BigInteger N(string curve)
         => curve switch
         {
@@ -78,7 +78,7 @@ public static partial class BIP32
 
         while(true)
         {
-            HMACSHA512.HashData(currentChainCode, dataBuffer, digest);
+            _ = HMACSHA512.HashData(currentChainCode, dataBuffer, digest);
 
             var il = digest[..32];
             var ir = digest[32..];
@@ -94,7 +94,7 @@ public static partial class BIP32
             var returnChildKeyNr = (ilNum + new BigInteger(currentKey, isUnsigned: true, isBigEndian: true)) % N(curve);
 
             var returnChildKey = il; //Do Not Access il after this
-            returnChildKeyNr.TryWriteBytes(returnChildKey, out _, isUnsigned: true, isBigEndian: true);
+            _ = returnChildKeyNr.TryWriteBytes(returnChildKey, out _, isUnsigned: true, isBigEndian: true);
 
             if(IsGteNPrivateKey(ilNum, curve) || IsZeroPrivateKey(returnChildKey))
             {
@@ -138,8 +138,8 @@ public static partial class BIP32
             throw new FormatException("Invalid derivation path");
         }
 
-        var currentKey = new byte[32];
-        var currentChainCode = new byte[32];
+        byte[] currentKey = new byte[32];
+        byte[] currentChainCode = new byte[32];
 
         GetMasterKeyFromSeed(seed, curve, currentKey, currentChainCode);
 

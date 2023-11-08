@@ -1,5 +1,5 @@
 ﻿using Cosm.Net.Crypto;
-using Org.BouncyCastle.Utilities.Encoders;
+using Cosm.Net.Wallet;
 
 namespace Cosm.Net.Test;
 public class Secp256k1WalletTests

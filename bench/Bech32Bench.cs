@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Cosm.Net.Encoding;
+using Nano.Bech32;
 
 namespace Cosm.Net.Bench;
 [MemoryDiagnoser]
