@@ -30,7 +30,7 @@ public class Bech32Bench
     }
 
     [Benchmark]
-    public string EncodeAddress() => Bech32.EncodeAddress("osmo", AddressData);
+    public string? EncodeAddress() => Bech32.EncodeAddress("osmo", AddressData);
 
     [Benchmark]
     public string? EncodeAddressNano() => Bech32Encoder.Encode("osmo", AddressData);

@@ -14,7 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="dotnetstandard-bip32" Version="1.0.0" />
     <PackageReference Include="dotnetstandard-bip39" Version="1.0.2" />
     <PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
     <PackageReference Include="Google.Protobuf" Version="3.25.0" />
