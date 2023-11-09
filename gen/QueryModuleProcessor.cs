@@ -1,6 +1,8 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Cosm.Net.Generators.SourceGeneratorKit;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -84,9 +86,10 @@ public static class QueryModuleProcessor
     private static ITypeSymbol GetQueryMethodRequestType(IMethodSymbol methodType)
         => methodType.Parameters[0].Type;
 
-    private static IEnumerable<IPropertySymbol> GetTypeInstanceProperties(ITypeSymbol type)
+    private static IEnumerable<IPropertySymbol> GetTypeInstanceProperties(ITypeSymbol type) 
         => type.GetMembers()
             .Where(x => x is IPropertySymbol)
             .Cast<IPropertySymbol>()
-            .Where(x => !x.IsStatic && !x.IsReadOnly);
+            .Where(x => !x.IsStatic && !x.IsReadOnly)
+            .Where(x => !x.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute"));
 }
