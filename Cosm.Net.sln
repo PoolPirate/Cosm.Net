@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Wasm", "src\module
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{756856BF-3E0E-4B95-A260-C57979EFE735}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Osmosis", "src\modules\osmosis\Cosm.Net.Osmosis.csproj", "{4E67D931-47A2-4C5F-BB6D-9316D48913CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{0A02612D-A842-46F5-8D56-E2324BB4EE75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A02612D-A842-46F5-8D56-E2324BB4EE75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A02612D-A842-46F5-8D56-E2324BB4EE75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E67D931-47A2-4C5F-BB6D-9316D48913CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E67D931-47A2-4C5F-BB6D-9316D48913CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E67D931-47A2-4C5F-BB6D-9316D48913CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E67D931-47A2-4C5F-BB6D-9316D48913CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +86,7 @@ Global
 		{0A917679-D952-413E-BC78-4424AF6B8F5E} = {5CA21658-0440-4F13-BB84-4D0365D5F796}
 		{0A02612D-A842-46F5-8D56-E2324BB4EE75} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{756856BF-3E0E-4B95-A260-C57979EFE735} = {5CA21658-0440-4F13-BB84-4D0365D5F796}
+		{4E67D931-47A2-4C5F-BB6D-9316D48913CF} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}

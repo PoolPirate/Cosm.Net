@@ -13,3 +13,6 @@
 [submodule "lib/wasmd"]
 	path = lib/wasmd
 	url = https://github.com/CosmWasm/wasmd.git
+[submodule "lib/osmosis"]
+	path = lib/osmosis
+	url = https://github.com/osmosis-labs/osmosis.git
