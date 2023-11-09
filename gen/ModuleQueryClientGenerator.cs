@@ -13,7 +13,7 @@ public class ModuleQueryClientGenerator : ISourceGenerator
     {
     }
 
-    public void Initialize(GeneratorInitializationContext context) 
+    public void Initialize(GeneratorInitializationContext context)
         => context.RegisterForSyntaxNotifications(() => QueryTypeReceiver);
     public void Execute(GeneratorExecutionContext context)
     {

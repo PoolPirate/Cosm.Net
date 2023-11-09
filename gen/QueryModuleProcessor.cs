@@ -1,8 +1,5 @@
-﻿using Cosm.Net.Generators.SourceGeneratorKit;
-using Microsoft.CodeAnalysis;
-using System;
+﻿using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -19,10 +16,10 @@ public static class QueryModuleProcessor
         foreach(var method in queryMethods)
         {
             string code = GetQueryMethodGeneratedCode(method);
-            methodCodeBuilder.AppendLine(code);
+            _ = methodCodeBuilder.AppendLine(code);
         }
 
-        return 
+        return
             $$"""
             namespace {{moduleType.ContainingNamespace}};
 
@@ -44,24 +41,24 @@ public static class QueryModuleProcessor
 
         foreach(var property in requestProps)
         {
-            callArgsBuilder.Append($"{property.Type} {NameUtils.Uncapitalize(property.Name)}, ");
-            requestCtorBuilder.AppendLine($"{property.Name} = {NameUtils.Uncapitalize(property.Name)}, ");
+            _ = callArgsBuilder.Append($"{property.Type} {NameUtils.Uncapitalize(property.Name)}, ");
+            _ = requestCtorBuilder.AppendLine($"{property.Name} = {NameUtils.Uncapitalize(property.Name)}, ");
         }
 
         int i = 0;
         foreach(var parameter in queryParams)
         {
             i++;
-            callArgsBuilder.Append(
+            _ = callArgsBuilder.Append(
                 $$"""
-                {{parameter.Type}} {{parameter.Name}}{{(parameter.HasExplicitDefaultValue 
-                    ? $"= {parameter.ExplicitDefaultValue ?? "default"}" 
+                {{parameter.Type}} {{parameter.Name}}{{(parameter.HasExplicitDefaultValue
+                    ? $"= {parameter.ExplicitDefaultValue ?? "default"}"
                     : "")}}{{(i < queryParams.Length ? ", " : "")}}
                 """);
-            parameterBuilder.Append($"{parameter.Name}{(i < queryParams.Length ? ", " : "")}");
+            _ = parameterBuilder.Append($"{parameter.Name}{(i < queryParams.Length ? ", " : "")}");
         }
 
-        return 
+        return
             $$"""
             public {{queryMethod.ReturnType}} {{queryMethod.Name}}({{callArgsBuilder}}) {
                 return Service.{{queryMethod.Name}}(new {{requestType}}() {
@@ -86,7 +83,7 @@ public static class QueryModuleProcessor
     private static ITypeSymbol GetQueryMethodRequestType(IMethodSymbol methodType)
         => methodType.Parameters[0].Type;
 
-    private static IEnumerable<IPropertySymbol> GetTypeInstanceProperties(ITypeSymbol type) 
+    private static IEnumerable<IPropertySymbol> GetTypeInstanceProperties(ITypeSymbol type)
         => type.GetMembers()
             .Where(x => x is IPropertySymbol)
             .Cast<IPropertySymbol>()

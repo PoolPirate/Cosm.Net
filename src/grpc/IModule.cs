@@ -3,5 +3,5 @@
 namespace Cosm.Net.Client;
 public interface IModule<TModule>
 {
-    internal abstract static TModule FromGrpcChannel(GrpcChannel channel);
+    internal static abstract TModule FromGrpcChannel(GrpcChannel channel);
 }

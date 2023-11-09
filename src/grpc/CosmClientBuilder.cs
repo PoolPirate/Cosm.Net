@@ -13,7 +13,7 @@ public sealed class CosmClientBuilder
             throw new InvalidOperationException("Channel already set");
         }
 
-        Services.AddSingleton(channel);
+        _ = Services.AddSingleton(channel);
         return this;
     }
 
@@ -22,7 +22,7 @@ public sealed class CosmClientBuilder
     {
         if(!Services.Any(x => x.ServiceType == typeof(TModule)))
         {
-            Services.AddSingleton((provider) =>
+            _ = Services.AddSingleton((provider) =>
             {
                 var channel = provider.GetRequiredService<GrpcChannel>();
                 return TModule.FromGrpcChannel(channel);

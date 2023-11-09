@@ -1,5 +1,4 @@
 ﻿using Cosmos.Staking.V1Beta1;
-using Grpc.Core;
 using Grpc.Net.Client;
 
 namespace Cosm.Net.Client.Modules;
