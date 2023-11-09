@@ -2,7 +2,7 @@
 using Cosmos.Staking.V1Beta1;
 using Grpc.Net.Client;
 
-namespace Cosm.Net.Cosmos;
+namespace Cosm.Net.CosmosSdk;
 public partial class DistributionModule : IModule<DistributionModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;

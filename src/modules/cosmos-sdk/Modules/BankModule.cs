@@ -2,7 +2,7 @@
 using Cosmos.Bank.V1Beta1;
 using Grpc.Net.Client;
 
-namespace Cosm.Net.Cosmos;
+namespace Cosm.Net.CosmosSdk;
 public partial class BankModule : IModule<BankModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
