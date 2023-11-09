@@ -1,7 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 
-namespace Cosm.Net.Base;
+namespace Cosm.Net.Modules;
 public interface IModule<TModule, TService> : ICosmModule<TService>, IModule<TModule>
         where TService : ClientBase
 {

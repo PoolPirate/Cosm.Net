@@ -1,10 +1,10 @@
-﻿using Cosm.Net.Base;
+﻿using Cosm.Net.Client;
+using Cosm.Net.Modules;
 
 namespace Cosm.Net.CosmosSdk.Extensions;
 public static class ICosmClientBuilderExtensions
 {
-    public static TCosmClientBuilder AddCosmosSdk<TCosmClientBuilder>(this ICosmClientBuilder<TCosmClientBuilder> builder)
-        where TCosmClientBuilder : class
+    public static CosmClientBuilder AddCosmosSdk(this CosmClientBuilder builder)
     {
         builder.RegisterModule<AccountModule>();
         builder.RegisterModule<AuthModule>();
@@ -25,6 +25,6 @@ public static class ICosmClientBuilderExtensions
         builder.RegisterModule<TxModule>();
         builder.RegisterModule<UpgradeModule>();
 
-        return (TCosmClientBuilder) builder;
+        return builder;
     }
 }

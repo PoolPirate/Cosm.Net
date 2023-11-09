@@ -1,4 +1,4 @@
-﻿using Cosm.Net.Base;
+﻿using Cosm.Net.Modules;
 using Cosmos.Gov.V1Beta1;
 using Grpc.Net.Client;
 

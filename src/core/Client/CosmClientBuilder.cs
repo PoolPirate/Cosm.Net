@@ -1,9 +1,9 @@
-﻿using Cosm.Net.Base;
+﻿using Cosm.Net.Modules;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
-public sealed class CosmClientBuilder : ICosmClientBuilder<CosmClientBuilder>
+public sealed class CosmClientBuilder
 {
     private readonly ServiceCollection Services = new ServiceCollection();
 

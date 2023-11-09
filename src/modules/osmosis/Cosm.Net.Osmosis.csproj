@@ -54,7 +54,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" />
-	  <ProjectReference Include="..\..\base\Cosm.Net.Base.csproj" />
+	  <ProjectReference Include="..\..\core\Cosm.Net.csproj" />
 	</ItemGroup>
 
 </Project>

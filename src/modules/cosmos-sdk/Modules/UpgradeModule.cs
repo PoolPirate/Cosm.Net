@@ -1,4 +1,4 @@
-﻿using Cosm.Net.Base;
+﻿using Cosm.Net.Modules;
 using Grpc.Net.Client;
 using Cosmos.Upgrade.V1Beta1;
 

@@ -1,4 +1,4 @@
-﻿using Cosm.Net.Base;
+﻿using Cosm.Net.Modules;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;

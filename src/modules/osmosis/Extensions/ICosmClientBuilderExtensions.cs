@@ -1,13 +1,12 @@
-﻿using Cosm.Net.Base;
+﻿using Cosm.Net.Client;
 
 namespace Cosm.Net.Osmosis.Extensions;
 public static class ICosmClientBuilderExtensions
 {
-    public static TCosmClientBuilder AddOsmosis<TCosmClientBuilder>(this ICosmClientBuilder<TCosmClientBuilder> builder)
-    where TCosmClientBuilder : class
+    public static CosmClientBuilder AddOsmosis(this CosmClientBuilder builder)
     {
         builder.RegisterModule<GammModule>();
 
-        return (TCosmClientBuilder) builder;
+        return builder;
     }
 }

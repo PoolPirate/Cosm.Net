@@ -1,4 +1,4 @@
-﻿using Cosm.Net.Base;
+﻿using Cosm.Net.Modules;
 using Cosmwasm.Wasm.V1;
 using Grpc.Net.Client;
 

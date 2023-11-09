@@ -1,6 +1,6 @@
 ﻿using Grpc.Core;
 
-namespace Cosm.Net.Base;
+namespace Cosm.Net.Modules;
 
 /// <summary>
 /// Used by source generator to identify modules

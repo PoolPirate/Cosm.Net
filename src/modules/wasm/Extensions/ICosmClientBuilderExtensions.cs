@@ -1,13 +1,13 @@
-﻿using Cosm.Net.Base;
+﻿
+using Cosm.Net.Client;
 
 namespace Cosm.Net.Wasm.Extensions;
 public static class ICosmClientBuilderExtensions
 {
-    public static TCosmClientBuilder AddWasmd<TCosmClientBuilder>(this ICosmClientBuilder<TCosmClientBuilder> builder)
-    where TCosmClientBuilder : class
+    public static CosmClientBuilder AddWasmd(this CosmClientBuilder builder)
     {
         builder.RegisterModule<WasmModule>();
 
-        return (TCosmClientBuilder) builder;
+        return builder;
     }
 }
