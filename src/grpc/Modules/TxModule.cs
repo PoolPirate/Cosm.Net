@@ -14,3 +14,4 @@ public partial class TxModule : ICosmModule<Service.ServiceClient>, IModule<TxMo
     static TxModule IModule<TxModule>.FromGrpcChannel(GrpcChannel channel)
         => new TxModule(channel);
 }
+

@@ -1,7 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Xml;
 
 namespace Cosm.Net.Generators;
 public static class QueryModuleProcessor
@@ -38,11 +41,19 @@ public static class QueryModuleProcessor
         var callArgsBuilder = new StringBuilder();
         var requestCtorBuilder = new StringBuilder();
         var parameterBuilder = new StringBuilder();
+        var commentBuilder = new StringBuilder();
 
         foreach(var property in requestProps)
         {
-            _ = callArgsBuilder.Append($"{property.Type} {NameUtils.Uncapitalize(property.Name)}, ");
-            _ = requestCtorBuilder.AppendLine($"{property.Name} = {NameUtils.Uncapitalize(property.Name)}, ");
+            string paramName = NameUtils.Uncapitalize(property.Name);
+
+            if(CommentUtils.TryGetSummary(property, out string? summary))
+            {
+                commentBuilder.AppendLine(CommentUtils.MakeParamComment(paramName, summary!));
+            }
+
+            _ = callArgsBuilder.Append($"{property.Type} {paramName}, ");
+            _ = requestCtorBuilder.AppendLine($"{property.Name} = {paramName}, ");
         }
 
         int i = 0;
@@ -56,15 +67,23 @@ public static class QueryModuleProcessor
                     : "")}}{{(i < queryParams.Length ? ", " : "")}}
                 """);
             _ = parameterBuilder.Append($"{parameter.Name}{(i < queryParams.Length ? ", " : "")}");
+
+            if(CommentUtils.TryGetSummary(parameter, out string? summary))
+            {
+                commentBuilder.AppendLine(CommentUtils.MakeParamComment(parameter.Name, summary!));
+            }
         }
 
         return
             $$"""
+            {{(CommentUtils.TryGetSummary(queryMethod, out string? methodSummary) ? CommentUtils.MakeSummaryComment(methodSummary!) : "")}}
+            {{commentBuilder}}
             public {{queryMethod.ReturnType}} {{queryMethod.Name}}({{callArgsBuilder}}) {
                 return Service.{{queryMethod.Name}}(new {{requestType}}() {
                 {{requestCtorBuilder}}
                 }, {{parameterBuilder}});
             }
+
             """;
     }
 

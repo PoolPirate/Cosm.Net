@@ -1,4 +1,6 @@
-﻿using Cosm.Net.Wallet;
+﻿using Cosm.Net.Client.Modules;
+using Cosm.Net.Wallet;
+using Cosmos.Nft.V1Beta1;
 
 namespace Cosm.Net.Test;
 public class Secp256k1WalletTests
@@ -11,5 +13,10 @@ public class Secp256k1WalletTests
     {
         var wallet = new Secp256k1Wallet(Mnemonic);
         Assert.Equal(CosmosAddress, wallet.GetAddress("cosmos"));
+
+        BankModule m;
+        
     }
 }
+
+
