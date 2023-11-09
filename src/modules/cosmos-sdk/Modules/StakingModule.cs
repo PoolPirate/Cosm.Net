@@ -2,7 +2,7 @@
 using Cosmos.Staking.V1Beta1;
 using Grpc.Net.Client;
 
-namespace Cosm.Net.Client.Modules;
+namespace Cosm.Net.Cosmos;
 public partial class StakingModule : IModule<StakingModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;

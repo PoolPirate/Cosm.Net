@@ -1,5 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -49,7 +51,7 @@ public static class QueryModuleProcessor
                 _ = commentBuilder.AppendLine(CommentUtils.MakeParamComment(paramName, summary!));
             }
 
-            _ = callArgsBuilder.Append($"{property.Type} {paramName}, ");
+            _ = callArgsBuilder.Append($"global::{property.Type.ContainingNamespace}.{property.Type.Name} {paramName}, ");
             _ = requestCtorBuilder.AppendLine($"{property.Name} = {paramName}, ");
         }
 
@@ -59,7 +61,7 @@ public static class QueryModuleProcessor
             i++;
             _ = callArgsBuilder.Append(
                 $$"""
-                {{parameter.Type}} {{parameter.Name}}{{(parameter.HasExplicitDefaultValue
+                global::{{parameter.Type}} {{parameter.Name}}{{(parameter.HasExplicitDefaultValue
                     ? $"= {parameter.ExplicitDefaultValue ?? "default"}"
                     : "")}}{{(i < queryParams.Length ? ", " : "")}}
                 """);
@@ -71,12 +73,19 @@ public static class QueryModuleProcessor
             }
         }
 
+        if (queryMethod.ReturnType is not INamedTypeSymbol rt)
+        {
+            throw new InvalidOperationException("Bad cast");
+        }
+
+        var innerType = rt.TypeArguments[0];
+
         return
             $$"""
             {{(CommentUtils.TryGetSummary(queryMethod, out string? methodSummary) ? CommentUtils.MakeSummaryComment(methodSummary!) : "")}}
             {{commentBuilder}}
-            public {{queryMethod.ReturnType}} {{queryMethod.Name}}({{callArgsBuilder}}) {
-                return Service.{{queryMethod.Name}}(new {{requestType}}() {
+            public global::{{rt.ContainingNamespace}}.{{rt.Name}}<global::{{innerType.ContainingNamespace}}.{{innerType.Name}}> {{queryMethod.Name}}({{callArgsBuilder}}) {
+                return Service.{{queryMethod.Name}}(new global::{{requestType}}() {
                 {{requestCtorBuilder}}
                 }, {{parameterBuilder}});
             }

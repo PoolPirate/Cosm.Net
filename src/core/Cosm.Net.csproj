@@ -20,9 +20,9 @@
     <PackageReference Include="Secp256k1.Net" Version="1.2.0" />
   </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\grpc\Cosm.Net.Cosmos.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base\Cosm.Net.Base.csproj" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<None Update="secp256k1.dll">

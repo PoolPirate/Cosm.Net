@@ -2,7 +2,7 @@
 using Cosmos.Accounts.V1;
 using Grpc.Net.Client;
 
-namespace Cosm.Net.Client.Modules;
+namespace Cosm.Net.Cosmos;
 public partial class AccountModule : IModule<AccountModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;

@@ -2,7 +2,7 @@
 using Cosmos.Nft.V1Beta1;
 using Grpc.Net.Client;
 
-namespace Cosm.Net.Client.Modules;
+namespace Cosm.Net.Cosmos;
 public partial class NftModule : IModule<NftModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;

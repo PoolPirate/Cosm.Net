@@ -10,3 +10,6 @@
 [submodule "lib/googleapis"]
 	path = lib/googleapis
 	url = https://github.com/googleapis/googleapis.git
+[submodule "lib/wasmd"]
+	path = lib/wasmd
+	url = https://github.com/CosmWasm/wasmd.git
