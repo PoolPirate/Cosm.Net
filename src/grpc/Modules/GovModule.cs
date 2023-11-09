@@ -1,8 +1,9 @@
-﻿using Cosmos.Gov.V1Beta1;
+﻿using Cosm.Net.Base;
+using Cosmos.Gov.V1Beta1;
 using Grpc.Net.Client;
 
 namespace Cosm.Net.Client.Modules;
-public partial class GovModule : ICosmModule<Query.QueryClient>, IModule<GovModule>
+public partial class GovModule : IModule<GovModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 

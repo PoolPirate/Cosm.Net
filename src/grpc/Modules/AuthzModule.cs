@@ -1,8 +1,9 @@
-﻿using Cosmos.Authz.V1Beta1;
+﻿using Cosm.Net.Base;
+using Cosmos.Authz.V1Beta1;
 using Grpc.Net.Client;
 
 namespace Cosm.Net.Client.Modules;
-public partial class AuthzModule : ICosmModule<Query.QueryClient>, IModule<AuthzModule>
+public partial class AuthzModule : IModule<AuthzModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 

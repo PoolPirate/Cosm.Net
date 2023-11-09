@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -7,9 +8,9 @@ public static class CommentUtils
 {
     public static bool TryGetSummary(ISymbol symbol, out string? summary)
     {
-        var comment = symbol.GetDocumentationCommentXml();
+        string? comment = symbol.GetDocumentationCommentXml();
 
-        if (string.IsNullOrWhiteSpace(comment))
+        if(System.String.IsNullOrWhiteSpace(comment))
         {
             summary = null;
             return false;
@@ -20,15 +21,15 @@ public static class CommentUtils
 
         var summaryElements = doc.GetElementsByTagName("summary");
 
-        if (summaryElements.Count == 0)
+        if(summaryElements.Count == 0)
         {
             summary = null;
             return false;
         }
 
-        var summaryText = summaryElements[0].InnerText;
+        string summaryText = summaryElements[0].InnerText;
 
-        if (string.IsNullOrWhiteSpace(summaryText))
+        if(System.String.IsNullOrWhiteSpace(summaryText))
         {
             summary = null;
             return false;
@@ -38,7 +39,7 @@ public static class CommentUtils
         return true;
     }
 
-    public static string MakeParamComment(string paramName, string content) 
+    public static string MakeParamComment(string paramName, string content)
         => $"""
            /// <param name="{paramName}">
            {EscapeLines(content)}
@@ -54,12 +55,12 @@ public static class CommentUtils
 
     public static string EscapeLines(string content)
     {
-        var lines = content.Split('\n');
+        var lines = content.Split('\n').Where(x => x.Trim('\n', '\r', ' ').Length > 0);
         var lineBuilder = new StringBuilder();
 
-        foreach(var line in lines)
+        foreach(string? line in lines)
         {
-            lineBuilder.AppendLine($"""/// {line}""");
+            _ = lineBuilder.AppendLine($"""/// {line.Trim('\n', '\r', ' ')}""");
         }
 
         return lineBuilder.ToString().Trim('\n', '\r', ' ');

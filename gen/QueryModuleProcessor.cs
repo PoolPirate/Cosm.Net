@@ -1,10 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Xml;
 
 namespace Cosm.Net.Generators;
 public static class QueryModuleProcessor
@@ -49,7 +46,7 @@ public static class QueryModuleProcessor
 
             if(CommentUtils.TryGetSummary(property, out string? summary))
             {
-                commentBuilder.AppendLine(CommentUtils.MakeParamComment(paramName, summary!));
+                _ = commentBuilder.AppendLine(CommentUtils.MakeParamComment(paramName, summary!));
             }
 
             _ = callArgsBuilder.Append($"{property.Type} {paramName}, ");
@@ -70,7 +67,7 @@ public static class QueryModuleProcessor
 
             if(CommentUtils.TryGetSummary(parameter, out string? summary))
             {
-                commentBuilder.AppendLine(CommentUtils.MakeParamComment(parameter.Name, summary!));
+                _ = commentBuilder.AppendLine(CommentUtils.MakeParamComment(parameter.Name, summary!));
             }
         }
 

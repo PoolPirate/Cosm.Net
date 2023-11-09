@@ -1,8 +1,9 @@
-﻿using Cosmos.Tx.V1Beta1;
+﻿using Cosm.Net.Base;
+using Cosmos.Tx.V1Beta1;
 using Grpc.Net.Client;
 
 namespace Cosm.Net.Client.Modules;
-public partial class TxModule : ICosmModule<Service.ServiceClient>, IModule<TxModule>
+public partial class TxModule : IModule<TxModule, Service.ServiceClient>
 {
     private readonly Service.ServiceClient Service;
 

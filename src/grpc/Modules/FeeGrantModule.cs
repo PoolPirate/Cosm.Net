@@ -1,8 +1,9 @@
-﻿using Cosmos.Feegrant.V1Beta1;
+﻿using Cosm.Net.Base;
+using Cosmos.Feegrant.V1Beta1;
 using Grpc.Net.Client;
 
 namespace Cosm.Net.Client.Modules;
-public partial class FeeGrantModule : ICosmModule<Query.QueryClient>, IModule<FeeGrantModule>
+public partial class FeeGrantModule : IModule<FeeGrantModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 

@@ -1,4 +1,5 @@
-﻿using Grpc.Net.Client;
+﻿using Cosm.Net.Base;
+using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;

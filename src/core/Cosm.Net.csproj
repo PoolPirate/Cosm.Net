@@ -21,7 +21,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\grpc\Cosm.Net.Client.csproj" />
+		<ProjectReference Include="..\grpc\Cosm.Net.Cosmos.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

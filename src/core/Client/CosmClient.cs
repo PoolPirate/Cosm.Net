@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Cosm.Net.Base;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
 public class CosmClient
