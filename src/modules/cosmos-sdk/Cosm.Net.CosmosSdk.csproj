@@ -18,13 +18,13 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<Protobuf Include="../../../lib/protobuf/gogoproto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/protobuf"  GrpcServices="None" />
+		<Protobuf Include="../../../lib/protobuf/gogoproto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/protobuf" GrpcServices="None" />
 		<Protobuf Include="../../../lib/cosmos-proto/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="None" />
 		<Protobuf Include="../../../lib/cosmos-sdk/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj"  OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\..\base\Cosm.Net.Base.csproj" />
 	</ItemGroup>
 

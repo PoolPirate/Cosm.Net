@@ -3,7 +3,7 @@ using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
-public sealed class CosmClientBuilder
+public sealed class CosmClientBuilder : ICosmClientBuilder<CosmClientBuilder>
 {
     private readonly ServiceCollection Services = new ServiceCollection();
 
