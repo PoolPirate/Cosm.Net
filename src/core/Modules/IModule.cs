@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using Grpc.Net.Client;
 
 namespace Cosm.Net.Modules;
 public interface IModule<TModule, TService> : ICosmModule<TService>, IModule<TModule>
@@ -9,5 +8,4 @@ public interface IModule<TModule, TService> : ICosmModule<TService>, IModule<TMo
 
 public interface IModule<TModule>
 {
-    public static abstract TModule FromGrpcChannel(GrpcChannel channel);
 }

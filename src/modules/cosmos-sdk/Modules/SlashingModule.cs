@@ -11,7 +11,4 @@ public partial class SlashingModule : IModule<SlashingModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static SlashingModule IModule<SlashingModule>.FromGrpcChannel(GrpcChannel channel)
-        => new SlashingModule(channel);
 }

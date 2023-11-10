@@ -11,7 +11,4 @@ public partial class NftModule : IModule<NftModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static NftModule IModule<NftModule>.FromGrpcChannel(GrpcChannel channel)
-        => new NftModule(channel);
 }

@@ -11,7 +11,4 @@ public partial class EvidenceModule : IModule<EvidenceModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static EvidenceModule IModule<EvidenceModule>.FromGrpcChannel(GrpcChannel channel)
-        => new EvidenceModule(channel);
 }

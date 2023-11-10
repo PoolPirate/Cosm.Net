@@ -11,7 +11,4 @@ public partial class AccountModule : IModule<AccountModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static AccountModule IModule<AccountModule>.FromGrpcChannel(GrpcChannel channel)
-        => new AccountModule(channel);
 }

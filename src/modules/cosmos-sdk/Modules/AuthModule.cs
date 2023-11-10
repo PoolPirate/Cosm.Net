@@ -11,7 +11,4 @@ public partial class AuthModule : IModule<AuthModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static AuthModule IModule<AuthModule>.FromGrpcChannel(GrpcChannel channel)
-        => new AuthModule(channel);
 }

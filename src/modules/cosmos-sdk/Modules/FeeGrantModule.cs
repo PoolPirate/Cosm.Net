@@ -11,7 +11,4 @@ public partial class FeeGrantModule : IModule<FeeGrantModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static FeeGrantModule IModule<FeeGrantModule>.FromGrpcChannel(GrpcChannel channel)
-        => new FeeGrantModule(channel);
 }

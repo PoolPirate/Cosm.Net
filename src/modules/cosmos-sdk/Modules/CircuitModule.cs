@@ -11,7 +11,4 @@ public partial class CircuitModule : IModule<CircuitModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static CircuitModule IModule<CircuitModule>.FromGrpcChannel(GrpcChannel channel)
-        => new CircuitModule(channel);
 }

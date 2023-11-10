@@ -7,11 +7,8 @@ public partial class UpgradeModule : IModule<UpgradeModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private UpgradeModule(GrpcChannel channel)
+    internal UpgradeModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static UpgradeModule IModule<UpgradeModule>.FromGrpcChannel(GrpcChannel channel)
-        => new UpgradeModule(channel);
 }

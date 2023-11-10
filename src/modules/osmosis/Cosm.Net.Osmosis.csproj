@@ -1,9 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>Cosm.Net.Osmosis</Title>
+	  <Authors>Playwo</Authors>
+	  <Company></Company>
+	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <RootNamespace>Cosm.Net.Osmosis</RootNamespace>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -26,6 +34,10 @@
 	  <NoWarn>1701;1702;0612</NoWarn>
 	  <WarningLevel>7</WarningLevel>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Protobuf Include="../../../lib/protobuf/gogoproto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/protobuf" GrpcServices="None" />
@@ -53,8 +65,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" />
-	  <ProjectReference Include="..\..\core\Cosm.Net.csproj" />
+	  <ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	  <ProjectReference Include="..\..\core\Cosm.Net.Core.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -11,7 +11,4 @@ public partial class GovModule : IModule<GovModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static GovModule IModule<GovModule>.FromGrpcChannel(GrpcChannel channel)
-        => new GovModule(channel);
 }

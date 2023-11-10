@@ -4,6 +4,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>Cosm.Net.CosmosSdk</Title>
+	  <Authors>Playwo</Authors>
+	  <Company></Company>
+	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <RootNamespace>Cosm.Net.CosmosSdk</RootNamespace>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -12,7 +20,11 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
-
+	
+	<ItemGroup>
+		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+	</ItemGroup>
+	
 	<PropertyGroup>
 		<Protobuf_OutputPath>obj/lib</Protobuf_OutputPath>
 	</PropertyGroup>
@@ -25,7 +37,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-		<ProjectReference Include="..\..\core\Cosm.Net.csproj" />
+		<ProjectReference Include="..\..\core\Cosm.Net.Core.csproj" />
 	</ItemGroup>
 
 </Project>

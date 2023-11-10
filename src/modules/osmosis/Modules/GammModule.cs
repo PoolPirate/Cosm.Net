@@ -7,11 +7,8 @@ public partial class GammModule : IModule<GammModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private GammModule(GrpcChannel channel)
+    internal GammModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static GammModule IModule<GammModule>.FromGrpcChannel(GrpcChannel channel)
-        => new GammModule(channel);
 }

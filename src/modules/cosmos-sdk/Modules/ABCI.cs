@@ -11,7 +11,4 @@ public partial class ABCI : IModule<ABCI, Tendermint.Abci.ABCI.ABCIClient>
     {
         Service = new Tendermint.Abci.ABCI.ABCIClient(channel);
     }
-
-    static ABCI IModule<ABCI>.FromGrpcChannel(GrpcChannel channel)
-        => new ABCI(channel);
 }

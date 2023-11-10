@@ -11,7 +11,4 @@ public partial class StakingModule : IModule<StakingModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static StakingModule IModule<StakingModule>.FromGrpcChannel(GrpcChannel channel)
-        => new StakingModule(channel);
 }

@@ -11,7 +11,4 @@ public partial class MintModule : IModule<MintModule, Query.QueryClient>
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static MintModule IModule<MintModule>.FromGrpcChannel(GrpcChannel channel)
-        => new MintModule(channel);
 }

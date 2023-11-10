@@ -7,11 +7,8 @@ public partial class ParamsModule : IModule<ParamsModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private ParamsModule(GrpcChannel channel)
+    internal ParamsModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static ParamsModule IModule<ParamsModule>.FromGrpcChannel(GrpcChannel channel)
-        => new ParamsModule(channel);
 }

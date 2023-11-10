@@ -7,11 +7,8 @@ public partial class AuthzModule : IModule<AuthzModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private AuthzModule(GrpcChannel channel)
+    internal AuthzModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static AuthzModule IModule<AuthzModule>.FromGrpcChannel(GrpcChannel channel)
-        => new AuthzModule(channel);
 }

@@ -12,6 +12,4 @@ public partial class DistributionModule : IModule<DistributionModule, Query.Quer
         Service = new Query.QueryClient(channel);
     }
 
-    static DistributionModule IModule<DistributionModule>.FromGrpcChannel(GrpcChannel channel)
-        => new DistributionModule(channel);
 }

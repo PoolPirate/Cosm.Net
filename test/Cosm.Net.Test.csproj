@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\core\Cosm.Net.csproj" />
+    <ProjectReference Include="..\src\Cosm.Net\Cosm.Net.csproj" />
     <ProjectReference Include="..\src\modules\cosmos-sdk\Cosm.Net.CosmosSdk.csproj" />
     <ProjectReference Include="..\src\modules\wasm\Cosm.Net.Wasm.csproj" />
   </ItemGroup>

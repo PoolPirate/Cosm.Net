@@ -11,7 +11,4 @@ public partial class ConsensusModule : IModule<ConsensusModule, Query.QueryClien
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static ConsensusModule IModule<ConsensusModule>.FromGrpcChannel(GrpcChannel channel)
-        => new ConsensusModule(channel);
 }

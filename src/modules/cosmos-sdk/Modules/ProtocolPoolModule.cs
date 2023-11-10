@@ -11,7 +11,4 @@ public partial class ProtocolPoolModule : IModule<ProtocolPoolModule, Query.Quer
     {
         Service = new Query.QueryClient(channel);
     }
-
-    static ProtocolPoolModule IModule<ProtocolPoolModule>.FromGrpcChannel(GrpcChannel channel)
-        => new ProtocolPoolModule(channel);
 }

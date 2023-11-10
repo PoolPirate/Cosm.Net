@@ -4,6 +4,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>Cosm.Net.Wasm</Title>
+	  <Authors>Playwo</Authors>
+	  <Company></Company>
+	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <RootNamespace>Cosm.Net.Wasm</RootNamespace>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -18,6 +26,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Protobuf Include="../../../lib/protobuf/gogoproto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/protobuf" GrpcServices="None" />
 		<Protobuf Include="../../../lib/cosmos-proto/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="None" />
 		<Protobuf Include="../../../lib/cosmos-sdk/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="None" />
@@ -25,7 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" />
-		<ProjectReference Include="..\..\core\Cosm.Net.csproj" />
+		<ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\..\core\Cosm.Net.Core.csproj" />
 	</ItemGroup>
 </Project>

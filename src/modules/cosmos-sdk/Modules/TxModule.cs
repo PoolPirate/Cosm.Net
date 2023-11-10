@@ -11,8 +11,5 @@ public partial class TxModule : IModule<TxModule, Service.ServiceClient>
     {
         Service = new Service.ServiceClient(channel);
     }
-
-    static TxModule IModule<TxModule>.FromGrpcChannel(GrpcChannel channel)
-        => new TxModule(channel);
 }
 

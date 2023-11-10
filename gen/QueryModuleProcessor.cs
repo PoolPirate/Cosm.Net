@@ -8,10 +8,15 @@ using System.Text;
 namespace Cosm.Net.Generators;
 public static class QueryModuleProcessor
 {
-    public static string GetQueryModuleGeneratedCode(INamedTypeSymbol moduleType)
+    public static ITypeSymbol GetQueryClientType(INamedTypeSymbol moduleType)
+        => moduleType.AllInterfaces
+            .Where(x => x.Name == "ICosmModule")
+            .Select(x => x.TypeArguments[0])
+            .First();
+
+    public static string GetQueryModuleGeneratedCode(INamedTypeSymbol moduleType, ITypeSymbol queryClientType)
     {
-        var clientType = GetQueryClientType(moduleType);
-        var queryMethods = GetQueryClientQueryMethods(clientType);
+        var queryMethods = GetQueryClientQueryMethods(queryClientType);
 
         var methodCodeBuilder = new StringBuilder();
 
@@ -92,12 +97,6 @@ public static class QueryModuleProcessor
 
             """;
     }
-
-    private static ITypeSymbol GetQueryClientType(INamedTypeSymbol moduleType)
-        => moduleType.AllInterfaces
-            .Where(x => x.Name == "ICosmModule")
-            .Select(x => x.TypeArguments[0])
-            .First();
 
     private static IEnumerable<IMethodSymbol> GetQueryClientQueryMethods(ITypeSymbol queryClientType)
         => queryClientType.GetMembers()

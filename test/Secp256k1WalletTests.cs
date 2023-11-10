@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Wallet;
+using Cosm.Net.Wasm;
 
 namespace Cosm.Net.Test;
 public class Secp256k1WalletTests

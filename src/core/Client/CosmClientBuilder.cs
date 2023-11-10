@@ -23,11 +23,7 @@ public sealed class CosmClientBuilder
     {
         if(!Services.Any(x => x.ServiceType == typeof(TModule)))
         {
-            _ = Services.AddSingleton((provider) =>
-            {
-                var channel = provider.GetRequiredService<GrpcChannel>();
-                return TModule.FromGrpcChannel(channel);
-            });
+            _ = Services.AddSingleton<TModule>();
         }
 
         return this;
