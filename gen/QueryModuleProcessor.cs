@@ -1,8 +1,14 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Cosm.Net.Core.Msg;
+using Cosm.Net.Generators.Extensions;
+using Cosm.Net.Generators.SyntaxElements;
+using Cosm.Net.Generators.Util;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Cosm.Net.Generators;
@@ -14,7 +20,8 @@ public static class QueryModuleProcessor
             .Select(x => x.TypeArguments[0])
             .First();
 
-    public static string GetQueryModuleGeneratedCode(INamedTypeSymbol moduleType, ITypeSymbol queryClientType)
+    public static string GetQueryModuleGeneratedCode(INamedTypeSymbol moduleType, ITypeSymbol queryClientType, 
+        IEnumerable<INamedTypeSymbol> messageTypes)
     {
         var queryMethods = GetQueryClientQueryMethods(queryClientType);
 
@@ -26,6 +33,12 @@ public static class QueryModuleProcessor
             _ = methodCodeBuilder.AppendLine(code);
         }
 
+        foreach(var messageType in  messageTypes)
+        {
+            string code = GetMessageTypeGeneratedCode(messageType);
+            _ = methodCodeBuilder.AppendLine(code);
+        }
+
         return
             $$"""
             namespace {{moduleType.ContainingNamespace}};
@@ -33,6 +46,7 @@ public static class QueryModuleProcessor
             public partial class {{moduleType.Name}} {
             {{methodCodeBuilder}}
             }
+
             """;
     }
 
@@ -42,66 +56,73 @@ public static class QueryModuleProcessor
         var requestProps = GetTypeInstanceProperties(requestType);
         var queryParams = queryMethod.Parameters.Skip(1).ToArray();
 
-        var callArgsBuilder = new StringBuilder();
-        var requestCtorBuilder = new StringBuilder();
-        var parameterBuilder = new StringBuilder();
-        var commentBuilder = new StringBuilder();
+        var functionBuilder = new FunctionBuilder(queryMethod.Name)
+            .WithReturnType((INamedTypeSymbol) queryMethod.ReturnType);
+
+        var queryFunctionCall = new MethodCallBuilder("Service", queryMethod);
+        var requestCtorCall = new ConstructorCallBuilder((INamedTypeSymbol) requestType);
 
         foreach(var property in requestProps)
         {
-            string paramName = NameUtils.Uncapitalize(property.Name);
-
-            if(CommentUtils.TryGetSummary(property, out string? summary))
-            {
-                _ = commentBuilder.AppendLine(CommentUtils.MakeParamComment(paramName, summary!));
-            }
-
-            _ = callArgsBuilder.Append($"global::{property.Type.ContainingNamespace}.{property.Type.Name} {paramName}, ");
-            _ = requestCtorBuilder.AppendLine($"{property.Name} = {paramName}, ");
+            string paramName = NameUtils.ToValidVariableName(property.Name);
+            functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
+            requestCtorCall.AddInitializer(property, paramName);
         }
 
-        int i = 0;
+        var requestVarName = "__request";
+        functionBuilder.AddStatement(requestCtorCall.ToVariableAssignment(requestVarName));
+        queryFunctionCall.AddArgument(requestVarName);
+
         foreach(var parameter in queryParams)
         {
-            i++;
-            _ = callArgsBuilder.Append(
-                $$"""
-                global::{{parameter.Type}} {{parameter.Name}}{{(parameter.HasExplicitDefaultValue
-                    ? $"= {parameter.ExplicitDefaultValue ?? "default"}"
-                    : "")}}{{(i < queryParams.Length ? ", " : "")}}
-                """);
-            _ = parameterBuilder.Append($"{parameter.Name}{(i < queryParams.Length ? ", " : "")}");
-
-            if(CommentUtils.TryGetSummary(parameter, out string? summary))
-            {
-                _ = commentBuilder.AppendLine(CommentUtils.MakeParamComment(parameter.Name, summary!));
-            }
+            functionBuilder.AddArgument((INamedTypeSymbol) parameter.Type, parameter.Name, 
+                parameter.HasExplicitDefaultValue, parameter.HasExplicitDefaultValue ? parameter.ExplicitDefaultValue : default);
         }
 
-        if (queryMethod.ReturnType is not INamedTypeSymbol rt)
+        return functionBuilder
+            .AddStatement($"return {queryFunctionCall.Build()}")
+            .Build();
+    }
+
+    private static string GetMessageTypeGeneratedCode(INamedTypeSymbol messageType)
+    {
+        string msgName = messageType.Name.Substring(3);
+        //Note: typeof does not work as transitive dependencies (Google.Protobuf) are unavailable in source generator
+        string wrapperName = "TxMessage";
+        //typeof(TxMessage<>).FullName.Substring(0, typeof(TxMessage<>).FullName.Length - 2);
+
+        var msgProps = GetTypeInstanceProperties(messageType)
+            .ToArray();
+
+        var functionBuilder = new FunctionBuilder(msgName)
+            .WithVisibility(FunctionVisibility.Public)
+            .WithReturnTypeRaw($"global::Cosm.Net.Core.Msg.I{wrapperName}<{NameUtils.FullyQualifiedTypeName(messageType)}>");
+
+        var txObjectBuilder = new ConstructorCallBuilder(
+            $"global::Cosm.Net.Core.Msg.{wrapperName}<{NameUtils.FullyQualifiedTypeName(messageType)}>");
+        var msgObjectBuilder = new ConstructorCallBuilder(messageType);
+
+        foreach(var property in msgProps)
         {
-            throw new InvalidOperationException("Bad cast");
+            string paramName = NameUtils.ToValidVariableName(property.Name);
+
+            functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
+            msgObjectBuilder.AddInitializer(property, paramName);
         }
 
-        var innerType = rt.TypeArguments[0];
+        string msgVarName = "__msg";
+        functionBuilder.AddStatement(msgObjectBuilder.ToVariableAssignment(msgVarName));
+        txObjectBuilder.AddArgument(msgVarName);
+        functionBuilder.AddStatement($"return {txObjectBuilder.ToInlineCall()}");
 
-        return
-            $$"""
-            {{(CommentUtils.TryGetSummary(queryMethod, out string? methodSummary) ? CommentUtils.MakeSummaryComment(methodSummary!) : "")}}
-            {{commentBuilder}}
-            public global::{{rt.ContainingNamespace}}.{{rt.Name}}<global::{{innerType.ContainingNamespace}}.{{innerType.Name}}> {{queryMethod.Name}}({{callArgsBuilder}}) {
-                return Service.{{queryMethod.Name}}(new global::{{requestType}}() {
-                {{requestCtorBuilder}}
-                }, {{parameterBuilder}});
-            }
-
-            """;
+        return functionBuilder.Build();
     }
 
     private static IEnumerable<IMethodSymbol> GetQueryClientQueryMethods(ITypeSymbol queryClientType)
         => queryClientType.GetMembers()
             .Where(x => x.Name.EndsWith("Async"))
             .Where(x => x is IMethodSymbol)
+            .Where(x => !x.IsObsolete())
             .Cast<IMethodSymbol>();
 
     private static ITypeSymbol GetQueryMethodRequestType(IMethodSymbol methodType)
@@ -111,6 +132,6 @@ public static class QueryModuleProcessor
         => type.GetMembers()
             .Where(x => x is IPropertySymbol)
             .Cast<IPropertySymbol>()
-            .Where(x => !x.IsStatic && !x.IsReadOnly)
-            .Where(x => !x.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute"));
+            .Where(x => !x.IsStatic && (!x.IsReadOnly || x.Type.Name == "RepeatedField"))
+            .Where(x => !x.IsObsolete());
 }

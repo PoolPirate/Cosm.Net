@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace Cosm.Net.Generators;
+namespace Cosm.Net.Generators.Util;
 public static class CommentUtils
 {
     public static bool TryGetSummary(ISymbol symbol, out string? summary)

@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Generators.SourceGeneratorKit;
+using Cosm.Net.Generators.Util;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Diagnostics;
@@ -16,17 +17,8 @@ public class ModuleQueryClientGenerator : ISourceGenerator
     {
     }
 
-    public void Initialize(GeneratorInitializationContext context)
-    {
-//#if DEBUG
-//        if(!Debugger.IsAttached)
-//        {
-//            Debugger.Launch();
-//        }
-//#endif
-
-        context.RegisterForSyntaxNotifications(() => new AggregateSyntaxContextReceiver(QueryTypeReceiver, MsgClassesReceiver));
-    }
+    public void Initialize(GeneratorInitializationContext context) 
+        => context.RegisterForSyntaxNotifications(() => new AggregateSyntaxContextReceiver(QueryTypeReceiver, MsgClassesReceiver));
 
     public void Execute(GeneratorExecutionContext context)
     {
@@ -41,20 +33,7 @@ public class ModuleQueryClientGenerator : ISourceGenerator
             var msgTypes = MsgClassesReceiver.Classes
                 .Where(x => x.ContainingNamespace.Equals(queryClientType.ContainingNamespace, SymbolEqualityComparer.Default));
 
-            foreach(var msgType in msgTypes)
-            {
-                try
-                {
-                    string msgCode = TxMsgProcessor.GetTxMsgGeneratedCode(msgType);
-                    context.AddSource($"{msgType.ContainingNamespace}.{msgType.Name}.generated.cs", msgCode);
-                }
-                catch(Exception ex)
-                {
-
-                }
-            }
-
-            string moduleCode = QueryModuleProcessor.GetQueryModuleGeneratedCode(moduleType, queryClientType);
+            string moduleCode = QueryModuleProcessor.GetQueryModuleGeneratedCode(moduleType, queryClientType, msgTypes);
 
             try
             {
