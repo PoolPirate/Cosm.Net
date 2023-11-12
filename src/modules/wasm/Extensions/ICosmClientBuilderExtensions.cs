@@ -6,7 +6,7 @@ public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder AddWasmd(this CosmClientBuilder builder)
     {
-        builder.RegisterModule<WasmModule>();
+        builder.RegisterModule<IWasmModule, WasmModule>();
 
         return builder;
     }

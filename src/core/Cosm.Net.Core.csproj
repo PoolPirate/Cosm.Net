@@ -5,6 +5,14 @@
 	<LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>Cosm.Net.Core</Title>
+	  <Authors>Playwo</Authors>
+	  <Company></Company>
+	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <RootNamespace>Cosm.Net</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,11 +3,11 @@ using Grpc.Net.Client;
 using Cosmos.Protocolpool.V1;
 
 namespace Cosm.Net.CosmosSdk;
-public partial class ProtocolPoolModule : IModule<ProtocolPoolModule, Query.QueryClient>
+internal partial class ProtocolPoolModule : IModule<ProtocolPoolModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private ProtocolPoolModule(GrpcChannel channel)
+    public ProtocolPoolModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }

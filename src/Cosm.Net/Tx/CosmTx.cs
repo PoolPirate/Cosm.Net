@@ -6,6 +6,24 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
+using Cosm.Net.Core.Msg;
+using Google.Protobuf;
+
+namespace Cosm.Net.Tx;
+
+public class CosmTx : ICosmTx
+{
+    private readonly ITxMessage[] _messages;
+
+    public CosmTx(ITxMessage[] messages)
+    {
+        _messages = messages;
+    }
+
+    ByteString ICosmTx.Encode() 
+        => throw new NotImplementedException();
+}
+
 //namespace Cosm.Net.Tx;
 //public class CosmTx
 //{

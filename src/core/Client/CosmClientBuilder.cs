@@ -18,12 +18,13 @@ public sealed class CosmClientBuilder
         return this;
     }
 
-    public CosmClientBuilder RegisterModule<TModule>()
-        where TModule : class, IModule<TModule>
+    public CosmClientBuilder RegisterModule<TIModule, TModule>()
+        where TModule : class, IModule<TModule>, TIModule
+        where TIModule : class
     {
         if(!Services.Any(x => x.ServiceType == typeof(TModule)))
         {
-            _ = Services.AddSingleton<TModule>();
+            _ = Services.AddSingleton<TIModule, TModule>();
         }
 
         return this;

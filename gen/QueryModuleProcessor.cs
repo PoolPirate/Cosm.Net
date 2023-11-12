@@ -26,11 +26,14 @@ public static class QueryModuleProcessor
         var queryMethods = GetQueryClientQueryMethods(queryClientType);
 
         var methodCodeBuilder = new StringBuilder();
+        var interfaceCodeBuilder = new StringBuilder();
 
         foreach(var method in queryMethods)
         {
-            string code = GetQueryMethodGeneratedCode(method);
-            _ = methodCodeBuilder.AppendLine(code);
+            (string interfaceMethod, string methodCode) = GetQueryMethodGeneratedCode(method);
+
+            _ = methodCodeBuilder.AppendLine(methodCode);
+            _ = interfaceCodeBuilder.AppendLine(interfaceMethod);
         }
 
         foreach(var messageType in  messageTypes)
@@ -43,14 +46,18 @@ public static class QueryModuleProcessor
             $$"""
             namespace {{moduleType.ContainingNamespace}};
 
-            public partial class {{moduleType.Name}} {
+            public interface I{{moduleType.Name}} {
+            {{interfaceCodeBuilder}}
+            }
+
+            internal partial class {{moduleType.Name}} : I{{moduleType.Name}} {
             {{methodCodeBuilder}}
             }
 
             """;
     }
 
-    private static string GetQueryMethodGeneratedCode(IMethodSymbol queryMethod)
+    private static (string interfaceMethod, string methodCode) GetQueryMethodGeneratedCode(IMethodSymbol queryMethod)
     {
         var requestType = GetQueryMethodRequestType(queryMethod);
         var requestProps = GetTypeInstanceProperties(requestType);
@@ -79,9 +86,9 @@ public static class QueryModuleProcessor
                 parameter.HasExplicitDefaultValue, parameter.HasExplicitDefaultValue ? parameter.ExplicitDefaultValue : default);
         }
 
-        return functionBuilder
-            .AddStatement($"return {queryFunctionCall.Build()}")
-            .Build();
+        functionBuilder.AddStatement($"return {queryFunctionCall.Build()}");
+
+        return (functionBuilder.BuildInterfaceDefinition(), functionBuilder.BuildMethodCode());
     }
 
     private static string GetMessageTypeGeneratedCode(INamedTypeSymbol messageType)
@@ -115,7 +122,7 @@ public static class QueryModuleProcessor
         txObjectBuilder.AddArgument(msgVarName);
         functionBuilder.AddStatement($"return {txObjectBuilder.ToInlineCall()}");
 
-        return functionBuilder.Build();
+        return functionBuilder.BuildMethodCode();
     }
 
     private static IEnumerable<IMethodSymbol> GetQueryClientQueryMethods(ITypeSymbol queryClientType)

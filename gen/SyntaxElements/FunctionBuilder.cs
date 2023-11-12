@@ -59,7 +59,25 @@ public class FunctionBuilder
         return this;
     }
 
-    public string Build()
+    public string BuildInterfaceDefinition()
+    {
+        var sb = new StringBuilder();
+
+        sb.Append(_visibility.ToString().ToLower());
+        sb.Append(" ");
+        sb.Append(_returnType is null
+            ? "void"
+            : _returnType);
+        sb.Append(" ");
+        sb.Append(_name);
+        sb.Append('(');
+        sb.Append(_argumentBuilder.Build());
+        sb.AppendLine(");");
+
+        return sb.ToString();
+    }
+
+    public string BuildMethodCode()
     {
         var sb = new StringBuilder();
 

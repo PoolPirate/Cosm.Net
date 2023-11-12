@@ -29,6 +29,11 @@ public class ModuleQueryClientGenerator : ISourceGenerator
 
         foreach(var moduleType in QueryTypeReceiver.Classes)
         {
+            if (moduleType.DeclaredAccessibility != Accessibility.Internal)
+            {
+                context.ReportDiagnostic(Diagnostic.Create("CN0011", "Analyzer", "Module classes need to be internal", DiagnosticSeverity.Error, DiagnosticSeverity.Error, true, 7, location: moduleType.Locations[0]));
+            }
+
             var queryClientType = QueryModuleProcessor.GetQueryClientType(moduleType);
             var msgTypes = MsgClassesReceiver.Classes
                 .Where(x => x.ContainingNamespace.Equals(queryClientType.ContainingNamespace, SymbolEqualityComparer.Default));

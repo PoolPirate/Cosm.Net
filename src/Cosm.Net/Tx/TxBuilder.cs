@@ -1,10 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cosm.Net.Core.Msg;
 
 namespace Cosm.Net.Tx;
-public class TxBuilder
+public class CosmTxBuilder
 {
+    private readonly List<ITxMessage> _messages;
+
+    public CosmTxBuilder()
+    {
+        _messages = new List<ITxMessage>();
+    }
+
+    public CosmTxBuilder AddMessage(ITxMessage msg)
+    {
+        _messages.Add(msg);
+        return this;
+    }
+
+    public CosmTx Build() 
+        => new CosmTx(_messages.ToArray());
 }

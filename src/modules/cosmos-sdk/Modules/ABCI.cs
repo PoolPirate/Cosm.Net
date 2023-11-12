@@ -3,11 +3,11 @@ using Grpc.Net.Client;
 
 namespace Cosm.Net.CosmosSdk;
 
-public partial class ABCI : IModule<ABCI, Tendermint.Abci.ABCI.ABCIClient>
+internal partial class ABCI : IModule<ABCI, Tendermint.Abci.ABCI.ABCIClient>
 {
     private readonly Tendermint.Abci.ABCI.ABCIClient Service;
 
-    private ABCI(GrpcChannel channel)
+    public ABCI(GrpcChannel channel)
     {
         Service = new Tendermint.Abci.ABCI.ABCIClient(channel);
     }

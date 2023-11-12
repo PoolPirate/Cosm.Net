@@ -3,11 +3,11 @@ using Cosmos.Evidence.V1Beta1;
 using Grpc.Net.Client;
 
 namespace Cosm.Net.CosmosSdk;
-public partial class EvidenceModule : IModule<EvidenceModule, Query.QueryClient>
+internal partial class EvidenceModule : IModule<EvidenceModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private EvidenceModule(GrpcChannel channel)
+    public EvidenceModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }

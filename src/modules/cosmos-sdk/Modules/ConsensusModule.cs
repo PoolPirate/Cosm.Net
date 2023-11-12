@@ -3,11 +3,11 @@ using Grpc.Net.Client;
 using Cosmos.Consensus.V1;
 
 namespace Cosm.Net.CosmosSdk;
-public partial class ConsensusModule : IModule<ConsensusModule, Query.QueryClient>
+internal partial class ConsensusModule : IModule<ConsensusModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private ConsensusModule(GrpcChannel channel)
+    public ConsensusModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }

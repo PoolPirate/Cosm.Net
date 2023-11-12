@@ -3,13 +3,12 @@ using Cosmos.Staking.V1Beta1;
 using Grpc.Net.Client;
 
 namespace Cosm.Net.CosmosSdk;
-public partial class DistributionModule : IModule<DistributionModule, Query.QueryClient>
+internal partial class DistributionModule : IModule<DistributionModule, Query.QueryClient>
 {
     private readonly Query.QueryClient Service;
 
-    private DistributionModule(GrpcChannel channel)
+    public DistributionModule(GrpcChannel channel)
     {
         Service = new Query.QueryClient(channel);
     }
-
 }

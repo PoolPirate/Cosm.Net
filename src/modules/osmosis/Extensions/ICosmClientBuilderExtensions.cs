@@ -5,7 +5,7 @@ public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder AddOsmosis(this CosmClientBuilder builder)
     {
-        builder.RegisterModule<GammModule>();
+        builder.RegisterModule<IGammModule, GammModule>();
 
         return builder;
     }
