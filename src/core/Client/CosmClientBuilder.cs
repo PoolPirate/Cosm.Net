@@ -19,8 +19,8 @@ public sealed class CosmClientBuilder
     }
 
     public CosmClientBuilder RegisterModule<TIModule, TModule>()
-        where TModule : class, IModule<TModule>, TIModule
-        where TIModule : class
+        where TModule : class, IModule, TIModule
+        where TIModule : class, IModule
     {
         if(!Services.Any(x => x.ServiceType == typeof(TModule)))
         {

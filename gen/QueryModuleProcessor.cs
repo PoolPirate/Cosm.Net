@@ -38,15 +38,19 @@ public static class QueryModuleProcessor
 
         foreach(var messageType in  messageTypes)
         {
-            string code = GetMessageTypeGeneratedCode(messageType);
-            _ = methodCodeBuilder.AppendLine(code);
+            (string interfaceMethod, string methodCode) = GetMessageTypeGeneratedCode(messageType);
+
+            _ = methodCodeBuilder.AppendLine(methodCode);
+            _ = interfaceCodeBuilder.AppendLine(interfaceMethod);
         }
 
         return
             $$"""
+            using global::Cosm.Net.Modules;
+
             namespace {{moduleType.ContainingNamespace}};
 
-            public interface I{{moduleType.Name}} {
+            public interface I{{moduleType.Name}} : IModule {
             {{interfaceCodeBuilder}}
             }
 
@@ -91,7 +95,7 @@ public static class QueryModuleProcessor
         return (functionBuilder.BuildInterfaceDefinition(), functionBuilder.BuildMethodCode());
     }
 
-    private static string GetMessageTypeGeneratedCode(INamedTypeSymbol messageType)
+    private static (string interfaceMethod, string methodCode) GetMessageTypeGeneratedCode(INamedTypeSymbol messageType)
     {
         string msgName = messageType.Name.Substring(3);
         //Note: typeof does not work as transitive dependencies (Google.Protobuf) are unavailable in source generator
@@ -122,7 +126,7 @@ public static class QueryModuleProcessor
         txObjectBuilder.AddArgument(msgVarName);
         functionBuilder.AddStatement($"return {txObjectBuilder.ToInlineCall()}");
 
-        return functionBuilder.BuildMethodCode();
+        return (functionBuilder.BuildInterfaceDefinition(), functionBuilder.BuildMethodCode());
     }
 
     private static IEnumerable<IMethodSymbol> GetQueryClientQueryMethods(ITypeSymbol queryClientType)

@@ -12,7 +12,7 @@ public class CosmClient
         ModuleProvider = moduleProvider;
     }
 
-    public TModule Module<TModule>() where TModule : IModule<TModule>
+    public TModule Module<TModule>() where TModule : IModule
         => ModuleProvider.GetService<TModule>()
             ?? throw new InvalidOperationException("Module not installed!");
 }
