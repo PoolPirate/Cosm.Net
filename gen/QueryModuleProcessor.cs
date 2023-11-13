@@ -1,5 +1,4 @@
-﻿using Cosm.Net.Core.Msg;
-using Cosm.Net.Generators.Extensions;
+﻿using Cosm.Net.Generators.Extensions;
 using Cosm.Net.Generators.SyntaxElements;
 using Cosm.Net.Generators.Util;
 using Microsoft.CodeAnalysis;
@@ -101,16 +100,15 @@ public static class QueryModuleProcessor
         //Note: typeof does not work as transitive dependencies (Google.Protobuf) are unavailable in source generator
         string wrapperName = "TxMessage";
         //typeof(TxMessage<>).FullName.Substring(0, typeof(TxMessage<>).FullName.Length - 2);
-
         var msgProps = GetTypeInstanceProperties(messageType)
             .ToArray();
 
         var functionBuilder = new FunctionBuilder(msgName)
             .WithVisibility(FunctionVisibility.Public)
-            .WithReturnTypeRaw($"global::Cosm.Net.Core.Msg.I{wrapperName}<{NameUtils.FullyQualifiedTypeName(messageType)}>");
+            .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.I{wrapperName}<{NameUtils.FullyQualifiedTypeName(messageType)}>");
 
         var txObjectBuilder = new ConstructorCallBuilder(
-            $"global::Cosm.Net.Core.Msg.{wrapperName}<{NameUtils.FullyQualifiedTypeName(messageType)}>");
+            $"global::Cosm.Net.Tx.Msg.{wrapperName}<{NameUtils.FullyQualifiedTypeName(messageType)}>");
         var msgObjectBuilder = new ConstructorCallBuilder(messageType);
 
         foreach(var property in msgProps)

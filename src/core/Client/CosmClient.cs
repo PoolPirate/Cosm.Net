@@ -1,18 +1,27 @@
-﻿using Cosm.Net.Core.Msg;
-using Cosm.Net.Modules;
+﻿using Cosm.Net.Modules;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
-public class CosmClient
+public class CosmClient : ICosmClient
 {
-    private readonly IServiceProvider ModuleProvider;
+    private readonly Type[] _moduleTypes;
+    private readonly IServiceProvider _moduleProvider;
 
-    internal CosmClient(IServiceProvider moduleProvider)
+    internal CosmClient(IServiceProvider moduleProvider, IEnumerable<Type> moduleTypes)
     {
-        ModuleProvider = moduleProvider;
+        _moduleProvider = moduleProvider;
+        _moduleTypes = moduleTypes.ToArray();
     }
 
     public TModule Module<TModule>() where TModule : IModule
-        => ModuleProvider.GetService<TModule>()
+        => _moduleProvider.GetService<TModule>()
             ?? throw new InvalidOperationException("Module not installed!");
+
+    public IEnumerable<(Type, IModule)> GetAllModules()
+    {
+        foreach(var type in _moduleTypes)
+        {
+            yield return (type, (IModule) _moduleProvider.GetRequiredService(type));
+        }
+    }
 }

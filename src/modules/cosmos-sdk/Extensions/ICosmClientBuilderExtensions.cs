@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Client;
+using Cosm.Net.CosmosSdk.Tx;
 using Cosm.Net.Modules;
 
 namespace Cosm.Net.CosmosSdk.Extensions;
@@ -25,6 +26,15 @@ public static class ICosmClientBuilderExtensions
         builder.RegisterModule<IStakingModule, StakingModule>();
         builder.RegisterModule<ITxModule, TxModule>();
         builder.RegisterModule<IUpgradeModule, UpgradeModule>();
+
+        return builder;
+    }
+
+    public static CosmTxClientBuilder UseCosmosTxStructure(this CosmTxClientBuilder builder)
+    {
+        builder.WithTxEncoder<CosmosTxEncoder>();
+        builder.WithTxPublisher<TxModulePublisher>();
+        builder.WithAccountDataProvider<CosmosAccountDataProvider>();
 
         return builder;
     }

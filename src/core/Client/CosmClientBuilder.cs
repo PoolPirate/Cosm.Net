@@ -5,16 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Cosm.Net.Client;
 public sealed class CosmClientBuilder
 {
-    private readonly ServiceCollection Services = new ServiceCollection();
+    private readonly ServiceCollection _services = new ServiceCollection();
+    private readonly List<Type> _moduleTypes = new List<Type>();
 
     public CosmClientBuilder WithChannel(GrpcChannel channel)
     {
-        if(Services.Any(x => x.ServiceType == typeof(GrpcChannel)))
+        if(_services.Any(x => x.ServiceType == typeof(GrpcChannel)))
         {
             throw new InvalidOperationException("Channel already set");
         }
 
-        _ = Services.AddSingleton(channel);
+        _ = _services.AddSingleton(channel);
         return this;
     }
 
@@ -22,9 +23,10 @@ public sealed class CosmClientBuilder
         where TModule : class, IModule, TIModule
         where TIModule : class, IModule
     {
-        if(!Services.Any(x => x.ServiceType == typeof(TModule)))
+        if(!_services.Any(x => x.ServiceType == typeof(TModule)))
         {
-            _ = Services.AddSingleton<TIModule, TModule>();
+            _ = _services.AddSingleton<TIModule, TModule>();
+            _moduleTypes.Add(typeof(TIModule));
         }
 
         return this;
@@ -32,14 +34,14 @@ public sealed class CosmClientBuilder
 
     public CosmClient Build()
     {
-        if(!Services.Any(x => x.ServiceType == typeof(GrpcChannel)))
+        if(!_services.Any(x => x.ServiceType == typeof(GrpcChannel)))
         {
             throw new InvalidOperationException("No channel set!");
         }
 
-        var moduleProvider = Services.BuildServiceProvider();
+        var moduleProvider = _services.BuildServiceProvider();
 
-        var client = new CosmClient(moduleProvider);
+        var client = new CosmClient(moduleProvider, _moduleTypes);
         return client;
     }
 }

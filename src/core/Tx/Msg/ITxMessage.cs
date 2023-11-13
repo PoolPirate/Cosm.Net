@@ -1,6 +1,6 @@
 ﻿using Google.Protobuf;
 
-namespace Cosm.Net.Core.Msg;
+namespace Cosm.Net.Tx.Msg;
 public interface ITxMessage<TMsg> : ITxMessage
     where TMsg : IMessage, IMessage<TMsg>
 {
@@ -8,5 +8,6 @@ public interface ITxMessage<TMsg> : ITxMessage
 
 public interface ITxMessage
 {
-
+    public string GetTypeUrl();
+    public ByteString ToByteString();
 }

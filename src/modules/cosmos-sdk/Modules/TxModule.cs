@@ -12,8 +12,5 @@ internal partial class TxModule : IModule<TxModule, Service.ServiceClient>
     {
         Service = new Service.ServiceClient(channel);
     }
-
-    public async Task<SimulateResponse> SimulateAsync(ICosmTx tx) 
-        => await SimulateAsync(tx.Encode());
 }
 

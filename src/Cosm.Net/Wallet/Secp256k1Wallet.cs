@@ -1,5 +1,6 @@
 ﻿using Cosm.Net.Crypto;
 using Cosm.Net.Encoding;
+using Cosm.Net.Signer;
 using dotnetstandard_bip39;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Utilities.Encoders;
@@ -88,6 +89,13 @@ public sealed class Secp256k1Wallet : IOfflineSigner
         {
             throw new Exception("Compacting signature failed");
         }
+    }
+
+    public byte[] SignMessage(ReadOnlySpan<byte> message)
+    {
+        var buffer = new byte[Secp256k1.SERIALIZED_SIGNATURE_SIZE];
+        SignMessage(message, buffer);
+        return buffer;
     }
 
     public string GetAddress(string prefix)

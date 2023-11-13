@@ -1,12 +1,10 @@
-﻿using Google.Protobuf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cosm.Net.Tx.Msg;
+using Google.Protobuf;
 
 namespace Cosm.Net.Tx;
 public interface ICosmTx
 {
-    public ByteString Encode();
+    public string Memo { get; }
+    public ulong TimeoutHeight { get; }
+    public IReadOnlyCollection<ITxMessage> Messages { get; }
 }

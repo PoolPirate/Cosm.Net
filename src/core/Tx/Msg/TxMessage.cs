@@ -1,6 +1,6 @@
 ﻿using Google.Protobuf;
 
-namespace Cosm.Net.Core.Msg;
+namespace Cosm.Net.Tx.Msg;
 public class TxMessage<TMsg> : ITxMessage<TMsg>
         where TMsg : IMessage, IMessage<TMsg>
 {
@@ -10,4 +10,9 @@ public class TxMessage<TMsg> : ITxMessage<TMsg>
     {
         _msg = msg;
     }
+
+    public string GetTypeUrl()
+        => $"/{_msg.Descriptor.FullName}";
+    public ByteString ToByteString()
+        => _msg.ToByteString();
 }
