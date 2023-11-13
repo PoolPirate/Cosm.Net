@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Services;
+﻿using Cosm.Net.Models;
+using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Google.Protobuf;
 using System.Threading.Channels;
@@ -40,7 +41,7 @@ public class SequentialTxScheduler : ITxScheduler
         CurrentSequence = accountData.Sequence;
     }
 
-    public Task SimulateTxAsync(ICosmTx tx)
+    public Task<TxSimulation> SimulateTxAsync(ICosmTx tx)
         => _txPublisher.SimulateTxAsync(tx, CurrentSequence);
 
     public ValueTask QueueTxAsync(ICosmTx tx) 

@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Services;
+﻿using Cosm.Net.Models;
+using Cosm.Net.Services;
 using Cosm.Net.Tx;
 using Cosmos.Tx.V1Beta1;
 
@@ -15,10 +16,12 @@ public class TxModulePublisher : ITxPublisher
         _txEncoder = txEncoder;
     }
 
-    public async Task SimulateTxAsync(ICosmTx tx, ulong sequence)
+    public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, ulong sequence)
     {
         var encodedTx = _txEncoder.EncodeTx(tx, sequence);
-        await _txModule.SimulateAsync(encodedTx);
+        var response = await _txModule.SimulateAsync(encodedTx);
+
+        return new TxSimulation(response.GasInfo.GasUsed);
     }
 
     public async Task PublishTxAsync(ISignedCosmTx tx)
