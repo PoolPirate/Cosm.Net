@@ -7,8 +7,7 @@ public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder AddCosmosSdk(this CosmClientBuilder builder)
     {
-        builder.RegisterModule<IABCIService, ABCIService>();
-        builder.RegisterModule<INodeService, NodeService>();
+        builder.RegisterModule<ITendermintService, TendermintService>();
 
         builder.RegisterModule<IAccountModule, AccountModule>();
         builder.RegisterModule<IAuthModule, AuthModule>();
