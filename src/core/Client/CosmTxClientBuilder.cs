@@ -111,20 +111,20 @@ public class CosmTxClientBuilder
     }
 
     public CosmTxClientBuilder WithAccountDataProvider<TAccountDataProvider>(bool overrideExisting = false)
-        where TAccountDataProvider : class, IAccountDataProvider
+        where TAccountDataProvider : class, IChainDataProvider
     {
-        if(_services.Any(x => x.ServiceType == typeof(IAccountDataProvider)))
+        if(_services.Any(x => x.ServiceType == typeof(IChainDataProvider)))
         {
             if(!overrideExisting)
             {
                 throw new InvalidOperationException("IAccountDataProvider already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(IAccountDataProvider), typeof(TAccountDataProvider), ServiceLifetime.Singleton));
+            _services.Replace(new ServiceDescriptor(typeof(IChainDataProvider), typeof(TAccountDataProvider), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<IAccountDataProvider, TAccountDataProvider>();
+            _services.AddSingleton<IChainDataProvider, TAccountDataProvider>();
         }
 
         return this;
@@ -174,7 +174,7 @@ public class CosmTxClientBuilder
         {
             throw new InvalidOperationException("Missing ITxScheduler");
         }
-        if(!_services.Any(x => x.ServiceType == typeof(IAccountDataProvider)))
+        if(!_services.Any(x => x.ServiceType == typeof(IChainDataProvider)))
         {
             throw new InvalidOperationException("Missing IAccountDataProvider");
         }

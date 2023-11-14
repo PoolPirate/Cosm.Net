@@ -3,7 +3,6 @@ using Cosm.Net.Services;
 using Cosm.Net.Tx;
 using Cosmos.Tx.V1Beta1;
 
-
 namespace Cosm.Net.CosmosSdk.Tx;
 public class TxModulePublisher : ITxPublisher
 {

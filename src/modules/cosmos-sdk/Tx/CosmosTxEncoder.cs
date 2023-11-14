@@ -18,11 +18,12 @@ public class CosmosTxEncoder : ITxEncoder
         _chainConfig = chainConfig;
     }
 
-    public byte[] GetSignSignDoc(ICosmTx tx, ulong accountNumber, ulong sequence) 
+    public byte[] GetSignSignDoc(ICosmTx tx, ulong accountNumber, ulong sequence, 
+        ulong gasWanted, string feeDenom, ulong feeAmount) 
         => new SignDoc()
         {
             AccountNumber = accountNumber,
-            AuthInfoBytes = MakeAuthInfo(sequence).ToByteString(),
+            AuthInfoBytes = MakeAuthInfo(sequence, gasWanted, feeDenom, feeAmount).ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages).ToByteString(),
             ChainId = _chainConfig.ChainId
         }.ToByteArray();
@@ -31,7 +32,7 @@ public class CosmosTxEncoder : ITxEncoder
     {
         var txRaw = new TxRaw()
         {
-            AuthInfoBytes = MakeAuthInfo(sequence)
+            AuthInfoBytes = MakeAuthInfo(sequence, 0, _chainConfig.FeeDenom, 0)
             .ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString()
@@ -44,7 +45,7 @@ public class CosmosTxEncoder : ITxEncoder
 
     public ByteString EncodeTx(ISignedCosmTx tx)
     {
-        var authInfoBytes = MakeAuthInfo(tx.Sequence)
+        var authInfoBytes = MakeAuthInfo(tx.Sequence, tx.GasWanted, tx.FeeDenom, tx.FeeAmount)
             .ToByteString();
         var bodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString();
@@ -60,20 +61,20 @@ public class CosmosTxEncoder : ITxEncoder
         return txRaw.ToByteString();
     }
 
-    private AuthInfo MakeAuthInfo(ulong sequence)
+    private AuthInfo MakeAuthInfo(ulong sequence, ulong gasWanted, string feeDenom, ulong feeAmount)
     {
         var authInfo = new AuthInfo()
         {
             Fee = new Fee()
             {
-                GasLimit = 100000,
+                GasLimit = gasWanted,
             }
         };
 
         authInfo.Fee.Amount.Add(new Cosmos.Base.V1Beta1.Coin()
         {
-            Amount = "1000",
-            Denom = "uosmo"
+            Amount = $"{feeAmount}",
+            Denom = feeDenom
         });
 
         authInfo.SignerInfos.Add(new SignerInfo()

@@ -7,7 +7,9 @@ public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder AddCosmosSdk(this CosmClientBuilder builder)
     {
-        builder.RegisterModule<IABCI, ABCI>();
+        builder.RegisterModule<IABCIService, ABCIService>();
+        builder.RegisterModule<INodeService, NodeService>();
+
         builder.RegisterModule<IAccountModule, AccountModule>();
         builder.RegisterModule<IAuthModule, AuthModule>();
         builder.RegisterModule<IAuthzModule, AuthzModule>();
@@ -34,7 +36,7 @@ public static class ICosmClientBuilderExtensions
     {
         builder.WithTxEncoder<CosmosTxEncoder>();
         builder.WithTxPublisher<TxModulePublisher>();
-        builder.WithAccountDataProvider<CosmosAccountDataProvider>();
+        builder.WithAccountDataProvider<CosmosChainDataProvider>();
 
         return builder;
     }

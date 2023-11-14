@@ -4,7 +4,7 @@ public class TxChainConfiguration : ITxChainConfiguration
     public string Prefix { get; set; } = null!;
     public string ChainId { get; set; } = null!;
 
-    public string GasDenom { get; set; } = null!;
+    public string FeeDenom { get; set; } = null!;
     public decimal GasPrice { get; set; } = 0;
 
     public void Validate()
@@ -17,7 +17,7 @@ public class TxChainConfiguration : ITxChainConfiguration
         {
             throw new ArgumentException("Chainid not set");
         }
-        if (GasDenom is null)
+        if (FeeDenom is null)
         {
             throw new ArgumentException("GasDenom not set");
         }

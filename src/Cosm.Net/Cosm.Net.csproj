@@ -12,6 +12,7 @@
 	<IncludeSymbols>True</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<RootNamespace>Cosm.Net</RootNamespace>
+	<LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
