@@ -3,5 +3,6 @@
 namespace Cosm.Net.Services;
 public interface IChainDataProvider
 {
+    public Task<string> GetChainIdAsync();
     public Task<AccountData> GetAccountDataAsync(string address);
 }

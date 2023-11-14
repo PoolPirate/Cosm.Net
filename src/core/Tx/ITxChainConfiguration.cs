@@ -6,6 +6,4 @@ public interface ITxChainConfiguration
     string Prefix { get; }
     public string FeeDenom { get; }
     public decimal GasPrice { get; }
-
-    public void Validate();
 }

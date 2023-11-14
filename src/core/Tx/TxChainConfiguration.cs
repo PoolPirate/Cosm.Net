@@ -1,25 +1,29 @@
 ﻿namespace Cosm.Net.Tx;
 public class TxChainConfiguration : ITxChainConfiguration
 {
-    public string Prefix { get; set; } = null!;
-    public string ChainId { get; set; } = null!;
+    public string Prefix { get; }
+    public string FeeDenom { get; }
+    public decimal GasPrice { get; }
+    public string ChainId { get; }
 
-    public string FeeDenom { get; set; } = null!;
-    public decimal GasPrice { get; set; } = 0;
-
-    public void Validate()
+    public TxChainConfiguration(string? chainId, string? prefix, string? feeDenom, decimal gasPrice)
     {
-        if (Prefix is null)
+        if (chainId is null)
+        {
+            throw new ArgumentException("ChainId not set");
+        }
+        if(prefix is null)
         {
             throw new ArgumentException("Prefix not set");
         }
-        if(ChainId is null)
-        {
-            throw new ArgumentException("Chainid not set");
-        }
-        if (FeeDenom is null)
+        if(feeDenom is null)
         {
             throw new ArgumentException("GasDenom not set");
         }
+
+        Prefix = prefix;
+        FeeDenom = feeDenom;
+        GasPrice = gasPrice;
+        ChainId = chainId;
     }
 }

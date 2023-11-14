@@ -9,6 +9,7 @@ public class CosmTxClientBuilder
 {
     private readonly ServiceCollection _services = new ServiceCollection();
     private ICosmClient? _cosmClient;
+    private readonly TxUserChainConfiguration _userChainConfiguration = new TxUserChainConfiguration();
 
     public CosmTxClientBuilder WithCosmClient(ICosmClient client, bool overrideExisting = false)
     {
@@ -130,25 +131,9 @@ public class CosmTxClientBuilder
         return this;
     }
 
-    public CosmTxClientBuilder WithTxChainConfiguration(Action<TxChainConfiguration> action, bool overrideExisting = false)
+    public CosmTxClientBuilder WithTxChainConfiguration(Action<TxUserChainConfiguration> action)
     {
-        var config = new TxChainConfiguration();
-        action.Invoke(config);
-
-        if(_services.Any(x => x.ServiceType == typeof(ITxChainConfiguration)))
-        {
-            if(!overrideExisting)
-            {
-                throw new InvalidOperationException("TxChainConfiguration already registered");
-            }
-
-            _services.Replace(new ServiceDescriptor(typeof(ITxChainConfiguration), config));
-        }
-        else
-        {
-            _services.AddSingleton<ITxChainConfiguration>(config);
-        }
-
+        action.Invoke(_userChainConfiguration);
         return this;
     }
 
@@ -184,13 +169,19 @@ public class CosmTxClientBuilder
             _services.AddSingleton(type, module);   
         }
 
+        var setupProvider = _services.BuildServiceProvider();
+
+        var dataProvider = setupProvider.GetRequiredService<IChainDataProvider>();
+        var chainId = await dataProvider.GetChainIdAsync();
+
+        var chainConfig = new TxChainConfiguration(chainId, _userChainConfiguration.Prefix, 
+            _userChainConfiguration.FeeDenom, _userChainConfiguration.GasPrice);
+
+        _services.AddSingleton<ITxChainConfiguration>(chainConfig);
+
         var provider = _services.BuildServiceProvider();
 
-        var chainConfig = provider.GetRequiredService<ITxChainConfiguration>();
-        chainConfig.Validate();
-
         var txScheduler = provider.GetRequiredService<ITxScheduler>();
-
         await txScheduler.InitializeAsync();
 
         return new CosmTxClient(provider);

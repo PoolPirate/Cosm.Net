@@ -19,19 +19,18 @@ public class CosmTxClient
         return scheduler.SimulateTxAsync(tx);
     }
 
-    public async Task PublishTxAsync(ICosmTx tx, ulong gasWanted, string feeDenom, ulong feeAmount)
+    public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, string feeDenom, ulong feeAmount)
     {
         var scheduler = _provider.GetRequiredService<ITxScheduler>();
-        await scheduler.QueueTxAsync(tx, gasWanted, feeDenom, feeAmount);
+        return await scheduler.PublishTxAsync(tx, gasWanted, feeDenom, feeAmount);
     }
-
-    public async Task SimulateAndPublishTxAsync(ICosmTx tx)
+    public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000)
     {
         var chainConfig = _provider.GetRequiredService<ITxChainConfiguration>();
         var simulation = await SimulateAsync(tx);
 
-        ulong gasWanted = (ulong) Math.Ceiling((simulation.GasUsed * 1.2) + 20000);
+        ulong gasWanted = (ulong) Math.Ceiling((simulation.GasUsed * gasMultiplier) + gasOffset);
 
-        await PublishTxAsync(tx, gasWanted, chainConfig.FeeDenom, (ulong) Math.Ceiling(chainConfig.GasPrice * gasWanted));
+        return await PublishTxAsync(tx, gasWanted, chainConfig.FeeDenom, (ulong) Math.Ceiling(chainConfig.GasPrice * gasWanted));
     }
 }

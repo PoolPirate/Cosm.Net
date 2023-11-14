@@ -15,12 +15,12 @@ public class SignedTx : ISignedCosmTx
     public ulong TimeoutHeight => _tx.TimeoutHeight;
     public IReadOnlyCollection<ITxMessage> Messages => _tx.Messages;
 
-    public SignedTx(ICosmTx tx, ulong sequence, ByteString signature, 
+    public SignedTx(ICosmTx tx, ulong sequence, ReadOnlySpan<byte> signature, 
         ulong gasWanted, string feeDenom, ulong feeAmount) 
     {
         _tx = tx;
         Sequence = sequence;
-        Signature = signature;
+        Signature = ByteString.CopyFrom(signature);
         GasWanted = gasWanted;
         FeeDenom = feeDenom;
         FeeAmount = feeAmount;
