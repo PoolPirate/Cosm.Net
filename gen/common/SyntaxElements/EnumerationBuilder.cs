@@ -7,13 +7,11 @@ namespace Cosm.Net.Generators.Common.SyntaxElements;
 public class EnumerationEntry
 {
     public string Value { get; }
-    public string? JsonPropertyName { get; }
     public string? SummaryComment { get; }
 
-    public EnumerationEntry(string value, string? jsonPropertyName, string? summaryComment)
+    public EnumerationEntry(string value, string? summaryComment)
     {
         Value = value;
-        JsonPropertyName = jsonPropertyName;
         SummaryComment = summaryComment;
     }
 }
@@ -23,6 +21,7 @@ public class EnumerationBuilder : ISyntaxBuilder
     private readonly string _name;
 
     private string? _summaryComment;
+    private string? _jsonConverter;
 
     public EnumerationBuilder(string name)
     {
@@ -30,15 +29,21 @@ public class EnumerationBuilder : ISyntaxBuilder
         _name = name;
     }
 
-    public EnumerationBuilder AddValue(string value, string? jsonPropertyName, string? summaryComment)
+    public EnumerationBuilder AddValue(string value, string? summaryComment)
     {
-        _enumerationValues.Add(new EnumerationEntry(value, jsonPropertyName, summaryComment));
+        _enumerationValues.Add(new EnumerationEntry(value, summaryComment));
         return this;
     }
 
     public EnumerationBuilder WithSummaryComment(string summaryComment)
     {
         _summaryComment = summaryComment;
+        return this;
+    }
+
+    public EnumerationBuilder WithJsonConverter(string jsonConverter)
+    {
+        _jsonConverter = jsonConverter;
         return this;
     }
 
@@ -51,16 +56,14 @@ public class EnumerationBuilder : ISyntaxBuilder
             valueSb.AppendLine(
                 $$"""
                 {{(entry.SummaryComment is not null ? CommentUtils.MakeSummaryComment(entry.SummaryComment) : "")}}
-                {{(entry.JsonPropertyName is not null 
-                    ? $"[System.Text.Json.Serialization.JsonPropertyName(\"{entry.JsonPropertyName}\")]" 
-                    : "")}}
                 {{entry.Value}},
                 """);
         }
-
+        
         return
             $$"""
             {{(_summaryComment is not null ? CommentUtils.MakeSummaryComment(_summaryComment) : "")}}
+            {{(_jsonConverter is not null ? $"[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof({_jsonConverter}))]" : "")}}
             public enum {{_name}} {
             {{valueSb}}
             }

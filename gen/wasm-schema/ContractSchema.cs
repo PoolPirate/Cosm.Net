@@ -27,9 +27,9 @@ public class ContractSchema
     [JsonPropertyName("responses")]
     public JsonObject Responses { get; set; } = null!;
 
-    private readonly Dictionary<string, ISyntaxBuilder> SourceComponents = [];
-    private int RequestCounter = 0;
-    private int ResponseCounter = 0;
+    private readonly Dictionary<string, ISyntaxBuilder> _sourceComponents = [];
+    private int _requestCounter = 0;
+    private int _responseCounter = 0;
 
     public async Task<string> GenerateCSharpCodeFileAsync(INamedTypeSymbol targetInterface)
     {
@@ -60,7 +60,7 @@ public class ContractSchema
 
         var componentsSb = new StringBuilder();
 
-        foreach(var component in SourceComponents)
+        foreach(var component in _sourceComponents)
         {
             componentsSb.AppendLine(component.Value.Build());
         }
@@ -74,20 +74,20 @@ public class ContractSchema
             """;
     }
 
-    private IEnumerable<FunctionBuilder> GenerateQueryFunctions(JsonSchema queryMsgSchema, 
+    private IEnumerable<FunctionBuilder> GenerateQueryFunctions(JsonSchema queryMsgSchema,
         IReadOnlyDictionary<string, JsonSchema> responseSchemas)
     {
         foreach(var querySchema in queryMsgSchema.OneOf)
         {
-            if (querySchema.Properties.Count != 1)
+            if(querySchema.Properties.Count != 1)
             {
                 throw new NotSupportedException();
             }
 
             var argumentsSchema = querySchema.Properties.Single().Value;
             var queryName = argumentsSchema.Name;
-            
-            if (!responseSchemas.TryGetValue(queryName, out var responseSchema))
+
+            if(!responseSchemas.TryGetValue(queryName, out var responseSchema))
             {
                 throw new NotSupportedException();
             }
@@ -96,7 +96,7 @@ public class ContractSchema
 
             var functions = new List<FunctionBuilder>
             {
-                new FunctionBuilder(NameUtils.ToValidFunctionName(queryName))
+                new FunctionBuilder($"{NameUtils.ToValidFunctionName(queryName)}Async")
                 .WithVisibility(FunctionVisibility.Public)
                 .WithReturnTypeRaw($"Task<{responseType}>")
                 .WithIsAsync()
@@ -136,11 +136,11 @@ public class ContractSchema
 
                 var paramTypes = GetOrGenerateSplittingSchemaType(argSchema, queryMsgSchema).ToArray();
 
-                if (paramTypes.Length == 0)
+                if(paramTypes.Length == 0)
                 {
                     throw new NotSupportedException();
                 }
-                else if (paramTypes.Length == 1)
+                else if(paramTypes.Length == 1)
                 {
                     var paramType = paramTypes[0];
                     foreach(var function in functions)
@@ -187,17 +187,17 @@ public class ContractSchema
         }
     }
 
-    private IEnumerable<string> GetOrGenerateSplittingSchemaType(JsonSchema schema, 
+    private IEnumerable<string> GetOrGenerateSplittingSchemaType(JsonSchema schema,
         JsonSchema? definitionSource = null)
     {
         definitionSource ??= schema;
 
-        if (schema.OneOf.Count != 0 && schema.OneOf.All(x => x.IsEnumeration))
+        if(schema.OneOf.Count != 0 && schema.OneOf.All(x => x.IsEnumeration))
         {
             yield return GetOrGenerateEnumerationType(schema, definitionSource);
             yield break;
         }
-        if (schema.OneOf.Count != 0)
+        if(schema.OneOf.Count != 0)
         {
             foreach(var oneOfSchema in schema.OneOf)
             {
@@ -209,7 +209,7 @@ public class ContractSchema
 
             yield break;
         }
-        if (schema.AnyOf.Count == 2 && schema.AnyOf.Count(x => x.Type != JsonObjectType.Null) == 1)
+        if(schema.AnyOf.Count == 2 && schema.AnyOf.Count(x => x.Type != JsonObjectType.Null) == 1)
         {
             foreach(var innerType in GetOrGenerateSplittingSchemaType(
                 schema.AnyOf.Single(x => x.Type != JsonObjectType.Null), definitionSource))
@@ -219,7 +219,7 @@ public class ContractSchema
 
             yield break;
         }
-        if (schema.HasReference && schema.AllOf.Count == 0)
+        if(schema.HasReference && schema.AllOf.Count == 0)
         {
             foreach(var innerType in GetOrGenerateSplittingSchemaType(schema.Reference, definitionSource))
             {
@@ -249,7 +249,7 @@ public class ContractSchema
                     }
                     break;
                 case JsonObjectType.Object:
-                    if (schema.Properties.Count == 0)
+                    if(schema.Properties.Count == 0)
                     {
                         yield return "object";
                         break;
@@ -299,7 +299,7 @@ public class ContractSchema
 
     private IEnumerable<string> GetOrGenerateSplittingObjectType(JsonSchema objectSchema, JsonSchema definitionsSource)
     {
-        if (objectSchema.Type != JsonObjectType.Object || objectSchema.ActualProperties.Count == 0)
+        if(objectSchema.Type != JsonObjectType.Object || objectSchema.ActualProperties.Count == 0)
         {
             throw new InvalidOperationException();
         }
@@ -307,9 +307,9 @@ public class ContractSchema
         var definitionName = definitionsSource.Definitions
             .FirstOrDefault(x => x.Value == objectSchema).Key;
 
-        string typeName = objectSchema.Title ?? definitionName ?? $"Request{RequestCounter++}";
+        string typeName = objectSchema.Title ?? definitionName ?? $"Request{_requestCounter++}";
 
-        if (!SourceComponents.ContainsKey(typeName))
+        if(!_sourceComponents.ContainsKey(typeName))
         {
             var classBuilder = new ClassBuilder(typeName);
 
@@ -317,7 +317,7 @@ public class ContractSchema
             {
                 var schemaTypes = GetOrGenerateSplittingSchemaType(property.Value, definitionsSource);
 
-                if (schemaTypes.Count() != 1)
+                if(schemaTypes.Count() != 1)
                 {
                     //ToDo: Create abstract base class with static creator functions
                     //and create internal implementation class for each path
@@ -336,13 +336,13 @@ public class ContractSchema
                 );
             }
 
-            SourceComponents.Add(typeName, classBuilder);
+            _sourceComponents.Add(typeName, classBuilder);
         }
 
         yield return typeName;
     }
 
-    private string GetOrGenerateEnumerationType(JsonSchema parentSchema,  JsonSchema definitionsSource)
+    private string GetOrGenerateEnumerationType(JsonSchema parentSchema, JsonSchema definitionsSource)
     {
         if(parentSchema.Type != JsonObjectType.None || parentSchema.ActualProperties.Count != 0 || parentSchema.OneOf.Count == 0)
         {
@@ -354,10 +354,11 @@ public class ContractSchema
 
         string typeName = parentSchema.Title ?? definitionName ?? throw new NotSupportedException();
 
-        if(!SourceComponents.ContainsKey(typeName))
+        if(!_sourceComponents.ContainsKey(typeName))
         {
             var enumerationBuilder = new EnumerationBuilder(typeName)
-                .WithSummaryComment(parentSchema.Description);
+                .WithSummaryComment(parentSchema.Description)
+                .WithJsonConverter($"global::Cosm.Net.Json.SnakeCaseJsonStringEnumConverter<{typeName}>");
 
             foreach(var oneOf in parentSchema.OneOf)
             {
@@ -366,11 +367,10 @@ public class ContractSchema
 
                 enumerationBuilder.AddValue(
                     NameUtils.ToValidPropertyName(enumerationValue),
-                    enumerationValue,
                     oneOf.Description);
             }
 
-            SourceComponents.Add(typeName, enumerationBuilder);
+            _sourceComponents.Add(typeName, enumerationBuilder);
         }
 
         return typeName;
@@ -387,7 +387,7 @@ public class ContractSchema
         }
         if(schema.OneOf.Count != 0)
         {
-            return GetOrGenerateMergedType(schema.OneOf, definitionSource);
+            return GetOrGenerateMergedType(schema, definitionSource);
         }
         if(schema.AnyOf.Count == 2 && schema.AnyOf.Count(x => x.Type != JsonObjectType.Null) == 1)
         {
@@ -449,10 +449,12 @@ public class ContractSchema
             throw new InvalidOperationException();
         }
 
-        string typeName = objectSchema.Title ?? $"Response{ResponseCounter++}" 
-            ?? throw new NotSupportedException();
+        string typeName = objectSchema.Title
+            ?? (objectSchema is JsonSchemaProperty p ? NameUtils.ToValidPropertyName(p.Name) : null)
+            ?? definitionsSource.Definitions.FirstOrDefault(x => x.Value == objectSchema).Key
+            ?? $"Response{_responseCounter++}";
 
-        if(!SourceComponents.ContainsKey(typeName))
+        if(!_sourceComponents.ContainsKey(typeName))
         {
             var classBuilder = new ClassBuilder(typeName);
 
@@ -470,33 +472,69 @@ public class ContractSchema
                 );
             }
 
-            SourceComponents.Add(typeName, classBuilder);
+            _sourceComponents.Add(typeName, classBuilder);
         }
 
         return typeName;
     }
 
-    private string GetOrGenerateMergedType(IEnumerable<JsonSchema> schemas, JsonSchema definitionsSource)
+    private string GetOrGenerateMergedType(JsonSchema parentSchema, JsonSchema definitionsSource)
     {
-        string typeName = $"Response{ResponseCounter++}";
+        var typeName = definitionsSource.Definitions
+            .FirstOrDefault(x => x.Value == parentSchema)
+            .Key ?? $"Response{_responseCounter++}";
+
+        if(_sourceComponents.ContainsKey(typeName))
+        {
+            return typeName;
+        }
+
         var classBuilder = new ClassBuilder(typeName);
 
-        int i = 0;
-        foreach(var schema in schemas)
+        foreach(var schema in parentSchema.OneOf)
         {
-            string type = GetOrGenerateMergingSchemaType(schema, definitionsSource);
+            if(schema.Properties.Count > 1)
+            {
+                throw new NotSupportedException();
+            }
+
+            string type = GetOrGenerateMergingSchemaType(
+                schema.Properties.Count == 1 ? schema.Properties.Single().Value : schema,
+                definitionsSource);
+
+            if(IsPrimitiveType(type))
+            {
+                type = type == "string"
+                    ? "global::Cosm.Net.Json.StringWrapper"
+                    : throw new NotSupportedException();
+            }
+
+            string propertyName = schema.Properties.Count == 1
+                ? schema.Properties.Single().Key
+                : "Value";
 
             classBuilder.AddProperty(
                 new PropertyBuilder(
-                    type,
-                    $"ParamOption{i++}"
+                    $"{type.TrimEnd('?')}?",
+                    NameUtils.ToValidPropertyName(propertyName)
                 )
+                .WithJsonPropertyName(propertyName)
+                .WithSummaryComment(schema.Description)
                 .WithSetterVisibility(SetterVisibility.Init)
-                .WithIsRequired(!type.EndsWith("?"))
+                .WithIsRequired(false)
             );
         }
 
-        SourceComponents.Add(typeName, classBuilder);
+        _sourceComponents.Add(typeName, classBuilder);
         return typeName;
     }
+
+    private static bool IsPrimitiveType(string typeName)
+        => typeName switch
+        {
+            "string" => true,
+            "int" => true,
+            "double" => true,
+            _ => false
+        };
 }

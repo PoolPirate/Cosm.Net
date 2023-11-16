@@ -1,0 +1,12 @@
+﻿using System.Text.Json.Serialization;
+using System.Text.Json;
+
+namespace Cosm.Net.Json;
+public class SnakeCaseJsonStringEnumConverter<TEnum> : JsonStringEnumConverter<TEnum>
+            where TEnum : struct, Enum
+{
+    public SnakeCaseJsonStringEnumConverter()
+        : base(namingPolicy: JsonNamingPolicy.SnakeCaseLower, allowIntegerValues: false)
+    {
+    }
+}
