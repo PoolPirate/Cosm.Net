@@ -1,12 +1,13 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Cosm.Net.Generators.Common.SourceGeneratorKit;
+using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cosm.Net.Generators.SourceGeneratorKit;
+namespace Cosm.Net.Generators;
 public class MsgClassesReceiver : SyntaxReceiver
 {
-    private readonly List<INamedTypeSymbol> MsgTypeCandidates = new List<INamedTypeSymbol>();
-    private readonly List<INamedTypeSymbol> MsgResponseCandidates = new List<INamedTypeSymbol>();
+    private readonly List<INamedTypeSymbol> MsgTypeCandidates = [];
+    private readonly List<INamedTypeSymbol> MsgResponseCandidates = [];
 
     public override bool CollectClassSymbol { get; } = true;
 

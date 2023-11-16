@@ -36,7 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\gen\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\..\..\gen\proto-module\Cosm.Net.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\..\core\Cosm.Net.Core.csproj" />
 	</ItemGroup>
 

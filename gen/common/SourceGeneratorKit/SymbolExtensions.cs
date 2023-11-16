@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Linq;
 
-namespace Cosm.Net.Generators.SourceGeneratorKit;
+namespace Cosm.Net.Generators.Common.SourceGeneratorKit;
 public static class SymbolExtensions
 {
     public static bool HasAttribute(this ISymbol symbol, string atrributeName)

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cosm.Net.Generators.SyntaxElements;
+namespace Cosm.Net.Generators.Common.SyntaxElements;
 
 public class MethodCallBuilder
 {

@@ -1,10 +1,10 @@
-﻿using Cosm.Net.Generators.Util;
+﻿using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cosm.Net.Generators.SyntaxElements;
+namespace Cosm.Net.Generators.Common.SyntaxElements;
 public enum FunctionVisibility
 {
     Public,
@@ -13,8 +13,8 @@ public enum FunctionVisibility
 
 public class FunctionBuilder
 {
-    private readonly TypedArgumentsBuilder _argumentBuilder;
     private readonly List<string> _statements;
+    private TypedArgumentsBuilder _argumentBuilder;
 
     private readonly string _name;
 
@@ -24,7 +24,7 @@ public class FunctionBuilder
     public FunctionBuilder(string name)
     {
          _argumentBuilder = new TypedArgumentsBuilder();
-        _statements = new List<string>();
+        _statements = [];
         _name = name;
     }
 
@@ -54,6 +54,13 @@ public class FunctionBuilder
 
     public FunctionBuilder AddArgument(INamedTypeSymbol type, string argumentName,
         bool hasExplicityDefaultValue = false, object? defaultValue = null)
+    {
+        _argumentBuilder.AddArgument(type, argumentName, hasExplicityDefaultValue, defaultValue);
+        return this;
+    }
+
+    public FunctionBuilder AddArgument(string type, string argumentName,
+    bool hasExplicityDefaultValue = false, object? defaultValue = null)
     {
         _argumentBuilder.AddArgument(type, argumentName, hasExplicityDefaultValue, defaultValue);
         return this;
@@ -101,5 +108,19 @@ public class FunctionBuilder
         sb.AppendLine("}");
 
         return sb.ToString();
+    }
+
+    public FunctionBuilder Clone()
+    {
+        var clone = new FunctionBuilder(_name)
+        {
+            _visibility = _visibility,
+            _returnType = _returnType
+        };
+
+        clone._statements.AddRange(_statements);
+        clone._argumentBuilder = _argumentBuilder.Clone();
+
+        return clone;
     }
 }

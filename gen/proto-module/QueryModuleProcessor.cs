@@ -1,6 +1,6 @@
-﻿using Cosm.Net.Generators.Extensions;
-using Cosm.Net.Generators.SyntaxElements;
-using Cosm.Net.Generators.Util;
+﻿using Cosm.Net.Generators.Common.SyntaxElements;
+using Cosm.Net.Generators.Common.Util;
+using Cosm.Net.Generators.Common.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;

@@ -1,10 +1,7 @@
-﻿using Cosm.Net.Generators.Util;
-using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
-namespace Cosm.Net.Generators.SyntaxElements;
+namespace Cosm.Net.Generators.Common.SyntaxElements;
 public class UntypedArgument
 {
     public string SourceExpression { get; }
@@ -20,7 +17,7 @@ public class CallArgumentsBuilder
 
     public CallArgumentsBuilder()
     {
-        _arguments = new List<UntypedArgument>();
+        _arguments = [];
     }
 
     public CallArgumentsBuilder AddArgument(string sourceExpression)

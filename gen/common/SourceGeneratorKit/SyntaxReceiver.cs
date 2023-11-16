@@ -2,13 +2,13 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 
-namespace Cosm.Net.Generators.SourceGeneratorKit;
+namespace Cosm.Net.Generators.Common.SourceGeneratorKit;
 public class SyntaxReceiver : ISyntaxContextReceiver
 {
-    public List<IMethodSymbol> Methods { get; } = new();
-    public List<IFieldSymbol> Fields { get; } = new();
-    public List<IPropertySymbol> Properties { get; } = new();
-    public List<INamedTypeSymbol> Classes { get; } = new();
+    public List<IMethodSymbol> Methods { get; } = [];
+    public List<IFieldSymbol> Fields { get; } = [];
+    public List<IPropertySymbol> Properties { get; } = [];
+    public List<INamedTypeSymbol> Classes { get; } = [];
 
     public virtual bool CollectMethodSymbol { get; } = false;
     public virtual bool CollectFieldSymbol { get; } = false;

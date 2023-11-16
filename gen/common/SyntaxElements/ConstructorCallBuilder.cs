@@ -1,10 +1,8 @@
-﻿using Cosm.Net.Generators.Util;
+﻿using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace Cosm.Net.Generators.SyntaxElements;
+namespace Cosm.Net.Generators.Common.SyntaxElements;
 public class ConstructorCallBuilder
 {
     private readonly CallArgumentsBuilder _argumentsBuilder;

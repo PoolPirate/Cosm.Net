@@ -1,13 +1,10 @@
-﻿using Cosm.Net.Generators.Util;
-using Google.Protobuf.Collections;
-using Google.Protobuf.WellKnownTypes;
+﻿using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 
-namespace Cosm.Net.Generators.SyntaxElements;
+namespace Cosm.Net.Generators.Common.SyntaxElements;
 public class InitializerArgument
 {
     public IPropertySymbol TargetProperty { get; }
@@ -25,7 +22,7 @@ public class ObjectInitializerBuilder
 
     public ObjectInitializerBuilder()
     {
-        _arguments = new List<InitializerArgument>();
+        _arguments = [];
     }
 
     public ObjectInitializerBuilder AddArgument(IPropertySymbol property, string sourceExpression)
@@ -98,15 +95,10 @@ public class ObjectInitializerBuilder
     }
 
     private string GetReadonlyInitializer(string variableName, IPropertySymbol targetProperty, string sourceExpression)
-    {
-        switch(targetProperty.Type.Name)
+        => targetProperty.Type.Name switch
         {
             //nameof(RepeatedField<>)
-            case "RepeatedField":
-                return $"{variableName}.{targetProperty.Name}.AddRange({sourceExpression});";
-            default:
-                DebuggerUtils.Attach();
-                throw new InvalidOperationException("Tried to initialize unsupported readonly property");
-        }
-    }
+            "RepeatedField" => $"{variableName}.{targetProperty.Name}.AddRange({sourceExpression});",
+            _ => throw new InvalidOperationException("Tried to initialize unsupported readonly property"),
+        };
 }

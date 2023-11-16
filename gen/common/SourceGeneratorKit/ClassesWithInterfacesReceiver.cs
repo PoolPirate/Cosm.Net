@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace Cosm.Net.Generators.SourceGeneratorKit;
+namespace Cosm.Net.Generators.Common.SourceGeneratorKit;
 public class ClassesWithInterfacesReceiver : SyntaxReceiver
 {
     private readonly string implementedInterface;

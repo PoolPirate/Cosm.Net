@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Cosm.Net.Generators.Util;
+namespace Cosm.Net.Generators.Common.Util;
 public static class DebuggerUtils
 {
     private static bool LaunchedBefore = false;
