@@ -11,7 +11,7 @@ public class MsgClassesReceiver : SyntaxReceiver
 
     public override bool CollectClassSymbol { get; } = true;
 
-    protected override bool ShouldCollectClassSymbol(INamedTypeSymbol classSymbol)
+    protected override bool ShouldCollectTypeSymbol(INamedTypeSymbol classSymbol)
     {
         if (IsMsgCandidate(classSymbol)) 
         {
@@ -20,7 +20,7 @@ public class MsgClassesReceiver : SyntaxReceiver
             if (matchingMsgResponseType is not null)
             {
                 MsgResponseCandidates.Remove(matchingMsgResponseType);
-                Classes.Add(classSymbol);
+                Types.Add(classSymbol);
             }
             else
             {
@@ -34,7 +34,7 @@ public class MsgClassesReceiver : SyntaxReceiver
             if (matchingMsgType is not null)
             {
                 MsgTypeCandidates.Remove(matchingMsgType);
-                Classes.Add(matchingMsgType);
+                Types.Add(matchingMsgType);
             } 
             else
             {

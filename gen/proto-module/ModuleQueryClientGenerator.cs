@@ -26,7 +26,7 @@ public class ModuleQueryClientGenerator : ISourceGenerator
             return;
         }
 
-        foreach(var moduleType in QueryTypeReceiver.Classes)
+        foreach(var moduleType in QueryTypeReceiver.Types)
         {
             if (moduleType.DeclaredAccessibility != Accessibility.Internal)
             {
@@ -34,7 +34,7 @@ public class ModuleQueryClientGenerator : ISourceGenerator
             }
 
             var queryClientType = QueryModuleProcessor.GetQueryClientType(moduleType);
-            var msgTypes = MsgClassesReceiver.Classes
+            var msgTypes = MsgClassesReceiver.Types
                 .Where(x => x.ContainingNamespace.Equals(queryClientType.ContainingNamespace, SymbolEqualityComparer.Default));
 
             string moduleCode = QueryModuleProcessor.GetQueryModuleGeneratedCode(moduleType, queryClientType, msgTypes);

@@ -4,6 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 	  <LangVersion>latest</LangVersion>
 	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>Cosm.Net.Generators.Common</Title>
+	  <Authors>Playwo</Authors>
+	  <Company></Company>
+	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <RootNamespace>Cosm.Net.Generators.Common</RootNamespace>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -12,6 +21,5 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="System.Text.Json" Version="8.0.0" />
 	</ItemGroup>
 </Project>

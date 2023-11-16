@@ -4,6 +4,7 @@ namespace Cosm.Net.Client;
 public interface ICosmClient
 {
     public TModule Module<TModule>() where TModule : IModule;
-
     internal IEnumerable<(Type, IModule)> GetAllModules();
+
+    public IInternalCosmClient AsInternal();
 }

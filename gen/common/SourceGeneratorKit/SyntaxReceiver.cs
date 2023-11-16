@@ -8,12 +8,13 @@ public class SyntaxReceiver : ISyntaxContextReceiver
     public List<IMethodSymbol> Methods { get; } = [];
     public List<IFieldSymbol> Fields { get; } = [];
     public List<IPropertySymbol> Properties { get; } = [];
-    public List<INamedTypeSymbol> Classes { get; } = [];
+    public List<INamedTypeSymbol> Types { get; } = [];
 
     public virtual bool CollectMethodSymbol { get; } = false;
     public virtual bool CollectFieldSymbol { get; } = false;
     public virtual bool CollectPropertySymbol { get; } = false;
     public virtual bool CollectClassSymbol { get; } = false;
+    public virtual bool CollectInterfaceSymbol { get; } = false;
 
     /// <inheritdoc/>
     public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
@@ -31,6 +32,9 @@ public class SyntaxReceiver : ISyntaxContextReceiver
                 break;
             case ClassDeclarationSyntax classDeclarationSyntax:
                 OnVisitClassDeclaration(classDeclarationSyntax, context.SemanticModel);
+                break;
+            case InterfaceDeclarationSyntax interfaceDeclarationSyntax:
+                OnVisitInterfaceDeclaration(interfaceDeclarationSyntax, context.SemanticModel);
                 break;
         }
     }
@@ -145,17 +149,45 @@ public class SyntaxReceiver : ISyntaxContextReceiver
             return;
         }
 
-        if(!ShouldCollectClassSymbol(classSymbol))
+        if(!ShouldCollectTypeSymbol(classSymbol))
         {
             return;
         }
 
-        Classes.Add(classSymbol);
+        Types.Add(classSymbol);
     }
 
-    protected virtual bool ShouldCollectClassDeclaration(ClassDeclarationSyntax classDeclarationSyntax)
+    protected virtual void OnVisitInterfaceDeclaration(InterfaceDeclarationSyntax interfaceDeclarationSyntax, SemanticModel model)
+    {
+        if(!CollectInterfaceSymbol)
+        {
+            return;
+        }
+
+        if(!ShouldCollectInterfaceDeclaration(interfaceDeclarationSyntax))
+        {
+            return;
+        }
+
+        if(model.GetDeclaredSymbol(interfaceDeclarationSyntax) is not INamedTypeSymbol interfaceSymbol)
+        {
+            return;
+        }
+
+        if(!ShouldCollectTypeSymbol(interfaceSymbol))
+        {
+            return;
+        }
+
+        Types.Add(interfaceSymbol);
+    }
+
+    protected virtual bool ShouldCollectInterfaceDeclaration(InterfaceDeclarationSyntax interfaceDeclarationSyntax)
         => true;
 
-    protected virtual bool ShouldCollectClassSymbol(INamedTypeSymbol classSymbol)
+    protected virtual bool ShouldCollectClassDeclaration(ClassDeclarationSyntax classDeclarationSyntax)
+    => true;
+
+    protected virtual bool ShouldCollectTypeSymbol(INamedTypeSymbol classSymbol)
         => true;
 }

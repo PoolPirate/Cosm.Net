@@ -7,15 +7,23 @@ namespace Cosm.Net.Generators.Common.SyntaxElements;
 
 public class MethodCallBuilder
 {
-    private readonly string _target;
-    private readonly IMethodSymbol _method;
     private readonly CallArgumentsBuilder _typedArgumentsBuilder;
+
+    private readonly string _target;
+    private readonly string _methodName;
 
     public MethodCallBuilder(string target, IMethodSymbol method)
     {
-        _target = target;
-        _method = method;
         _typedArgumentsBuilder = new CallArgumentsBuilder();
+        _target = target;
+        _methodName = method.Name;
+    }
+
+    public MethodCallBuilder(string target, string methodName)
+    {
+        _typedArgumentsBuilder = new CallArgumentsBuilder();
+        _target = target;
+        _methodName = methodName;
     }
 
     public MethodCallBuilder AddArgument(string sourceExpression)
@@ -30,7 +38,7 @@ public class MethodCallBuilder
 
         sb.Append(_target);
         sb.Append('.');
-        sb.Append(_method.Name);
+        sb.Append(_methodName);
         sb.Append('(');
         sb.Append(_typedArgumentsBuilder.Build());
         sb.Append(')');

@@ -21,6 +21,7 @@ public class FunctionBuilder
     private FunctionVisibility _visibility = FunctionVisibility.Public;
     private string? _returnType = null;
     private string? _summaryComment = null;
+    private bool _isAsync = false;
 
     public FunctionBuilder(string name)
     {
@@ -53,6 +54,12 @@ public class FunctionBuilder
         return this;
     }
 
+    public FunctionBuilder WithIsAsync(bool isAsync = true)
+    {
+        _isAsync = isAsync;
+        return this;
+    }
+
     public FunctionBuilder AddStatement(string statement)
     {
         _statements.Add(statement);
@@ -81,16 +88,10 @@ public class FunctionBuilder
         {
             sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
         }
-        sb.Append(_visibility.ToString().ToLower());
-        sb.Append(" ");
-        sb.Append(_returnType is null
-            ? "void"
-            : _returnType);
-        sb.Append(" ");
-        sb.Append(_name);
-        sb.Append('(');
-        sb.Append(_argumentBuilder.Build());
-        sb.AppendLine(");");
+
+        sb.Append($"""
+        {_visibility.ToString().ToLower()} {(_returnType is null ? "void" : _returnType)} {_name}({_argumentBuilder.Build()});
+        """);
 
         return sb.ToString();
     }
@@ -103,16 +104,9 @@ public class FunctionBuilder
         {
             sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
         }
-        sb.Append(_visibility.ToString().ToLower());
-        sb.Append(" ");
-        sb.Append(_returnType is null 
-            ? "void"
-            : _returnType);
-        sb.Append(" ");
-        sb.Append(_name);
-        sb.Append('(');
-        sb.Append(_argumentBuilder.Build());
-        sb.Append(')');
+        sb.Append($"""
+        {_visibility.ToString().ToLower()} {(_isAsync ? "async" : "")} {(_returnType is null ? "void" : _returnType)} {_name}({_argumentBuilder.Build()})
+        """);
         sb.AppendLine("{");
 
         foreach(var statement in _statements)
@@ -132,6 +126,7 @@ public class FunctionBuilder
             _returnType = _returnType,
             _visibility = _visibility,
             _summaryComment = _summaryComment,
+            _isAsync = _isAsync,
         };
 
         clone._statements.AddRange(_statements);

@@ -3,10 +3,13 @@ using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
-public sealed class CosmClientBuilder
+public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 {
     private readonly ServiceCollection _services = new ServiceCollection();
-    private readonly List<Type> _moduleTypes = new List<Type>();
+    private readonly List<Type> _moduleTypes = [];
+
+    IServiceCollection IInternalCosmClientBuilder.ServiceCollection 
+        => _services;
 
     public CosmClientBuilder WithChannel(GrpcChannel channel)
     {
@@ -44,4 +47,7 @@ public sealed class CosmClientBuilder
         var client = new CosmClient(moduleProvider, _moduleTypes);
         return client;
     }
+
+    public IInternalCosmClientBuilder AsInternal()
+        => this;
 }

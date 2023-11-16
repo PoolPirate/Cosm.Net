@@ -1,8 +1,4 @@
 ﻿using Cosm.Net.Generators.Common.Util;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
 public enum PropertyVisibility

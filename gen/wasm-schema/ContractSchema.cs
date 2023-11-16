@@ -1,39 +1,37 @@
 ﻿using Cosm.Net.Generators.Common.SyntaxElements;
 using Cosm.Net.Generators.Common.Util;
+using Microsoft.CodeAnalysis;
 using NJsonSchema;
-using NJsonSchema.CodeGeneration.CSharp;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Cosm.Net.Generators.CosmWasm;
 public class ContractSchema
 {
     [JsonPropertyName("contract_name")]
-    public string ContractName { get; init; } = null!;
+    public string ContractName { get; set; } = null!;
     [JsonPropertyName("contract_version")]
-    public string ContractVersion { get; init; } = null!;
+    public string ContractVersion { get; set; } = null!;
     [JsonPropertyName("idl_version")]
-    public string IdlVersion { get; init; } = null!;
+    public string IdlVersion { get; set; } = null!;
 
     [JsonPropertyName("instantiate")]
-    public JsonObject Instantiate {  get; init; } = null!;
+    public JsonObject Instantiate {  get; set; } = null!;
     [JsonPropertyName("execute")]
-    public JsonObject Execute { get; init; } = null!;
+    public JsonObject Execute { get; set; } = null!;
     [JsonPropertyName("query")]
-    public JsonObject Query { get; init; } = null!;
+    public JsonObject Query { get; set; } = null!;
     [JsonPropertyName("migrate")]
-    public JsonObject Migrate { get; init; } = null!;
+    public JsonObject Migrate { get; set; } = null!;
     [JsonPropertyName("responses")]
-    public JsonObject Responses { get; init; } = null!;
+    public JsonObject Responses { get; set; } = null!;
 
     private readonly Dictionary<string, ISyntaxBuilder> SourceComponents = [];
     private int RequestCounter = 0;
     private int ResponseCounter = 0;
 
-    public async Task<string> GenerateCSharpCodeFileAsync()
+    public async Task<string> GenerateCSharpCodeFileAsync(INamedTypeSymbol targetInterface)
     {
         var responseSchemas = new Dictionary<string, JsonSchema>();
 
@@ -42,8 +40,22 @@ public class ContractSchema
             responseSchemas.Add(responseNode.Key, await JsonSchema.FromJsonAsync(responseNode.Value!.ToJsonString()));
         }
 
-        var contractClassBuilder = new ClassBuilder(NameUtils.ToValidClassName(ContractName))
+        string contractClassName = targetInterface.Name;
+        if (contractClassName.StartsWith("I"))
+        {
+            contractClassName = contractClassName.Substring(1);
+        }
+        else
+        {
+            contractClassName += "Implementation";
+        }
+
+        var contractClassBuilder = new ClassBuilder(contractClassName)
             .WithVisibility(ClassVisibility.Internal)
+            .WithIsPartial(true)
+            .AddField(new FieldBuilder("global::Cosm.Net.Wasm.IWasmModule", "_wasm"))
+            .AddField(new FieldBuilder("global::System.String", "_contractAddress"))
+            .AddBaseType("global::Cosm.Net.Wasm.Models.IContract", true)
             .AddFunctions(GenerateQueryFunctions(await JsonSchema.FromJsonAsync(Query.ToJsonString()), responseSchemas));
 
         var componentsSb = new StringBuilder();
@@ -55,8 +67,8 @@ public class ContractSchema
 
         return
             $$"""
-            namespace Cosmwasm.Contract.{{NameUtils.ToValidNamespaceName(ContractName)}};
-            {{contractClassBuilder.Build(generateInterface: true)}}
+            namespace {{targetInterface.ContainingNamespace}};
+            {{contractClassBuilder.Build(generateFieldConstructor: true, generateInterface: true, interfaceName: targetInterface.Name)}}
 
             {{componentsSb}}
             """;
@@ -87,8 +99,21 @@ public class ContractSchema
                 new FunctionBuilder(NameUtils.ToValidFunctionName(queryName))
                 .WithVisibility(FunctionVisibility.Public)
                 .WithReturnTypeRaw($"Task<{responseType}>")
+                .WithIsAsync()
                 .WithSummaryComment(querySchema.Description)
-                .AddStatement($"return Task.FromResult<{responseType}>(default!)")
+                .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
+                    .ToVariableAssignment("innerJsonRequest"))
+                .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
+                    .AddArgument($"""
+                    [
+                        new global::System.Collections.Generic.KeyValuePair<
+                            global::System.String, global::System.Text.Json.Nodes.JsonNode>(
+                            "{queryName}", innerJsonRequest
+                        )
+                    ]
+                    """)
+                    .ToVariableAssignment("jsonRequest"))
+
             };
 
             var requiredProps = argumentsSchema.RequiredProperties.ToList();
@@ -104,8 +129,11 @@ public class ContractSchema
                     return index;
                 });
 
-            foreach(var (argName, argSchema) in sortedProperties)
+            foreach(var property in sortedProperties)
             {
+                var argName = property.Key;
+                var argSchema = property.Value;
+
                 var paramTypes = GetOrGenerateSplittingSchemaType(argSchema, queryMsgSchema).ToArray();
 
                 if (paramTypes.Length == 0)
@@ -117,7 +145,11 @@ public class ContractSchema
                     var paramType = paramTypes[0];
                     foreach(var function in functions)
                     {
-                        function.AddArgument(paramType, argName, paramType.EndsWith('?'));
+                        function.AddArgument(paramType, argName, paramType.EndsWith("?"))
+                                .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                                    .AddArgument($"\"{argName}\"")
+                                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName})")
+                                    .Build());
                     }
                 }
                 else
@@ -134,14 +166,23 @@ public class ContractSchema
                     for(int i = 0; i < functions.Count; i++)
                     {
                         paramIndex = (paramIndex + 1) % paramTypes.Length;
-                        functions[i].AddArgument(paramTypes[paramIndex], argName, paramTypes[paramIndex].EndsWith('?'));
+                        functions[i]
+                            .AddArgument(paramTypes[paramIndex], argName, paramTypes[paramIndex].EndsWith("?"))
+                            .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                                .AddArgument($"\"{argName}\"")
+                                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName})")
+                                .Build());
                     }
                 }
             }
 
             foreach(var function in functions)
             {
-                yield return function;
+                yield return function
+                    .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
+                    .AddStatement("var encodedResponse = await _wasm.SmartContractStateAsync(_contractAddress, global::Google.Protobuf.ByteString.CopyFrom(encodedRequest))")
+                    .AddStatement("var jsonResponse = global::System.Text.Encoding.UTF8.GetString(encodedResponse.Data.Span)")
+                    .AddStatement($"return global::System.Text.Json.JsonSerializer.Deserialize<{responseType}>(jsonResponse)");
             }
         }
     }
@@ -289,7 +330,7 @@ public class ContractSchema
                         schemaType,
                         NameUtils.ToValidPropertyName(property.Key))
                     .WithSetterVisibility(SetterVisibility.Init)
-                    .WithIsRequired(!schemaType.EndsWith('?'))
+                    .WithIsRequired(!schemaType.EndsWith("?"))
                     .WithJsonPropertyName(property.Key)
                     .WithSummaryComment(property.Value.Description)
                 );
@@ -423,7 +464,7 @@ public class ContractSchema
                         schemaType,
                         NameUtils.ToValidPropertyName(property.Key))
                     .WithSetterVisibility(SetterVisibility.Init)
-                    .WithIsRequired(!schemaType.EndsWith('?'))
+                    .WithIsRequired(!schemaType.EndsWith("?"))
                     .WithJsonPropertyName(property.Key)
                     .WithSummaryComment(property.Value.Description)
                 );
@@ -451,7 +492,7 @@ public class ContractSchema
                     $"ParamOption{i++}"
                 )
                 .WithSetterVisibility(SetterVisibility.Init)
-                .WithIsRequired(!type.EndsWith('?'))
+                .WithIsRequired(!type.EndsWith("?"))
             );
         }
 

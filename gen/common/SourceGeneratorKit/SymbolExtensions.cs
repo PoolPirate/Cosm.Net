@@ -1,16 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Cosm.Net.Generators.Common.Util;
+using Microsoft.CodeAnalysis;
 using System.Linq;
 
 namespace Cosm.Net.Generators.Common.SourceGeneratorKit;
 public static class SymbolExtensions
 {
-    public static bool HasAttribute(this ISymbol symbol, string atrributeName)
+    public static bool HasAttribute(this ISymbol symbol, string atrributeName) 
         => symbol.GetAttributes()
-            .Any(_ => _.AttributeClass?.ToDisplayString() == atrributeName);
+                .Any(_ => _.AttributeClass?.Name == atrributeName);
 
     public static AttributeData? FindAttribute(this ISymbol symbol, string atrributeName)
         => symbol.GetAttributes()
-            .FirstOrDefault(_ => _.AttributeClass?.ToDisplayString() == atrributeName);
+            .FirstOrDefault(_ => _.AttributeClass?.Name == atrributeName);
 
     public static bool IsDerivedFromType(this INamedTypeSymbol symbol, string typeName)
         => symbol.Name == typeName || (symbol.BaseType != null && symbol.BaseType.IsDerivedFromType(typeName));

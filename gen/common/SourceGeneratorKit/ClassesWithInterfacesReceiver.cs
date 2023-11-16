@@ -3,15 +3,15 @@
 namespace Cosm.Net.Generators.Common.SourceGeneratorKit;
 public class ClassesWithInterfacesReceiver : SyntaxReceiver
 {
-    private readonly string implementedInterface;
+    private readonly string _implementedInterface;
 
     public ClassesWithInterfacesReceiver(string implementedInterface)
     {
-        this.implementedInterface = implementedInterface;
+        _implementedInterface = implementedInterface;
     }
 
     public override bool CollectClassSymbol { get; } = true;
 
-    protected override bool ShouldCollectClassSymbol(INamedTypeSymbol classSymbol)
-        => classSymbol.IsImplements(implementedInterface);
+    protected override bool ShouldCollectTypeSymbol(INamedTypeSymbol classSymbol)
+        => classSymbol.IsImplements(_implementedInterface);
 }
