@@ -87,6 +87,7 @@ public class ContractSchema
                 new FunctionBuilder(NameUtils.ToValidFunctionName(queryName))
                 .WithVisibility(FunctionVisibility.Public)
                 .WithReturnTypeRaw($"Task<{responseType}>")
+                .WithSummaryComment(querySchema.Description)
                 .AddStatement($"return Task.FromResult<{responseType}>(default!)")
             };
 
@@ -289,6 +290,8 @@ public class ContractSchema
                         NameUtils.ToValidPropertyName(property.Key))
                     .WithSetterVisibility(SetterVisibility.Init)
                     .WithIsRequired(!schemaType.EndsWith('?'))
+                    .WithJsonPropertyName(property.Key)
+                    .WithSummaryComment(property.Value.Description)
                 );
             }
 
@@ -312,13 +315,18 @@ public class ContractSchema
 
         if(!SourceComponents.ContainsKey(typeName))
         {
-            var enumerationBuilder = new EnumerationBuilder(typeName);
+            var enumerationBuilder = new EnumerationBuilder(typeName)
+                .WithSummaryComment(parentSchema.Description);
 
             foreach(var oneOf in parentSchema.OneOf)
             {
+                string enumerationValue = oneOf.Enumeration.Single().ToString()
+                        ?? throw new NotSupportedException();
+
                 enumerationBuilder.AddValue(
-                    NameUtils.ToValidPropertyName(oneOf.Enumeration.Single().ToString() 
-                        ?? throw new NotSupportedException()));
+                    NameUtils.ToValidPropertyName(enumerationValue),
+                    enumerationValue,
+                    oneOf.Description);
             }
 
             SourceComponents.Add(typeName, enumerationBuilder);
@@ -416,6 +424,8 @@ public class ContractSchema
                         NameUtils.ToValidPropertyName(property.Key))
                     .WithSetterVisibility(SetterVisibility.Init)
                     .WithIsRequired(!schemaType.EndsWith('?'))
+                    .WithJsonPropertyName(property.Key)
+                    .WithSummaryComment(property.Value.Description)
                 );
             }
 

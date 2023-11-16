@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Cosm.Net.Generators.Common.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
 public enum PropertyVisibility
@@ -22,6 +24,9 @@ public class PropertyBuilder
     private PropertyVisibility _visibility = PropertyVisibility.Public;
     private SetterVisibility _setterVisibility = SetterVisibility.Public;
     private bool _isRequired = false;
+    
+    private string? _jsonPropertyName;
+    private string? _summaryComment;
 
     public PropertyBuilder(string type, string name)
     {
@@ -44,11 +49,25 @@ public class PropertyBuilder
     public PropertyBuilder WithIsRequired(bool isRequired = true)
     {
         _isRequired = isRequired;
+        return this;        
+    }
+
+    public PropertyBuilder WithSummaryComment(string summaryComment)
+    {
+        _summaryComment = summaryComment;
+        return this;
+    }
+
+    public PropertyBuilder WithJsonPropertyName(string jsonPropertyName)
+    {
+        _jsonPropertyName = jsonPropertyName;
         return this;
     }
 
     public string Build() 
         => $$"""
+            {{(_summaryComment is not null ? CommentUtils.MakeSummaryComment(_summaryComment) : "")}}
+            {{(_jsonPropertyName is not null ? $"[System.Text.Json.Serialization.JsonPropertyName(\"{_jsonPropertyName}\")]" : "")}}
             {{_visibility.ToString().ToLower()}} {{(_isRequired ? "required" : "")}} {{_type}} {{_name}} { get; {{
             (_setterVisibility == SetterVisibility.Init 
                 ? "init" 

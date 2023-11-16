@@ -18,8 +18,9 @@ public class FunctionBuilder
 
     private readonly string _name;
 
-    private string? _returnType = null;
     private FunctionVisibility _visibility = FunctionVisibility.Public;
+    private string? _returnType = null;
+    private string? _summaryComment = null;
 
     public FunctionBuilder(string name)
     {
@@ -43,6 +44,12 @@ public class FunctionBuilder
     public FunctionBuilder WithVisibility(FunctionVisibility visibility)
     {
         _visibility = visibility;
+        return this;
+    }
+
+    public FunctionBuilder WithSummaryComment(string summaryComment)
+    {
+        _summaryComment = summaryComment;
         return this;
     }
 
@@ -70,6 +77,10 @@ public class FunctionBuilder
     {
         var sb = new StringBuilder();
 
+        if (_summaryComment is not null)
+        {
+            sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
+        }
         sb.Append(_visibility.ToString().ToLower());
         sb.Append(" ");
         sb.Append(_returnType is null
@@ -88,6 +99,10 @@ public class FunctionBuilder
     {
         var sb = new StringBuilder();
 
+        if(_summaryComment is not null)
+        {
+            sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
+        }
         sb.Append(_visibility.ToString().ToLower());
         sb.Append(" ");
         sb.Append(_returnType is null 
@@ -114,8 +129,9 @@ public class FunctionBuilder
     {
         var clone = new FunctionBuilder(_name)
         {
+            _returnType = _returnType,
             _visibility = _visibility,
-            _returnType = _returnType
+            _summaryComment = _summaryComment,
         };
 
         clone._statements.AddRange(_statements);
