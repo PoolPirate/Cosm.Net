@@ -2,6 +2,9 @@ rm out -r
 md out
 
 cd ..
+
+dotnet clean
+
 cd src\core
 dotnet restore --no-cache -f
 dotnet publish -c Release
@@ -51,6 +54,7 @@ copy bin\release\Cosm.Net.Osmosis.* ..\..\..\scripts\out\ /Y
 cd ..\..\..\
 
 cd src\modules\wasm
+dotnet clean
 dotnet restore --no-cache -f
 dotnet publish -c Release
 
@@ -65,3 +69,4 @@ dotnet publish -c Release
 copy bin\release\Cosm.Net.Generators.CosmWasm.* ..\..\scripts\out\ /Y
 
 cd ..\..\
+cd scripts

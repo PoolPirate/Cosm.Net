@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Client;
 using Cosm.Net.Wasm.Models;
 using Cosm.Net.Wasm.Services;
+using Cosmwasm.Wasm.V1;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Wasm.Extensions;

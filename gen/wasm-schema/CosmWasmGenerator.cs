@@ -40,7 +40,9 @@ public class CosmWasmGenerator : ISourceGenerator
             var schemaText = schemaFile.GetText()!.ToString();
             var contractSchema = JsonSerializer.Deserialize<ContractSchema>(schemaText)!;
 
-            string code = contractSchema.GenerateCSharpCodeFileAsync(contractType).GetAwaiter().GetResult();
+            string code = contractSchema.GenerateCSharpCodeFileAsync(
+                contractType.Name, contractType.ContainingNamespace.Name)
+                .GetAwaiter().GetResult();
             context.AddSource($"{contractType.Name}.generated.cs", code);
         }
     }

@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Cosm.Net.Core" Version="1.0.0" />
+		<PackageReference Include="Cosm.Net.CosmosSdk" Version="1.0.0" />
 		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.0.0" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.59.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -30,9 +31,6 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<Protobuf Include="../../../lib/protobuf/gogoproto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/protobuf" GrpcServices="None" />
-		<Protobuf Include="../../../lib/cosmos-proto/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="None" />
-		<Protobuf Include="../../../lib/cosmos-sdk/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="None" />
 		<Protobuf Include="../../../lib/wasmd/proto/**/*.proto" ProtoRoot="../../../lib" GrpcServices="Client" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis;../../../lib/wasmd/proto" />
 	</ItemGroup>
 </Project>

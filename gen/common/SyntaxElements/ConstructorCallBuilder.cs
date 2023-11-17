@@ -33,6 +33,12 @@ public class ConstructorCallBuilder
         return this;
     }
 
+    public ConstructorCallBuilder AddInitializer(string propertyName, string sourceExpression, bool isReadonlyList = false)
+    {
+        _objectInitializerBuilder.AddArgument(propertyName, sourceExpression, isReadonlyList);
+        return this;
+    }
+
     public string ToInlineCall()
     {
         var sb = new StringBuilder();

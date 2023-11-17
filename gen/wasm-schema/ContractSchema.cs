@@ -17,7 +17,7 @@ public class ContractSchema
     public string IdlVersion { get; set; } = null!;
 
     [JsonPropertyName("instantiate")]
-    public JsonObject Instantiate {  get; set; } = null!;
+    public JsonObject Instantiate { get; set; } = null!;
     [JsonPropertyName("execute")]
     public JsonObject Execute { get; set; } = null!;
     [JsonPropertyName("query")]
@@ -31,7 +31,7 @@ public class ContractSchema
     private int _requestCounter = 0;
     private int _responseCounter = 0;
 
-    public async Task<string> GenerateCSharpCodeFileAsync(INamedTypeSymbol targetInterface)
+    public async Task<string> GenerateCSharpCodeFileAsync(string targetInterface, string targetNamespace)
     {
         var responseSchemas = new Dictionary<string, JsonSchema>();
 
@@ -40,8 +40,8 @@ public class ContractSchema
             responseSchemas.Add(responseNode.Key, await JsonSchema.FromJsonAsync(responseNode.Value!.ToJsonString()));
         }
 
-        string contractClassName = targetInterface.Name;
-        if (contractClassName.StartsWith("I"))
+        string contractClassName = targetInterface;
+        if(contractClassName.StartsWith("I"))
         {
             contractClassName = contractClassName.Substring(1);
         }
@@ -56,7 +56,8 @@ public class ContractSchema
             .AddField(new FieldBuilder("global::Cosm.Net.Wasm.IWasmModule", "_wasm"))
             .AddField(new FieldBuilder("global::System.String", "_contractAddress"))
             .AddBaseType("global::Cosm.Net.Wasm.Models.IContract", true)
-            .AddFunctions(GenerateQueryFunctions(await JsonSchema.FromJsonAsync(Query.ToJsonString()), responseSchemas));
+            .AddFunctions(GenerateQueryFunctions(await JsonSchema.FromJsonAsync(Query.ToJsonString()), responseSchemas))
+            .AddFunctions(GenerateMsgFunctions(await JsonSchema.FromJsonAsync(Execute.ToJsonString())));
 
         var componentsSb = new StringBuilder();
 
@@ -67,11 +68,129 @@ public class ContractSchema
 
         return
             $$"""
-            namespace {{targetInterface.ContainingNamespace}};
-            {{contractClassBuilder.Build(generateFieldConstructor: true, generateInterface: true, interfaceName: targetInterface.Name)}}
+            namespace {{targetNamespace}};
+            {{contractClassBuilder.Build(generateFieldConstructor: true, generateInterface: true, interfaceName: targetInterface)}}
 
             {{componentsSb}}
             """;
+    }
+
+
+
+    private IEnumerable<FunctionBuilder> GenerateMsgFunctions(JsonSchema txMsgSchema)
+    {
+        foreach(var txSchema in txMsgSchema.OneOf)
+        {
+            if(txSchema.Properties.Count != 1)
+            {
+                throw new NotSupportedException();
+            }
+
+            var argumentsSchema = txSchema.Properties.Single().Value;
+            var msgName = argumentsSchema.Name;
+
+            var functions = new List<FunctionBuilder>
+            {
+                new FunctionBuilder($"{NameUtils.ToValidFunctionName(msgName)}")
+                .WithVisibility(FunctionVisibility.Public)
+                .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.ITxMessage<global::Cosmwasm.Wasm.V1.MsgExecuteContract>")
+                .WithSummaryComment(txSchema.Description)
+                .AddArgument("string", "txSender")
+                .AddArgument("global::System.Collections.Generic.IEnumerable<global::Cosmos.Base.V1Beta1.Coin>", "funds")
+                .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
+                    .ToVariableAssignment("innerJsonRequest"))
+                .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
+                    .AddArgument($"""
+                    [
+                        new global::System.Collections.Generic.KeyValuePair<
+                            global::System.String, global::System.Text.Json.Nodes.JsonNode>(
+                            "{msgName}", innerJsonRequest
+                        )
+                    ]
+                    """)
+                    .ToVariableAssignment("jsonRequest"))
+
+            };
+
+            var requiredProps = argumentsSchema.RequiredProperties.ToList();
+
+            var sortedProperties = argumentsSchema.Properties
+                .OrderBy(x =>
+                {
+                    var index = requiredProps.IndexOf(x.Key);
+                    if(index == -1)
+                    {
+                        index = int.MaxValue;
+                    }
+                    return index;
+                });
+
+            foreach(var property in sortedProperties)
+            {
+                var argName = property.Key;
+                var argSchema = property.Value;
+
+                var paramTypes = GetOrGenerateSplittingSchemaType(argSchema, txMsgSchema).ToArray();
+
+                if(paramTypes.Length == 0)
+                {
+                    throw new NotSupportedException();
+                }
+                else if(paramTypes.Length == 1)
+                {
+                    var paramType = paramTypes[0];
+                    foreach(var function in functions)
+                    {
+                        function
+                            .AddArgument(paramType.Name, argName,
+                                paramType.HasDefaultValue, paramType.ExplicitDefaultValue)
+                            .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                                    .AddArgument($"\"{argName}\"")
+                                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName})")
+                                    .Build());
+                    }
+                }
+                else
+                {
+                    foreach(var function in functions.ToArray())
+                    {
+                        for(int i = 1; i < paramTypes.Length; i++)
+                        {
+                            functions.Add(function.Clone());
+                        }
+                    }
+
+                    int paramIndex = 0;
+                    for(int i = 0; i < functions.Count; i++)
+                    {
+                        paramIndex = (paramIndex + 1) % paramTypes.Length;
+                        functions[i]
+                            .AddArgument(paramTypes[paramIndex].Name, argName,
+                                paramTypes[paramIndex].HasDefaultValue, paramTypes[paramIndex].ExplicitDefaultValue)
+                            .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                                .AddArgument($"\"{argName}\"")
+                                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName})")
+                                .Build());
+                    }
+                }
+            }
+
+            foreach(var function in functions)
+            {
+                yield return function
+                    .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
+                    .AddStatement(new ConstructorCallBuilder("global::Cosmwasm.Wasm.V1.MsgExecuteContract")
+                        .AddInitializer("Funds", "funds", true)
+                        .AddInitializer("Contract", "_contractAddress")
+                        .AddInitializer("Sender", "txSender")
+                        .AddInitializer("Msg", "global::Google.Protobuf.ByteString.CopyFrom(encodedRequest)")
+                        .ToVariableAssignment("executionMessage"))
+                    .AddStatement(new ConstructorCallBuilder($"global::Cosm.Net.Tx.Msg.TxMessage<global::Cosmwasm.Wasm.V1.MsgExecuteContract>")
+                        .AddArgument("executionMessage")
+                        .ToVariableAssignment("txMessage"))
+                    .AddStatement("return txMessage");
+            }
+        }
     }
 
     private IEnumerable<FunctionBuilder> GenerateQueryFunctions(JsonSchema queryMsgSchema,
@@ -92,13 +211,13 @@ public class ContractSchema
                 throw new NotSupportedException();
             }
 
-            string responseType = GetOrGenerateMergingSchemaType(responseSchema);
+            var responseType = GetOrGenerateMergingSchemaType(responseSchema);
 
             var functions = new List<FunctionBuilder>
             {
                 new FunctionBuilder($"{NameUtils.ToValidFunctionName(queryName)}Async")
                 .WithVisibility(FunctionVisibility.Public)
-                .WithReturnTypeRaw($"Task<{responseType}>")
+                .WithReturnTypeRaw($"Task<{responseType.Name}>")
                 .WithIsAsync()
                 .WithSummaryComment(querySchema.Description)
                 .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
@@ -145,11 +264,13 @@ public class ContractSchema
                     var paramType = paramTypes[0];
                     foreach(var function in functions)
                     {
-                        function.AddArgument(paramType, argName, paramType.EndsWith("?"))
-                                .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
-                                    .AddArgument($"\"{argName}\"")
-                                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName})")
-                                    .Build());
+                        function
+                            .AddArgument(paramType.Name, argName,
+                                paramType.HasDefaultValue, paramType.ExplicitDefaultValue)
+                            .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                                .AddArgument($"\"{argName}\"")
+                                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName})")
+                                .Build());
                     }
                 }
                 else
@@ -167,7 +288,8 @@ public class ContractSchema
                     {
                         paramIndex = (paramIndex + 1) % paramTypes.Length;
                         functions[i]
-                            .AddArgument(paramTypes[paramIndex], argName, paramTypes[paramIndex].EndsWith("?"))
+                            .AddArgument(paramTypes[paramIndex].Name, argName,
+                                paramTypes[paramIndex].HasDefaultValue, paramTypes[paramIndex].ExplicitDefaultValue)
                             .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
                                 .AddArgument($"\"{argName}\"")
                                 .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName})")
@@ -182,12 +304,12 @@ public class ContractSchema
                     .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
                     .AddStatement("var encodedResponse = await _wasm.SmartContractStateAsync(_contractAddress, global::Google.Protobuf.ByteString.CopyFrom(encodedRequest))")
                     .AddStatement("var jsonResponse = global::System.Text.Encoding.UTF8.GetString(encodedResponse.Data.Span)")
-                    .AddStatement($"return global::System.Text.Json.JsonSerializer.Deserialize<{responseType}>(jsonResponse)");
+                    .AddStatement($"return global::System.Text.Json.JsonSerializer.Deserialize<{responseType.Name}>(jsonResponse)");
             }
         }
     }
 
-    private IEnumerable<string> GetOrGenerateSplittingSchemaType(JsonSchema schema,
+    private IEnumerable<GeneratedType> GetOrGenerateSplittingSchemaType(JsonSchema schema,
         JsonSchema? definitionSource = null)
     {
         definitionSource ??= schema;
@@ -214,7 +336,7 @@ public class ContractSchema
             foreach(var innerType in GetOrGenerateSplittingSchemaType(
                 schema.AnyOf.Single(x => x.Type != JsonObjectType.Null), definitionSource))
             {
-                yield return $"{innerType}?";
+                yield return new GeneratedType($"{innerType.Name}?", true);
             }
 
             yield break;
@@ -245,13 +367,13 @@ public class ContractSchema
                 case JsonObjectType.Array:
                     foreach(var innerType in GetOrGenerateSplittingSchemaType(schema.Item, definitionSource))
                     {
-                        yield return $"{innerType}[]";
+                        yield return new GeneratedType($"{innerType.Name}[]", false);
                     }
                     break;
                 case JsonObjectType.Object:
                     if(schema.Properties.Count == 0)
                     {
-                        yield return "object";
+                        yield return new GeneratedType("object", true, "new object()");
                         break;
                     }
                     foreach(var innerType in GetOrGenerateSplittingObjectType(schema, definitionSource))
@@ -260,28 +382,28 @@ public class ContractSchema
                     }
                     break;
                 case JsonObjectType.Boolean:
-                    yield return "bool";
+                    yield return new GeneratedType("bool", schema.Default is not null, schema.Default?.ToString()?.ToLower()!);
                     break;
                 case JsonObjectType.Boolean | JsonObjectType.Null:
-                    yield return "bool?";
+                    yield return new GeneratedType("bool?", true);
                     break;
                 case JsonObjectType.Integer:
-                    yield return "int";
+                    yield return new GeneratedType("int", schema.Default is not null, schema.Default?.ToString()!);
                     break;
                 case JsonObjectType.Integer | JsonObjectType.Null:
-                    yield return "int?";
+                    yield return new GeneratedType("int?", true);
                     break;
                 case JsonObjectType.Number:
-                    yield return "double";
+                    yield return new GeneratedType("double", schema.Default is not null, schema.Default?.ToString()!);
                     break;
                 case JsonObjectType.Number | JsonObjectType.Null:
-                    yield return "double?";
+                    yield return new GeneratedType("double?", true);
                     break;
                 case JsonObjectType.String:
-                    yield return "string";
+                    yield return new GeneratedType("string", schema.Default is not null, schema.Default?.ToString()!);
                     break;
                 case JsonObjectType.String | JsonObjectType.Null:
-                    yield return "string?";
+                    yield return new GeneratedType("string?", true);
                     break;
 
                 case JsonObjectType.File:
@@ -297,7 +419,7 @@ public class ContractSchema
         throw new NotSupportedException();
     }
 
-    private IEnumerable<string> GetOrGenerateSplittingObjectType(JsonSchema objectSchema, JsonSchema definitionsSource)
+    private IEnumerable<GeneratedType> GetOrGenerateSplittingObjectType(JsonSchema objectSchema, JsonSchema definitionsSource)
     {
         if(objectSchema.Type != JsonObjectType.Object || objectSchema.ActualProperties.Count == 0)
         {
@@ -321,16 +443,16 @@ public class ContractSchema
                 {
                     //ToDo: Create abstract base class with static creator functions
                     //and create internal implementation class for each path
-                    throw new NotImplementedException();
+                    //throw new NotImplementedException();
                 }
 
-                var schemaType = schemaTypes.Single();
+                var schemaType = schemaTypes.First();
                 classBuilder.AddProperty(
                     new PropertyBuilder(
-                        schemaType,
+                        schemaType.Name,
                         NameUtils.ToValidPropertyName(property.Key))
                     .WithSetterVisibility(SetterVisibility.Init)
-                    .WithIsRequired(!schemaType.EndsWith("?"))
+                    .WithIsRequired(!schemaType.HasDefaultValue)
                     .WithJsonPropertyName(property.Key)
                     .WithSummaryComment(property.Value.Description)
                 );
@@ -339,10 +461,14 @@ public class ContractSchema
             _sourceComponents.Add(typeName, classBuilder);
         }
 
-        yield return typeName;
+        if(objectSchema.Default is not null)
+        {
+            throw new NotSupportedException();
+        }
+        yield return new GeneratedType(typeName, false);
     }
 
-    private string GetOrGenerateEnumerationType(JsonSchema parentSchema, JsonSchema definitionsSource)
+    private GeneratedType GetOrGenerateEnumerationType(JsonSchema parentSchema, JsonSchema definitionsSource)
     {
         if(parentSchema.Type != JsonObjectType.None || parentSchema.ActualProperties.Count != 0 || parentSchema.OneOf.Count == 0)
         {
@@ -373,10 +499,13 @@ public class ContractSchema
             _sourceComponents.Add(typeName, enumerationBuilder);
         }
 
-        return typeName;
+        if(parentSchema.Default is not null)
+        {
+            throw new NotSupportedException();
+        }
+        return new GeneratedType(typeName, false);
     }
-
-    private string GetOrGenerateMergingSchemaType(JsonSchema schema,
+    private GeneratedType GetOrGenerateMergingSchemaType(JsonSchema schema,
     JsonSchema? definitionSource = null)
     {
         definitionSource ??= schema;
@@ -391,7 +520,10 @@ public class ContractSchema
         }
         if(schema.AnyOf.Count == 2 && schema.AnyOf.Count(x => x.Type != JsonObjectType.Null) == 1)
         {
-            return $"{GetOrGenerateMergingSchemaType(schema.AnyOf.Single(x => x.Type != JsonObjectType.Null), definitionSource)}?";
+            return new GeneratedType(
+                $"{GetOrGenerateMergingSchemaType(schema.AnyOf.Single(x => x.Type != JsonObjectType.Null), definitionSource).Name}?",
+                true
+            );
         }
         if(schema.HasReference && schema.AllOf.Count == 0)
         {
@@ -407,29 +539,33 @@ public class ContractSchema
             switch(schema.Type)
             {
                 case JsonObjectType.Array:
-                    return $"{GetOrGenerateMergingSchemaType(schema.Item, definitionSource)}[]";
+                    if(schema.Default is not null)
+                    {
+                        throw new NotSupportedException();
+                    }
+                    return new GeneratedType($"{GetOrGenerateMergingSchemaType(schema.Item, definitionSource).Name}[]", false);
                 case JsonObjectType.Object:
                     if(schema.Properties.Count == 0)
                     {
-                        return "object";
+                        return new GeneratedType("object", true, "new object()");
                     }
                     return GetOrGenerateMergingObjectType(schema, definitionSource);
                 case JsonObjectType.Boolean:
-                    return "bool";
+                    return new GeneratedType("bool", schema.Default is not null, schema.Default?.ToString()?.ToLower()!);
                 case JsonObjectType.Boolean | JsonObjectType.Null:
-                    return "bool?";
+                    return new GeneratedType("bool?", true);
                 case JsonObjectType.Integer:
-                    return "int";
+                    return new GeneratedType("int", schema.Default is not null, schema.Default?.ToString()!);
                 case JsonObjectType.Integer | JsonObjectType.Null:
-                    return "int?";
+                    return new GeneratedType("int?", true);
                 case JsonObjectType.Number:
-                    return "double";
+                    return new GeneratedType("double", schema.Default is not null, schema.Default?.ToString()!);
                 case JsonObjectType.Number | JsonObjectType.Null:
-                    return "double?";
+                    return new GeneratedType("double?", true);
                 case JsonObjectType.String:
-                    return "string";
+                    return new GeneratedType("string", schema.Default is not null, schema.Default?.ToString()!);
                 case JsonObjectType.String | JsonObjectType.Null:
-                    return "string?";
+                    return new GeneratedType("string?", true);
 
                 case JsonObjectType.File:
                 case JsonObjectType.None:
@@ -442,7 +578,7 @@ public class ContractSchema
         throw new NotSupportedException();
     }
 
-    private string GetOrGenerateMergingObjectType(JsonSchema objectSchema, JsonSchema definitionsSource)
+    private GeneratedType GetOrGenerateMergingObjectType(JsonSchema objectSchema, JsonSchema definitionsSource)
     {
         if(objectSchema.Type != JsonObjectType.Object || objectSchema.ActualProperties.Count == 0)
         {
@@ -454,6 +590,11 @@ public class ContractSchema
             ?? definitionsSource.Definitions.FirstOrDefault(x => x.Value == objectSchema).Key
             ?? $"Response{_responseCounter++}";
 
+        if(typeName == "LpAction")
+        {
+
+        }
+
         if(!_sourceComponents.ContainsKey(typeName))
         {
             var classBuilder = new ClassBuilder(typeName);
@@ -463,10 +604,10 @@ public class ContractSchema
                 var schemaType = GetOrGenerateMergingSchemaType(property.Value, definitionsSource);
                 classBuilder.AddProperty(
                     new PropertyBuilder(
-                        schemaType,
+                        schemaType.Name,
                         NameUtils.ToValidPropertyName(property.Key))
                     .WithSetterVisibility(SetterVisibility.Init)
-                    .WithIsRequired(!schemaType.EndsWith("?"))
+                    .WithIsRequired(!schemaType.HasDefaultValue)
                     .WithJsonPropertyName(property.Key)
                     .WithSummaryComment(property.Value.Description)
                 );
@@ -475,10 +616,14 @@ public class ContractSchema
             _sourceComponents.Add(typeName, classBuilder);
         }
 
-        return typeName;
+        if(objectSchema.Default is not null)
+        {
+            throw new NotSupportedException();
+        }
+        return new GeneratedType(typeName, false);
     }
 
-    private string GetOrGenerateMergedType(JsonSchema parentSchema, JsonSchema definitionsSource)
+    private GeneratedType GetOrGenerateMergedType(JsonSchema parentSchema, JsonSchema definitionsSource)
     {
         var typeName = definitionsSource.Definitions
             .FirstOrDefault(x => x.Value == parentSchema)
@@ -486,7 +631,11 @@ public class ContractSchema
 
         if(_sourceComponents.ContainsKey(typeName))
         {
-            return typeName;
+            if(parentSchema.Default is not null)
+            {
+                throw new NotSupportedException();
+            }
+            return new GeneratedType(typeName, false);
         }
 
         var classBuilder = new ClassBuilder(typeName);
@@ -498,14 +647,14 @@ public class ContractSchema
                 throw new NotSupportedException();
             }
 
-            string type = GetOrGenerateMergingSchemaType(
+            var type = GetOrGenerateMergingSchemaType(
                 schema.Properties.Count == 1 ? schema.Properties.Single().Value : schema,
                 definitionsSource);
 
             if(IsPrimitiveType(type))
             {
-                type = type == "string"
-                    ? "global::Cosm.Net.Json.StringWrapper"
+                type = type.Name == "string"
+                    ? new GeneratedType("global::Cosm.Net.Json.StringWrapper", false)
                     : throw new NotSupportedException();
             }
 
@@ -515,7 +664,7 @@ public class ContractSchema
 
             classBuilder.AddProperty(
                 new PropertyBuilder(
-                    $"{type.TrimEnd('?')}?",
+                    $"{type.Name.TrimEnd('?')}?",
                     NameUtils.ToValidPropertyName(propertyName)
                 )
                 .WithJsonPropertyName(propertyName)
@@ -526,11 +675,16 @@ public class ContractSchema
         }
 
         _sourceComponents.Add(typeName, classBuilder);
-        return typeName;
+
+        if(parentSchema.Default is not null)
+        {
+            throw new NotSupportedException();
+        }
+        return new GeneratedType(typeName, false);
     }
 
-    private static bool IsPrimitiveType(string typeName)
-        => typeName switch
+    private static bool IsPrimitiveType(GeneratedType type)
+        => type.Name switch
         {
             "string" => true,
             "int" => true,
