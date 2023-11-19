@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Generators.Common.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
@@ -15,10 +16,10 @@ public class EnumerationEntry
         SummaryComment = summaryComment;
     }
 }
-public class EnumerationBuilder : ISyntaxBuilder
+public class EnumerationBuilder : ITypeBuilder
 {
     private readonly List<EnumerationEntry> _enumerationValues;
-    private readonly string _name;
+    private string _name;
 
     private string? _summaryComment;
     private string? _jsonConverter;
@@ -27,6 +28,12 @@ public class EnumerationBuilder : ISyntaxBuilder
     {
         _enumerationValues = [];
         _name = name;
+    }
+
+    public EnumerationBuilder WithName(string name)
+    {
+        _name = name;
+        return this;
     }
 
     public EnumerationBuilder AddValue(string value, string? summaryComment)
@@ -68,5 +75,20 @@ public class EnumerationBuilder : ISyntaxBuilder
             {{valueSb}}
             }
             """;
+    }
+
+    public override int GetHashCode()
+    {
+        int hc = _enumerationValues.Count;
+
+        foreach(int val in _enumerationValues.Select(x => x.Value.GetHashCode()))
+        {
+            hc = unchecked((hc * 314159) + val);
+        }
+
+        return HashCode.Combine(
+            _name,
+            hc
+        );
     }
 }

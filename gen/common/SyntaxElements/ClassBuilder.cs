@@ -21,13 +21,13 @@ public class BaseType
         IsInterface = isInterface;
     }
 }
-public class ClassBuilder : ISyntaxBuilder
+public class ClassBuilder : ITypeBuilder
 {
     private readonly List<FunctionBuilder> _functions;
     private readonly List<PropertyBuilder> _properties;
     private readonly List<FieldBuilder> _fields;
     private readonly List<BaseType> _baseTypes;
-    private readonly string _name;
+    private string _name;
     private ClassVisibility _visibility = ClassVisibility.Public;
     private bool _isPartial = false;
 
@@ -40,6 +40,11 @@ public class ClassBuilder : ISyntaxBuilder
         _name = name;
     }
 
+    public ClassBuilder WithName(string name)
+    {
+        _name = name;
+        return this;
+    }
     public ClassBuilder AddFunction(FunctionBuilder function)
     {
         _functions.Add(function);
@@ -147,4 +152,23 @@ public class ClassBuilder : ISyntaxBuilder
 
     public string Build() 
         => Build(false);
+
+    public override int GetHashCode()
+    {
+        int hc = _properties.Count;
+
+        foreach(int val in _properties.Select(x => x.GetHashCode()))
+        {
+            hc = unchecked((hc * 314159) + val);
+        }
+
+        return HashCode.Combine(
+            _name,
+            _isPartial,
+            _visibility,
+            hc
+        );
+    }
+
+
 }

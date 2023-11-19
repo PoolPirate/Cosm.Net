@@ -27,7 +27,8 @@ public class ContractSchema
     [JsonPropertyName("responses")]
     public JsonObject Responses { get; set; } = null!;
 
-    private readonly Dictionary<string, ISyntaxBuilder> _sourceComponents = [];
+    private readonly Dictionary<string, int> _typeNames = [];
+    private readonly Dictionary<int, ITypeBuilder> _sourceComponents = [];
     private int _requestCounter = 0;
     private int _responseCounter = 0;
 
@@ -75,7 +76,31 @@ public class ContractSchema
             """;
     }
 
+    public void TryAddSourceComponent(string typeName, ITypeBuilder builder)
+    {
+        if(!_sourceComponents.ContainsKey(builder.GetHashCode()))
+        {
+            _typeNames.TryGetValue(typeName, out int usages);
 
+            if(usages != 0)
+            {
+                switch(builder)
+                {
+                    case ClassBuilder c:
+                        c.WithName($"{typeName}{usages}");
+                        break;
+                    case EnumerationBuilder b:
+                        b.WithName($"{typeName}{usages}");
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
+
+            _typeNames[typeName] = usages + 1;
+            _sourceComponents.Add(builder.GetHashCode(), builder);
+        }
+    }
 
     private IEnumerable<FunctionBuilder> GenerateMsgFunctions(JsonSchema txMsgSchema)
     {
@@ -429,37 +454,40 @@ public class ContractSchema
         var definitionName = definitionsSource.Definitions
             .FirstOrDefault(x => x.Value == objectSchema).Key;
 
-        string typeName = objectSchema.Title ?? definitionName ?? $"Request{_requestCounter++}";
+        string typeName = objectSchema.Title ?? definitionName;
 
-        if(!_sourceComponents.ContainsKey(typeName))
+        typeName ??= objectSchema.RequiredProperties.Count == 1 && objectSchema.Properties.Count == 1 //Nested message
+                ? $"{NameUtils.ToValidClassName(objectSchema.RequiredProperties.Single())}" +
+                    (objectSchema.ParentSchema.Description.Contains("Query") ? "Query" : "") +
+                    (objectSchema.ParentSchema.Description.Contains("Execute") ? "Msg" : "")
+                : $"Request{_requestCounter++}";
+
+        var classBuilder = new ClassBuilder(typeName);
+
+        foreach(var property in objectSchema.ActualProperties)
         {
-            var classBuilder = new ClassBuilder(typeName);
+            var schemaTypes = GetOrGenerateSplittingSchemaType(property.Value, definitionsSource);
 
-            foreach(var property in objectSchema.ActualProperties)
+            if(schemaTypes.Count() != 1)
             {
-                var schemaTypes = GetOrGenerateSplittingSchemaType(property.Value, definitionsSource);
-
-                if(schemaTypes.Count() != 1)
-                {
-                    //ToDo: Create abstract base class with static creator functions
-                    //and create internal implementation class for each path
-                    //throw new NotImplementedException();
-                }
-
-                var schemaType = schemaTypes.First();
-                classBuilder.AddProperty(
-                    new PropertyBuilder(
-                        schemaType.Name,
-                        NameUtils.ToValidPropertyName(property.Key))
-                    .WithSetterVisibility(SetterVisibility.Init)
-                    .WithIsRequired(!schemaType.HasDefaultValue)
-                    .WithJsonPropertyName(property.Key)
-                    .WithSummaryComment(property.Value.Description)
-                );
+                //ToDo: Create abstract base class with static creator functions
+                //and create internal implementation class for each path
+                //throw new NotImplementedException();
             }
 
-            _sourceComponents.Add(typeName, classBuilder);
+            var schemaType = schemaTypes.First();
+            classBuilder.AddProperty(
+                new PropertyBuilder(
+                    schemaType.Name,
+                    NameUtils.ToValidPropertyName(property.Key))
+                .WithSetterVisibility(SetterVisibility.Init)
+                .WithIsRequired(!schemaType.HasDefaultValue)
+                .WithJsonPropertyName(property.Key)
+                .WithSummaryComment(property.Value.Description)
+            );
         }
+
+        TryAddSourceComponent(typeName, classBuilder);
 
         if(objectSchema.Default is not null)
         {
@@ -480,24 +508,21 @@ public class ContractSchema
 
         string typeName = parentSchema.Title ?? definitionName ?? throw new NotSupportedException();
 
-        if(!_sourceComponents.ContainsKey(typeName))
+        var enumerationBuilder = new EnumerationBuilder(typeName)
+            .WithSummaryComment(parentSchema.Description)
+            .WithJsonConverter($"global::Cosm.Net.Json.SnakeCaseJsonStringEnumConverter<{typeName}>");
+
+        foreach(var oneOf in parentSchema.OneOf)
         {
-            var enumerationBuilder = new EnumerationBuilder(typeName)
-                .WithSummaryComment(parentSchema.Description)
-                .WithJsonConverter($"global::Cosm.Net.Json.SnakeCaseJsonStringEnumConverter<{typeName}>");
+            string enumerationValue = oneOf.Enumeration.Single().ToString()
+                    ?? throw new NotSupportedException();
 
-            foreach(var oneOf in parentSchema.OneOf)
-            {
-                string enumerationValue = oneOf.Enumeration.Single().ToString()
-                        ?? throw new NotSupportedException();
-
-                enumerationBuilder.AddValue(
-                    NameUtils.ToValidPropertyName(enumerationValue),
-                    oneOf.Description);
-            }
-
-            _sourceComponents.Add(typeName, enumerationBuilder);
+            enumerationBuilder.AddValue(
+                NameUtils.ToValidPropertyName(enumerationValue),
+                oneOf.Description);
         }
+
+        TryAddSourceComponent(typeName, enumerationBuilder);
 
         if(parentSchema.Default is not null)
         {
@@ -590,31 +615,23 @@ public class ContractSchema
             ?? definitionsSource.Definitions.FirstOrDefault(x => x.Value == objectSchema).Key
             ?? $"Response{_responseCounter++}";
 
-        if(typeName == "LpAction")
-        {
+        var classBuilder = new ClassBuilder(typeName);
 
+        foreach(var property in objectSchema.ActualProperties)
+        {
+            var schemaType = GetOrGenerateMergingSchemaType(property.Value, definitionsSource);
+            classBuilder.AddProperty(
+                new PropertyBuilder(
+                    schemaType.Name,
+                    NameUtils.ToValidPropertyName(property.Key))
+                .WithSetterVisibility(SetterVisibility.Init)
+                .WithIsRequired(!schemaType.HasDefaultValue)
+                .WithJsonPropertyName(property.Key)
+                .WithSummaryComment(property.Value.Description)
+            );
         }
 
-        if(!_sourceComponents.ContainsKey(typeName))
-        {
-            var classBuilder = new ClassBuilder(typeName);
-
-            foreach(var property in objectSchema.ActualProperties)
-            {
-                var schemaType = GetOrGenerateMergingSchemaType(property.Value, definitionsSource);
-                classBuilder.AddProperty(
-                    new PropertyBuilder(
-                        schemaType.Name,
-                        NameUtils.ToValidPropertyName(property.Key))
-                    .WithSetterVisibility(SetterVisibility.Init)
-                    .WithIsRequired(!schemaType.HasDefaultValue)
-                    .WithJsonPropertyName(property.Key)
-                    .WithSummaryComment(property.Value.Description)
-                );
-            }
-
-            _sourceComponents.Add(typeName, classBuilder);
-        }
+        TryAddSourceComponent(typeName, classBuilder);
 
         if(objectSchema.Default is not null)
         {
@@ -628,15 +645,6 @@ public class ContractSchema
         var typeName = definitionsSource.Definitions
             .FirstOrDefault(x => x.Value == parentSchema)
             .Key ?? $"Response{_responseCounter++}";
-
-        if(_sourceComponents.ContainsKey(typeName))
-        {
-            if(parentSchema.Default is not null)
-            {
-                throw new NotSupportedException();
-            }
-            return new GeneratedType(typeName, false);
-        }
 
         var classBuilder = new ClassBuilder(typeName);
 
@@ -674,12 +682,16 @@ public class ContractSchema
             );
         }
 
-        _sourceComponents.Add(typeName, classBuilder);
+        int a = classBuilder.GetHashCode();
+        int b = classBuilder.GetHashCode();
+
+        TryAddSourceComponent(typeName, classBuilder);
 
         if(parentSchema.Default is not null)
         {
             throw new NotSupportedException();
         }
+
         return new GeneratedType(typeName, false);
     }
 

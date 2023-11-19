@@ -69,4 +69,10 @@ public class PropertyBuilder
                 ? "init" 
                 : $"{_setterVisibility.ToString().ToLower()} set")}}; }
             """;
+
+    public override int GetHashCode()
+        => System.HashCode.Combine(
+            _type,
+            _name
+        );
 }

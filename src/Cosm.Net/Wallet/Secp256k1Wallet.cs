@@ -1,9 +1,7 @@
 ﻿using Cosm.Net.Crypto;
 using Cosm.Net.Encoding;
 using Cosm.Net.Signer;
-using dotnetstandard_bip39;
 using Org.BouncyCastle.Crypto.Digests;
-using Org.BouncyCastle.Utilities.Encoders;
 using Secp256k1Net;
 using System.Security.Cryptography;
 
@@ -55,17 +53,11 @@ public sealed class Secp256k1Wallet : IOfflineSigner
 
     private static byte[] DerivePrivateKeyFromMnemonic(string mnemonic, string passphrase, BIP39Wordlist wordlist)
     {
-        var bip39 = new BIP39();
-
-        if(!bip39.ValidateMnemonic(mnemonic, wordlist))
-        {
-            throw new InvalidOperationException("Invalid mnemonic seed!");
-        }
-
-        string seed = bip39.MnemonicToSeedHex(mnemonic, passphrase);
+        //ToDo: Validate mnemonic
+        var seed = BIP39.MnemonicToSeed(mnemonic, passphrase);
         string path = $"m/{44 + 2147483648u}'/{118 + 2147483648u}'/{0 + 2147483648u}'/0'/0'";
 
-        var (key, _) = BIP32.DerivePath(Hex.Decode(seed), path, BIP32Curves.Secp256k1);
+        var (key, _) = BIP32.DerivePath(seed, path, BIP32Curves.Secp256k1);
         return key;
     }
 

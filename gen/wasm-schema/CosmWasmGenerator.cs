@@ -34,16 +34,33 @@ public class CosmWasmGenerator : ISourceGenerator
 
             if(schemaFile is null)
             {
-                continue;
+                throw new FileNotFoundException("Schema file not found!");
             }
 
             var schemaText = schemaFile.GetText()!.ToString();
-            var contractSchema = JsonSerializer.Deserialize<ContractSchema>(schemaText)!;
+
+            ContractSchema contractSchema = null!;
+
+            try
+            {
+                contractSchema = JsonSerializer.Deserialize<ContractSchema>(schemaText)!;
+            }
+            catch(Exception)
+            {
+                throw new InvalidOperationException("Misformatted schema file");
+            }
 
             string code = contractSchema.GenerateCSharpCodeFileAsync(
-                contractType.Name, contractType.ContainingNamespace.Name)
+                contractType.Name, contractType.ContainingNamespace.ToString())
                 .GetAwaiter().GetResult();
-            context.AddSource($"{contractType.Name}.generated.cs", code);
+
+            try
+            {
+                context.AddSource($"{contractType.Name}.generated.cs", code);
+            }
+            catch
+            {
+            }
         }
     }
 }
