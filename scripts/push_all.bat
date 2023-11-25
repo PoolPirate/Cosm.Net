@@ -1,1 +1,0 @@
-nuget push out\*.nupkg -Source nuget.org
