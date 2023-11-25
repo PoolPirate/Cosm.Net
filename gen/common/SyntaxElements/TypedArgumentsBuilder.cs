@@ -1,11 +1,13 @@
 ﻿using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
 
-public class TypedArgumentsBuilder
+public class TypedArgumentsBuilder : ISyntaxBuilder
 {
     private readonly List<string> _arguments;
 
@@ -74,5 +76,17 @@ public class TypedArgumentsBuilder
         clone._arguments.AddRange(_arguments);
 
         return clone;
+    }
+
+    public SyntaxId GetSyntaxId()
+    {
+        int innerHashCode = _arguments.Count;
+
+        foreach(int val in _arguments.Select(x => HashCode.Combine(x)))
+        {
+            innerHashCode = unchecked((innerHashCode * 314159) + val);
+        }
+
+        return new SyntaxId(innerHashCode);
     }
 }

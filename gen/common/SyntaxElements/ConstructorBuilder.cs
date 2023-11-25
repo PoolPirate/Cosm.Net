@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
-public class ConstructorBuilder
+public class ConstructorBuilder : ISyntaxBuilder
 {
     private readonly List<FieldBuilder> _fields;
     private readonly string _className;
@@ -54,5 +56,22 @@ public class ConstructorBuilder
             {{assignmentSb}}
             }
             """;
+    }
+
+    public SyntaxId GetSyntaxId()
+    {
+        var innerSyntaxId = new SyntaxId(_fields.Count);
+
+        foreach(var syntaxId in _fields.Select(x => x.GetSyntaxId()))
+        {
+            innerSyntaxId = innerSyntaxId.Combine(syntaxId);
+        }
+
+        var hashCode = HashCode.Combine(
+            innerSyntaxId,
+            _className
+        );
+
+        return new SyntaxId(hashCode);
     }
 }

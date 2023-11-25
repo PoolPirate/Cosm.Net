@@ -10,7 +10,7 @@ public enum ClassVisibility
     Public,
     Internal
 }
-public class BaseType
+public class BaseType : ISyntaxBuilder
 {
     public string Name { get; }
     public bool IsInterface { get; }
@@ -20,6 +20,12 @@ public class BaseType
         Name = name;
         IsInterface = isInterface;
     }
+
+    public SyntaxId GetSyntaxId()
+        => new SyntaxId(HashCode.Combine(
+            Name,
+            IsInterface
+        ));
 }
 public class ClassBuilder : ITypeBuilder
 {
@@ -30,6 +36,7 @@ public class ClassBuilder : ITypeBuilder
     private string _name;
     private ClassVisibility _visibility = ClassVisibility.Public;
     private bool _isPartial = false;
+    private bool _isAbstract = false;
 
     public ClassBuilder(string name)
     {
@@ -39,6 +46,10 @@ public class ClassBuilder : ITypeBuilder
         _baseTypes = [];
         _name = name;
     }
+
+    public IReadOnlyList<FieldBuilder> GetFields() => _fields;
+    public IReadOnlyList<PropertyBuilder> GetProperties() => _properties;
+    public IReadOnlyList<FunctionBuilder> GetFunctions() => _functions;
 
     public ClassBuilder WithName(string name)
     {
@@ -84,6 +95,12 @@ public class ClassBuilder : ITypeBuilder
     public ClassBuilder WithIsPartial(bool isPartial = true)
     {
         _isPartial = isPartial;
+        return this;
+    }
+
+    public ClassBuilder WithIsAbstract(bool isAbstract = true)
+    {
+        _isAbstract = isAbstract;
         return this;
     }
 
@@ -138,7 +155,10 @@ public class ClassBuilder : ITypeBuilder
                     .WithIsPartial(_isPartial)
                     .Build()
             )}}
-            {{_visibility.ToString().ToLower()}}{{(_isPartial ? " partial" : "")}} class {{_name}} 
+            {{_visibility.ToString().ToLower()}}
+            {{(_isPartial ? " partial" : "")}} 
+            {{(_isAbstract ? " abstract" : "")}}
+            class {{_name}} 
                 {{baseTypeSb}}
             {
             {{(!generateFieldConstructor ? ""
@@ -153,22 +173,35 @@ public class ClassBuilder : ITypeBuilder
     public string Build() 
         => Build(false);
 
-    public override int GetHashCode()
-    {
-        int hc = _properties.Count;
+    public SyntaxId GetSyntaxId() 
+        => GetContentId().Combine(new SyntaxId(HashCode.Combine(_name)));
 
-        foreach(int val in _properties.Select(x => x.GetHashCode()))
+    public SyntaxId GetContentId()
+    {
+        var innerSyntaxId = new SyntaxId(HashCode.Combine(
+            nameof(ClassBuilder),
+            _visibility,
+            _isPartial,
+            _isAbstract
+        ));
+
+        foreach(var syntaxId in _properties.Select(x => x.GetSyntaxId()))
         {
-            hc = unchecked((hc * 314159) + val);
+            innerSyntaxId = innerSyntaxId.Combine(syntaxId);
+        }
+        foreach(var syntaxId in _fields.Select(x => x.GetSyntaxId()))
+        {
+            innerSyntaxId = innerSyntaxId.Combine(syntaxId);
+        }
+        foreach(var syntaxId in _functions.Select(x => x.GetSyntaxId()))
+        {
+            innerSyntaxId = innerSyntaxId.Combine(syntaxId);
+        }
+        foreach(var syntaxId in _baseTypes.Select(x => x.GetSyntaxId()))
+        {
+            innerSyntaxId = innerSyntaxId.Combine(syntaxId);
         }
 
-        return HashCode.Combine(
-            _name,
-            _isPartial,
-            _visibility,
-            hc
-        );
+        return innerSyntaxId;
     }
-
-
 }

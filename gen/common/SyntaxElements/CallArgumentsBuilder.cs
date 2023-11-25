@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
@@ -11,7 +12,7 @@ public class UntypedArgument
         SourceExpression = sourceExpression;
     }
 }
-public class CallArgumentsBuilder
+public class CallArgumentsBuilder : ISyntaxBuilder
 {
     private readonly List<UntypedArgument> _arguments;
 
@@ -42,5 +43,14 @@ public class CallArgumentsBuilder
         }
 
         return sb.ToString();
+    }
+
+    public SyntaxId GetSyntaxId()
+    {
+        int hashCode = HashCode.Combine(
+            nameof(CallArgumentsBuilder), 
+            _arguments.Count
+        );
+        return new SyntaxId(hashCode);
     }
 }

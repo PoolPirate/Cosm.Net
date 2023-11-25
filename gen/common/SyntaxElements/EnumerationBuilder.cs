@@ -77,18 +77,24 @@ public class EnumerationBuilder : ITypeBuilder
             """;
     }
 
-    public override int GetHashCode()
-    {
-        int hc = _enumerationValues.Count;
+    public SyntaxId GetSyntaxId()
+        => GetContentId().Combine(new SyntaxId(HashCode.Combine(_name)));
 
-        foreach(int val in _enumerationValues.Select(x => x.Value.GetHashCode()))
+    public SyntaxId GetContentId()
+    {
+        int innerHashCode = _enumerationValues.Count;
+
+        foreach(int val in _enumerationValues.Select(x => HashCode.Combine(x.Value)))
         {
-            hc = unchecked((hc * 314159) + val);
+            innerHashCode = unchecked((innerHashCode * 314159) + val);
         }
 
-        return HashCode.Combine(
-            _name,
-            hc
+        int hashCode = HashCode.Combine(
+            nameof(EnumerationBuilder),
+            innerHashCode,
+            _jsonConverter
         );
+
+        return new SyntaxId(hashCode);
     }
 }

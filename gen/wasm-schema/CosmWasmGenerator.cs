@@ -29,12 +29,14 @@ public class CosmWasmGenerator : ISourceGenerator
             var schemaPath = contractType.FindAttribute(ContractSchemaFilePathAttribute)!
                 .ConstructorArguments[0].Value!.ToString();
             var schemaFile = context.AdditionalFiles
-                .Where(x => x.Path == schemaPath)
+                .Where(x => x.Path.EndsWith(schemaPath))
                 .FirstOrDefault();
 
             if(schemaFile is null)
             {
-                throw new FileNotFoundException("Schema file not found!");
+                context.ReportDiagnostic(Diagnostic.Create(
+                    GeneratorDiagnostics.SchemaFileNotFound, contractType.Locations[0], Array.Empty<object>()));
+                continue;
             }
 
             var schemaText = schemaFile.GetText()!.ToString();
@@ -45,9 +47,11 @@ public class CosmWasmGenerator : ISourceGenerator
             {
                 contractSchema = JsonSerializer.Deserialize<ContractSchema>(schemaText)!;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                throw new InvalidOperationException("Misformatted schema file");
+                context.ReportDiagnostic(Diagnostic.Create(
+                    GeneratorDiagnostics.SchemaFileMalformed, contractType.Locations[0], ex));
+                continue;
             }
 
             string code = contractSchema.GenerateCSharpCodeFileAsync(

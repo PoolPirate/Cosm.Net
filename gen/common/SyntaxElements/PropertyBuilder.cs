@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Generators.Common.Util;
+using System;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
 public enum PropertyVisibility
@@ -13,10 +14,10 @@ public enum SetterVisibility
     Private,
     Init
 }
-public class PropertyBuilder
+public class PropertyBuilder : ISyntaxBuilder
 {
-    private readonly string _type;
-    private readonly string _name;
+    public string Type { get; private set; }
+    public string Name { get; private set; }
     private PropertyVisibility _visibility = PropertyVisibility.Public;
     private SetterVisibility _setterVisibility = SetterVisibility.Public;
     private bool _isRequired = false;
@@ -26,8 +27,8 @@ public class PropertyBuilder
 
     public PropertyBuilder(string type, string name)
     {
-        _type = type;
-        _name = name;
+        Type = type;
+        Name = name;
     }
 
     public PropertyBuilder WithVisibility(PropertyVisibility visibility)
@@ -64,7 +65,7 @@ public class PropertyBuilder
         => $$"""
             {{(_summaryComment is not null ? CommentUtils.MakeSummaryComment(_summaryComment) : "")}}
             {{(_jsonPropertyName is not null ? $"[System.Text.Json.Serialization.JsonPropertyName(\"{_jsonPropertyName}\")]" : "")}}
-            {{_visibility.ToString().ToLower()}} {{(_isRequired ? "required" : "")}} {{_type}} {{_name}} { get; {{
+            {{_visibility.ToString().ToLower()}} {{(_isRequired ? "required" : "")}} {{Type}} {{Name}} { get; {{
             (_setterVisibility == SetterVisibility.Init 
                 ? "init" 
                 : $"{_setterVisibility.ToString().ToLower()} set")}}; }
@@ -72,7 +73,20 @@ public class PropertyBuilder
 
     public override int GetHashCode()
         => System.HashCode.Combine(
-            _type,
-            _name
+            Type,
+            Name
         );
+    public SyntaxId GetSyntaxId()
+    {
+        int hashCode = HashCode.Combine(
+                Type,
+                Name,
+                _visibility,
+                _setterVisibility,
+                _isRequired,
+                _jsonPropertyName
+        );
+
+        return new SyntaxId(hashCode);
+    }
 }

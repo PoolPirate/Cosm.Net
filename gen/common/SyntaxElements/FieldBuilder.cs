@@ -1,11 +1,13 @@
-﻿namespace Cosm.Net.Generators.Common.SyntaxElements;
+﻿using System;
+
+namespace Cosm.Net.Generators.Common.SyntaxElements;
 public enum FieldVisibility
 {
     Public,
     Private,
     Internal
 }
-public class FieldBuilder
+public class FieldBuilder : ISyntaxBuilder
 {
     public string Type { get; }
     public string Name { get; }
@@ -35,4 +37,16 @@ public class FieldBuilder
         => $$"""
             {{_visibility.ToString().ToLower()}} {{(_isReadonly ? "readonly" : "")}} {{Type}} {{Name}};
             """;
+
+    public SyntaxId GetSyntaxId()
+    {
+        int hashCode = HashCode.Combine(
+            nameof(FieldBuilder),
+            Type,
+            Name,
+            _visibility,
+            _isReadonly
+        );
+        return new SyntaxId(hashCode);
+    }
 }
