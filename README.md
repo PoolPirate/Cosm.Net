@@ -13,7 +13,17 @@ While building the lib I focused on 3 core aspects.
 
 ## Getting Started
 ### Installation
-Cloning it is. Nuget coming soon.
+#### Base package (required)
+- [Cosm.Net](https://www.nuget.org/packages/Cosm.Net)
+
+#### Modules
+- [Cosmos-SDK](https://www.nuget.org/packages/Cosm.Net.CosmosSdk)
+- [WasmD](https://www.nuget.org/packages/Cosm.Net.Wasm)
+- [Osmosis](https://www.nuget.org/packages/Cosm.Net.Osmosis)
+
+#### Generators
+- [CosmWasm](https://www.nuget.org/packages/Cosm.Net.Generators.CosmWasm)
+- [Proto (Chain modules)](https://www.nuget.org/packages/Cosm.Net.Generators.Proto)
 
 ### Connecting to a chain
 
