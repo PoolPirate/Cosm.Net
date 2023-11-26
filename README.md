@@ -55,7 +55,7 @@ var txClient = await new CosmTxClientBuilder()
     .UseCosmosTxStructure() //Modular approach to transaction structures. Allows to integrate with heavy modified cosmos-sdk chains.
     .WithTxChainConfiguration(config =>
     {
-        config.Prefix = "osmo";
+        config.Bech32Prefix = "osmo";
         config.FeeDenom = "uosmo";
         config.GasPrice = 0.025m;
     })
@@ -70,7 +70,7 @@ Retrieve instances of the contract / module from the client.
 var bankModule = client.Module<IBankModule>();
 var osmoBalance = await bankModule.BalanceAsync(wallet.GetAddress("osmo", "uosmo");
 
-var levanaFactory = client.Factory<ILevanaFactory>("osmo1ssw6x553kzqher0earlkwlxasfm2stnl3ms3ma2zz4tnajxyyaaqlucd45");
+var levanaFactory = client.Contract<ILevanaFactory>("osmo1ssw6x553kzqher0earlkwlxasfm2stnl3ms3ma2zz4tnajxyyaaqlucd45");
 var markets = await levanaFactory.MarketsAsync();
 ```
 
@@ -90,7 +90,7 @@ txBuilder.AddMessage(bankModule.Send(wallet.GetAddress("osmo"), "osmo1qqqqqqqqqq
       Denom = "uosmo"
   }]));
 
-var levanaMarket = client.Factory<ILevanaMarket>("osmo1nzddhaf086r0rv0gmrepn3ryxsu9qqrh7zmvcexqtfmxqgj0hhps4hruzu");
+var levanaMarket = client.Contract<ILevanaMarket>("osmo1nzddhaf086r0rv0gmrepn3ryxsu9qqrh7zmvcexqtfmxqgj0hhps4hruzu");
 txBuilder.AddMessage(levanaFactory.Crank()); 
 
 await txClient.SimulateAndPublishTxAsync(txBuilder.Build()); //Will hand over the scheduling of the tx over to the configured handler
