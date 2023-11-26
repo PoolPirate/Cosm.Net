@@ -22,7 +22,13 @@ public class TxModulePublisher : ITxPublisher
         var encodedTx = _txEncoder.EncodeTx(tx, sequence);
         var response = await _txModule.SimulateAsync(encodedTx);
 
-        return new TxSimulation(response.GasInfo.GasUsed);
+        return new TxSimulation(
+            response.GasInfo.GasUsed,
+            response.Result.Events
+                .Select(x => new TxEvent(
+                    x.Type, x.Attributes.Select(y => new TxEventAttribute(y.Key, y.Value)).ToArray()))
+                .ToArray()
+        );
     }
 
     public async Task<string> PublishTxAsync(ISignedCosmTx tx)
