@@ -1,10 +1,9 @@
-﻿using Cosm.Net.Modules;
+﻿using Cosm.Net.Client.Internal;
+using Cosm.Net.Modules;
 
 namespace Cosm.Net.Client;
 public interface ICosmClient
 {
     public TModule Module<TModule>() where TModule : IModule;
-    internal IEnumerable<(Type, IModule)> GetAllModules();
-
     public IInternalCosmClient AsInternal();
 }

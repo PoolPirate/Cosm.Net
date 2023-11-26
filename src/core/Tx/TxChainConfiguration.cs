@@ -1,10 +1,10 @@
 ﻿namespace Cosm.Net.Tx;
 public class TxChainConfiguration : ITxChainConfiguration
 {
+    public string ChainId { get; }
     public string Prefix { get; }
     public string FeeDenom { get; }
     public decimal GasPrice { get; }
-    public string ChainId { get; }
 
     public TxChainConfiguration(string? chainId, string? prefix, string? feeDenom, decimal gasPrice)
     {

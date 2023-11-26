@@ -137,7 +137,7 @@ public class CosmTxClientBuilder
         return this;
     }
 
-    public async Task<CosmTxClient> BuildAsync()
+    public async Task<ICosmTxClient> BuildAsync()
     {
         if (!_services.Any(x => x.ServiceType == typeof(ICosmClient)) || _cosmClient is null) 
         {
@@ -164,7 +164,7 @@ public class CosmTxClientBuilder
             throw new InvalidOperationException("Missing IAccountDataProvider");
         }
 
-        foreach(var (type, module) in _cosmClient.GetAllModules())
+        foreach(var (type, module) in _cosmClient.AsInternal().GetAllModules())
         {
             _services.AddSingleton(type, module);   
         }
@@ -174,7 +174,7 @@ public class CosmTxClientBuilder
         var dataProvider = setupProvider.GetRequiredService<IChainDataProvider>();
         var chainId = await dataProvider.GetChainIdAsync();
 
-        var chainConfig = new TxChainConfiguration(chainId, _userChainConfiguration.Prefix, 
+        var chainConfig = new TxChainConfiguration(chainId, _userChainConfiguration.Bech32Prefix, 
             _userChainConfiguration.FeeDenom, _userChainConfiguration.GasPrice);
 
         _services.AddSingleton<ITxChainConfiguration>(chainConfig);
@@ -184,6 +184,6 @@ public class CosmTxClientBuilder
         var txScheduler = provider.GetRequiredService<ITxScheduler>();
         await txScheduler.InitializeAsync();
 
-        return new CosmTxClient(provider);
+        return new CosmTxClient(provider, _cosmClient, chainConfig);
     }
 }
