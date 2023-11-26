@@ -24,10 +24,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Cosm.Net\Cosm.Net.csproj" />
-    <ProjectReference Include="..\src\modules\cosmos-sdk\Cosm.Net.CosmosSdk.csproj" />
     <ProjectReference Include="..\src\modules\wasm\Cosm.Net.Wasm.csproj" />
   </ItemGroup>
-
+	
     <ItemGroup>
 	    <None Update="secp256k1.dll">
 	      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
