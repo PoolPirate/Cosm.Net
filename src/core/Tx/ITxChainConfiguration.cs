@@ -3,7 +3,7 @@
 public interface ITxChainConfiguration
 {
     string ChainId { get; }
-    string Prefix { get; }
-    public string FeeDenom { get; }
-    public decimal GasPrice { get; }
+    string Bech32Prefix { get; }
+
+    internal void Initialize(string chainId, string bech32Prefix);
 }

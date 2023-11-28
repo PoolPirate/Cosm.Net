@@ -13,7 +13,7 @@
 	  <IncludeSymbols>True</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  <RootNamespace>Cosm.Net</RootNamespace>
-	  <Version>0.9.0-beta4</Version>
+	  <Version>0.9.0-beta5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,7 @@
     <PackageReference Include="Secp256k1.Net" Version="1.2.0" />
 	<PackageReference Include="Grpc.Net.Client" Version="2.59.0" />
 	<PackageReference Include="System.Text.Json" Version="8.0.0" />
+	<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
 
 	<ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Cosm.Net.Crypto;
-using dotnetstandard_bip39;
 using Org.BouncyCastle.Utilities.Encoders;
 
 namespace Cosm.Net.Bench;
@@ -15,7 +14,7 @@ public class BIP32Bench
     public BIP32Bench()
     {
         Mnemonic = "file crane delay shadow extend outdoor maximum click approve zebra alert ten";
-        MnemonicSeed = Hex.Decode(new BIP39().MnemonicToSeedHex(Mnemonic, ""));
+        MnemonicSeed = BIP39.MnemonicToSeed(Mnemonic);
         CosmosDerivationPath = $"m/{44 + 2147483648u}'/{118 + 2147483648u}'/{0 + 2147483648u}'/0'/0'";
     }
 

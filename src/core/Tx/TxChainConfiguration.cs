@@ -1,29 +1,17 @@
 ﻿namespace Cosm.Net.Tx;
 public class TxChainConfiguration : ITxChainConfiguration
 {
-    public string ChainId { get; }
-    public string Prefix { get; }
-    public string FeeDenom { get; }
-    public decimal GasPrice { get; }
+    private string? _chainId = null;
+    private string? _bech32Prefix = null;
 
-    public TxChainConfiguration(string? chainId, string? prefix, string? feeDenom, decimal gasPrice)
+    public string ChainId => _chainId
+        ?? throw new InvalidOperationException("TxChainConfiguration cannot be accessed before Initalization has been called");
+    public string Bech32Prefix => _bech32Prefix
+        ?? throw new InvalidOperationException("TxChainConfiguration cannot be accessed before Initalization has been called");
+
+    void ITxChainConfiguration.Initialize(string chainId, string bech32Prefix)
     {
-        if (chainId is null)
-        {
-            throw new ArgumentException("ChainId not set");
-        }
-        if(prefix is null)
-        {
-            throw new ArgumentException("Prefix not set");
-        }
-        if(feeDenom is null)
-        {
-            throw new ArgumentException("GasDenom not set");
-        }
-
-        Prefix = prefix;
-        FeeDenom = feeDenom;
-        GasPrice = gasPrice;
-        ChainId = chainId;
+        _chainId = chainId;
+        _bech32Prefix = bech32Prefix;
     }
 }

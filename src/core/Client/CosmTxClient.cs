@@ -11,15 +11,18 @@ internal class CosmTxClient : ICosmTxClient, IInternalCosmTxClient
     private readonly IServiceProvider _provider;
     private readonly ICosmClient _cosmClient;
     private readonly ITxChainConfiguration _chainConfig;
+    private readonly IGasFeeProvider _gasFeeProvider;
 
     public ITxChainConfiguration Chain => _chainConfig;
     IServiceProvider IInternalCosmClient.ServiceProvider => _cosmClient.AsInternal().ServiceProvider;
 
-    public CosmTxClient(IServiceProvider provider, ICosmClient cosmClient, ITxChainConfiguration chainConfig)
+    public CosmTxClient(IServiceProvider provider, ICosmClient cosmClient,
+        IGasFeeProvider gasFeeProvider, ITxChainConfiguration chainConfig)
     {
         _provider = provider;
         _cosmClient = cosmClient;
         _chainConfig = chainConfig;
+        _gasFeeProvider = gasFeeProvider;
     }
 
     public Task<TxSimulation> SimulateAsync(ICosmTx tx)
@@ -28,10 +31,10 @@ internal class CosmTxClient : ICosmTxClient, IInternalCosmTxClient
         return scheduler.SimulateTxAsync(tx);
     }
 
-    public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, string feeDenom, ulong feeAmount)
+    public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee)
     {
         var scheduler = _provider.GetRequiredService<ITxScheduler>();
-        return await scheduler.PublishTxAsync(tx, gasWanted, feeDenom, feeAmount);
+        return await scheduler.PublishTxAsync(tx, gasFee);
     }
     public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000)
     {
@@ -39,8 +42,9 @@ internal class CosmTxClient : ICosmTxClient, IInternalCosmTxClient
         var simulation = await SimulateAsync(tx);
 
         ulong gasWanted = (ulong) Math.Ceiling((simulation.GasUsed * gasMultiplier) + gasOffset);
+        var fee = await _gasFeeProvider.GetFeeForGasAsync(gasWanted);
 
-        return await PublishTxAsync(tx, gasWanted, chainConfig.FeeDenom, (ulong) Math.Ceiling(chainConfig.GasPrice * gasWanted));
+        return await PublishTxAsync(tx, fee);
     }
 
     public TModule Module<TModule>() where TModule : IModule 

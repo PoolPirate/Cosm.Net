@@ -4,7 +4,7 @@ using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using System.Threading.Channels;
 
-using QueueEntry = (ulong GasWanted, string FeeDenom, ulong FeeAmount, Cosm.Net.Tx.ICosmTx Tx,
+using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee,
     System.Threading.Tasks.TaskCompletionSource<string>? CompletionSource);
 
 namespace Cosm.Net.Tx;
@@ -42,7 +42,7 @@ public class SequentialTxScheduler : ITxScheduler
     public async Task InitializeAsync()
     {
         var accountData = await _accountDataProvider.GetAccountDataAsync(
-            _signer.GetAddress(_chainConfiguration.Prefix));
+            _signer.GetAddress(_chainConfiguration.Bech32Prefix));
 
         AccountNumber = accountData.AccountNumber;
         CurrentSequence = accountData.Sequence;
@@ -51,10 +51,10 @@ public class SequentialTxScheduler : ITxScheduler
     public Task<TxSimulation> SimulateTxAsync(ICosmTx tx)
         => _txPublisher.SimulateTxAsync(tx, CurrentSequence);
 
-    public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, string feeDenom, ulong feeAmount)
+    public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee)
     {
         var source = new TaskCompletionSource<string>();
-        await _txChannel.Writer.WriteAsync(new QueueEntry(gasWanted, feeDenom, feeAmount, tx, source));
+        await _txChannel.Writer.WriteAsync(new QueueEntry(tx, gasFee, source));
         return await source.Task;
     }
 
@@ -76,12 +76,10 @@ public class SequentialTxScheduler : ITxScheduler
 
     private async Task ProcessTxAsync(QueueEntry entry)
     {
-        var signDoc = _txEncoder.GetSignSignDoc(entry.Tx, AccountNumber, CurrentSequence, 
-            entry.GasWanted, entry.FeeDenom, entry.FeeAmount);
+        var signDoc = _txEncoder.GetSignSignDoc(entry.Tx, entry.GasFee, AccountNumber, CurrentSequence);
         var signature = _signer.SignMessage(signDoc);
 
-        var signedTx = new SignedTx(entry.Tx, CurrentSequence, signature,
-            entry.GasWanted, entry.FeeDenom, entry.FeeAmount);
+        var signedTx = new SignedTx(entry.Tx, entry.GasFee, CurrentSequence, signature);
 
         try
         {

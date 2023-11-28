@@ -7,9 +7,22 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Cosm.Net.Client;
 public class CosmTxClientBuilder
 {
-    private readonly ServiceCollection _services = new ServiceCollection();
-    private ICosmClient? _cosmClient;
-    private readonly TxUserChainConfiguration _userChainConfiguration = new TxUserChainConfiguration();
+    private readonly ServiceCollection _services = [];
+
+    private string? _bech32Prefix = null;
+    private ICosmClient? _cosmClient = null;
+    private IOfflineSigner? _signer = null;
+
+    public CosmTxClientBuilder WithBech32Prefix(string bech32Prefix, bool overrideExisting = false)
+    {
+        if(_bech32Prefix is not null && !overrideExisting)
+        {
+            throw new InvalidOperationException("Bech32Prefix already set");
+        }
+
+        _bech32Prefix = bech32Prefix;
+        return this;
+    }
 
     public CosmTxClientBuilder WithCosmClient(ICosmClient client, bool overrideExisting = false)
     {
@@ -34,20 +47,12 @@ public class CosmTxClientBuilder
 
     public CosmTxClientBuilder WithSigner(IOfflineSigner signer, bool overrideExisting = false)
     {
-        if(_services.Any(x => x.ServiceType == typeof(IOfflineSigner)))
+        if (_signer is not null && !overrideExisting)
         {
-            if(!overrideExisting)
-            {
-                throw new InvalidOperationException("IOfflineSigner already registered");
-            }
-
-            _services.Replace(new ServiceDescriptor(typeof(IOfflineSigner), signer));
-        }
-        else
-        {
-            _services.AddSingleton(signer);
+            throw new InvalidOperationException("Signer already set!");
         }
 
+        _signer = signer;
         return this;
     }
 
@@ -70,9 +75,26 @@ public class CosmTxClientBuilder
 
         return this;
     }
+    public CosmTxClientBuilder WithTxEncoder<TTxEncoder, TConfiguration>(TConfiguration configuration)
+        where TTxEncoder : class, ITxEncoder<TConfiguration>
+        where TConfiguration : class
+    {
+        if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
+        {
+            throw new InvalidOperationException("Configuration type has already been registered");
+        }
+        if(_services.Any(x => x.ServiceType == typeof(ITxEncoder)))
+        {
+            throw new InvalidOperationException("ITxEncoder already registered");
+        }
+
+        _services.AddSingleton<ITxEncoder, TTxEncoder>();
+        _services.AddSingleton(configuration);
+        return this;
+    }
 
     public CosmTxClientBuilder WithTxPublisher<TTxPublisher>(bool overrideExisting = false)
-    where TTxPublisher : class, ITxPublisher
+        where TTxPublisher : class, ITxPublisher
     {
         if(_services.Any(x => x.ServiceType == typeof(ITxPublisher)))
         {
@@ -90,9 +112,26 @@ public class CosmTxClientBuilder
 
         return this;
     }
+    public CosmTxClientBuilder WithTxPublisher<TTxPublisher, TConfiguration>(TConfiguration configuration)
+        where TTxPublisher : class, ITxPublisher<TConfiguration>
+        where TConfiguration : class
+    {
+        if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
+        {
+            throw new InvalidOperationException("Configuration type has already been registered");
+        }
+        if(_services.Any(x => x.ServiceType == typeof(ITxPublisher)))
+        {
+            throw new InvalidOperationException("ITxPublisher already registered");
+        }
+
+        _services.AddSingleton<ITxPublisher, TTxPublisher>();
+        _services.AddSingleton(configuration);
+        return this;
+    }
 
     public CosmTxClientBuilder WithTxScheduler<TTxScheduler>(bool overrideExisting = false)
-    where TTxScheduler : class, ITxScheduler
+        where TTxScheduler : class, ITxScheduler
     {
         if(_services.Any(x => x.ServiceType == typeof(ITxScheduler)))
         {
@@ -110,6 +149,23 @@ public class CosmTxClientBuilder
 
         return this;
     }
+    public CosmTxClientBuilder WithTxScheduler<TTxScheduler, TConfiguration>(TConfiguration configuration)
+        where TTxScheduler : class, ITxScheduler<TConfiguration>
+        where TConfiguration : class
+    {
+        if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
+        {
+            throw new InvalidOperationException("Configuration type has already been registered");
+        }
+        if(_services.Any(x => x.ServiceType == typeof(ITxScheduler)))
+        {
+            throw new InvalidOperationException("ITxScheduler already registered");
+        }
+
+        _services.AddSingleton<ITxScheduler, TTxScheduler>();
+        _services.AddSingleton(configuration);
+        return this;
+    }
 
     public CosmTxClientBuilder WithAccountDataProvider<TAccountDataProvider>(bool overrideExisting = false)
         where TAccountDataProvider : class, IChainDataProvider
@@ -118,7 +174,7 @@ public class CosmTxClientBuilder
         {
             if(!overrideExisting)
             {
-                throw new InvalidOperationException("IAccountDataProvider already registered");
+                throw new InvalidOperationException("IChainDataProvider already registered");
             }
 
             _services.Replace(new ServiceDescriptor(typeof(IChainDataProvider), typeof(TAccountDataProvider), ServiceLifetime.Singleton));
@@ -130,23 +186,76 @@ public class CosmTxClientBuilder
 
         return this;
     }
-
-    public CosmTxClientBuilder WithTxChainConfiguration(Action<TxUserChainConfiguration> action)
+    public CosmTxClientBuilder WithAccountDataProvider<TAccountDataProvider, TConfiguration>(TConfiguration configuration)
+        where TAccountDataProvider : class, IChainDataProvider<TConfiguration>
+        where TConfiguration : class
     {
-        action.Invoke(_userChainConfiguration);
+        if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
+        {
+            throw new InvalidOperationException("Configuration type has already been registered");
+        }
+        if(_services.Any(x => x.ServiceType == typeof(IChainDataProvider)))
+        {
+            throw new InvalidOperationException("IChainDataProvider already registered");
+        }
+
+        _services.AddSingleton<IChainDataProvider, TAccountDataProvider>();
+        _services.AddSingleton(configuration);
+        return this;
+    }
+
+    public CosmTxClientBuilder WithGasFeeProvider<TGasFeeProvider>(bool overrideExisting = false)
+        where TGasFeeProvider : class, IGasFeeProvider
+    {
+        if(_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
+        {
+            if(!overrideExisting)
+            {
+                throw new InvalidOperationException("IGasFeeProvider already registered");
+            }
+
+            _services.Replace(new ServiceDescriptor(typeof(IGasFeeProvider), typeof(TGasFeeProvider), ServiceLifetime.Singleton));
+        }
+        else
+        {
+            _services.AddSingleton<IGasFeeProvider, TGasFeeProvider>();
+        }
+
+        return this;
+    }
+    public CosmTxClientBuilder WithGasFeeProvider<TGasFeeProvider, TConfiguration>(TConfiguration configuration)
+        where TGasFeeProvider : class, IGasFeeProvider<TConfiguration>
+        where TConfiguration : class
+    {
+        if (_services.Any(x => x.ServiceType == typeof(TConfiguration)))
+        {
+            throw new InvalidOperationException("Configuration type has already been registered");
+        }
+        if(_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
+        {
+            throw new InvalidOperationException("IGasFeeProvider already registered");
+        }
+
+        _services.AddSingleton<IGasFeeProvider, TGasFeeProvider>();
+        _services.AddSingleton(configuration);
         return this;
     }
 
     public async Task<ICosmTxClient> BuildAsync()
     {
-        if (!_services.Any(x => x.ServiceType == typeof(ICosmClient)) || _cosmClient is null) 
+        if (_bech32Prefix is null)
+        {
+            throw new InvalidOperationException("Missing Bech32Prefix");
+        }
+        if (_cosmClient is null) 
         {
             throw new InvalidOperationException("Missing CosmClient");
         }
-        if(!_services.Any(x => x.ServiceType == typeof(IOfflineSigner)))
+        if(_signer is null)
         {
             throw new InvalidOperationException("Missing Signer");
         }
+
         if(!_services.Any(x => x.ServiceType == typeof(ITxEncoder)))
         {
             throw new InvalidOperationException("Missing ITxEncoder");
@@ -163,27 +272,34 @@ public class CosmTxClientBuilder
         {
             throw new InvalidOperationException("Missing IAccountDataProvider");
         }
+        if(!_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
+        {
+            throw new InvalidOperationException("Missing IGasFeeProvider");
+        }
 
         foreach(var (type, module) in _cosmClient.AsInternal().GetAllModules())
         {
             _services.AddSingleton(type, module);   
         }
 
-        var setupProvider = _services.BuildServiceProvider();
+        ITxChainConfiguration chainConfig = new TxChainConfiguration();
 
-        var dataProvider = setupProvider.GetRequiredService<IChainDataProvider>();
-        var chainId = await dataProvider.GetChainIdAsync();
-
-        var chainConfig = new TxChainConfiguration(chainId, _userChainConfiguration.Bech32Prefix, 
-            _userChainConfiguration.FeeDenom, _userChainConfiguration.GasPrice);
-
-        _services.AddSingleton<ITxChainConfiguration>(chainConfig);
+        _services.AddSingleton(chainConfig);
+        _services.AddSingleton(_cosmClient);
+        _services.AddSingleton(_signer);
 
         var provider = _services.BuildServiceProvider();
 
+        var dataProvider = provider.GetRequiredService<IChainDataProvider>();
+        string chainId = await dataProvider.GetChainIdAsync();
+
+        chainConfig.Initialize(chainId, _bech32Prefix);
+  
         var txScheduler = provider.GetRequiredService<ITxScheduler>();
         await txScheduler.InitializeAsync();
 
-        return new CosmTxClient(provider, _cosmClient, chainConfig);
+        var gasFeeProvider = provider.GetRequiredService<IGasFeeProvider>();
+
+        return new CosmTxClient(provider, _cosmClient, gasFeeProvider, chainConfig);
     }
 }

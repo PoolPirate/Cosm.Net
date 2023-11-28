@@ -5,7 +5,9 @@ namespace Cosm.Net.Services;
 public interface ITxScheduler
 {   
     public Task<TxSimulation> SimulateTxAsync(ICosmTx tx);
-    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, string feeDenom, ulong feeAmount);
+    public Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee);
 
     public Task InitializeAsync();
 }
+
+public interface ITxScheduler<TConfiguration> : ITxScheduler;

@@ -7,3 +7,5 @@ public interface ITxPublisher
     public Task<string> PublishTxAsync(ISignedCosmTx tx);
     public Task<TxSimulation> SimulateTxAsync(ICosmTx tx, ulong sequence);
 }
+
+public interface ITxPublisher<TConfiguration> : ITxPublisher;

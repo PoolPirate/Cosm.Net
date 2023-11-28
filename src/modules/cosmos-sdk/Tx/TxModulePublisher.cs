@@ -10,16 +10,18 @@ public class TxModulePublisher : ITxPublisher
 {
     private readonly ITxModule _txModule;
     private readonly ITxEncoder _txEncoder;
+    private readonly IGasFeeProvider _gasFeeProvider;
 
-    public TxModulePublisher(ITxModule txModule, ITxEncoder txEncoder)
+    public TxModulePublisher(ITxModule txModule, ITxEncoder txEncoder, IGasFeeProvider gasFeeProvider)
     {
         _txModule = txModule;
         _txEncoder = txEncoder;
+        _gasFeeProvider = gasFeeProvider;
     }
 
     public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, ulong sequence)
     {
-        var encodedTx = _txEncoder.EncodeTx(tx, sequence);
+        var encodedTx = _txEncoder.EncodeTx(tx, sequence, _gasFeeProvider.BaseGasFeeDenom);
         var response = await _txModule.SimulateAsync(encodedTx);
 
         return new TxSimulation(

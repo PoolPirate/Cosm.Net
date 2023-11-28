@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\core\Cosm.Net.csproj" />
+    <ProjectReference Include="..\src\Cosm.Net\Cosm.Net.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Services;
+﻿using Cosm.Net.Models;
+using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Cosm.Net.Tx.Msg;
@@ -18,21 +19,20 @@ public class CosmosTxEncoder : ITxEncoder
         _chainConfig = chainConfig;
     }
 
-    public byte[] GetSignSignDoc(ICosmTx tx, ulong accountNumber, ulong sequence, 
-        ulong gasWanted, string feeDenom, ulong feeAmount) 
+    public byte[] GetSignSignDoc(ICosmTx tx, GasFeeAmount gasFee, ulong accountNumber, ulong sequence) 
         => new SignDoc()
         {
             AccountNumber = accountNumber,
-            AuthInfoBytes = MakeAuthInfo(sequence, gasWanted, feeDenom, feeAmount).ToByteString(),
+            AuthInfoBytes = MakeAuthInfo(sequence, gasFee.GasWanted, gasFee.FeeDenom, gasFee.FeeAmount).ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages).ToByteString(),
             ChainId = _chainConfig.ChainId
         }.ToByteArray();
 
-    public ByteString EncodeTx(ICosmTx tx, ulong sequence)
+    public ByteString EncodeTx(ICosmTx tx, ulong sequence, string feeDenom)
     {
         var txRaw = new TxRaw()
         {
-            AuthInfoBytes = MakeAuthInfo(sequence, 0, _chainConfig.FeeDenom, 0)
+            AuthInfoBytes = MakeAuthInfo(sequence, 0, feeDenom, 0)
             .ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString()
@@ -45,7 +45,7 @@ public class CosmosTxEncoder : ITxEncoder
 
     public ByteString EncodeTx(ISignedCosmTx tx)
     {
-        var authInfoBytes = MakeAuthInfo(tx.Sequence, tx.GasWanted, tx.FeeDenom, tx.FeeAmount)
+        var authInfoBytes = MakeAuthInfo(tx.Sequence, tx.GasFee.GasWanted, tx.GasFee.FeeDenom, tx.GasFee.FeeAmount)
             .ToByteString();
         var bodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString();

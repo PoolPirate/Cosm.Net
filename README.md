@@ -49,16 +49,12 @@ var wallet = new Secp256k1Wallet("totally my mnemonic phrase")
 
 //Create tx client builder and attach it to the previously connected chain client
 var txClient = await new CosmTxClientBuilder()
+    .WithBech32Prefix("osmo")
     .WithCosmClient(cosmClient)
     .WithSigner(signer)
     .WithTxScheduler<SequentialTxScheduler>() //Handler that manages tx submissions. Custom implementation could include retries, gas estimations, load balancing etc
     .UseCosmosTxStructure() //Modular approach to transaction structures. Allows to integrate with heavy modified cosmos-sdk chains.
-    .WithTxChainConfiguration(config =>
-    {
-        config.Bech32Prefix = "osmo";
-        config.FeeDenom = "uosmo";
-        config.GasPrice = 0.025m;
-    })
+    .WithConstantGasPrice("uosmo", 0.025m)
     .BuildAsync()
 ```
 
@@ -91,7 +87,7 @@ txBuilder.AddMessage(bankModule.Send(wallet.GetAddress("osmo"), "osmo1qqqqqqqqqq
   }]));
 
 var levanaMarket = client.Contract<ILevanaMarket>("osmo1nzddhaf086r0rv0gmrepn3ryxsu9qqrh7zmvcexqtfmxqgj0hhps4hruzu");
-txBuilder.AddMessage(levanaFactory.Crank()); 
+txBuilder.AddMessage(levanaMarket.Crank()); 
 
 await txClient.SimulateAndPublishTxAsync(txBuilder.Build()); //Will hand over the scheduling of the tx over to the configured handler
 ```

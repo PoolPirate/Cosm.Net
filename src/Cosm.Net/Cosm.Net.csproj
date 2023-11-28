@@ -13,11 +13,11 @@
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<RootNamespace>Cosm.Net</RootNamespace>
 	<LangVersion>preview</LangVersion>
-	<Version>0.9.0-beta4</Version>
+	<Version>0.9.0-beta5</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cosm.Net.Core" Version="0.9.0-beta4" />
+    <PackageReference Include="Cosm.Net.Core" Version="0.9.0-beta5" />
   </ItemGroup>
 
 </Project>
