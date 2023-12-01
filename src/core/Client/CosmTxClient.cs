@@ -36,9 +36,13 @@ internal class CosmTxClient : ICosmTxClient, IInternalCosmTxClient
         var scheduler = _provider.GetRequiredService<ITxScheduler>();
         return await scheduler.PublishTxAsync(tx, gasFee);
     }
+    public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted)
+    {
+        var fee = await _gasFeeProvider.GetFeeForGasAsync(gasWanted);
+        return await PublishTxAsync(tx, fee);
+    }
     public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000)
     {
-        var chainConfig = _provider.GetRequiredService<ITxChainConfiguration>();
         var simulation = await SimulateAsync(tx);
 
         ulong gasWanted = (ulong) Math.Ceiling((simulation.GasUsed * gasMultiplier) + gasOffset);
@@ -57,5 +61,4 @@ internal class CosmTxClient : ICosmTxClient, IInternalCosmTxClient
 
     IEnumerable<(Type, IModule)> IInternalCosmClient.GetAllModules() 
         => _cosmClient.AsInternal().GetAllModules();
-
 }

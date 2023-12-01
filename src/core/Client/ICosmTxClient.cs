@@ -9,6 +9,7 @@ public interface ICosmTxClient : ICosmClient
 
     public Task<TxSimulation> SimulateAsync(ICosmTx tx);
     public Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee);
+    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted);
     public Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000);
 
     public new IInternalCosmTxClient AsInternal();
