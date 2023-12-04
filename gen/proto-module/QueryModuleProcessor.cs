@@ -75,6 +75,7 @@ public static class QueryModuleProcessor
         foreach(var property in requestProps)
         {
             string paramName = NameUtils.ToValidVariableName(property.Name);
+
             functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
             requestCtorCall.AddInitializer(property, paramName);
         }
@@ -141,6 +142,6 @@ public static class QueryModuleProcessor
         => type.GetMembers()
             .Where(x => x is IPropertySymbol)
             .Cast<IPropertySymbol>()
-            .Where(x => !x.IsStatic && (!x.IsReadOnly || x.Type.Name == "RepeatedField"))
+            .Where(x => !x.IsStatic && (!x.IsReadOnly || x.Type.Name.StartsWith("RepeatedField")))
             .Where(x => !x.IsObsolete());
 }

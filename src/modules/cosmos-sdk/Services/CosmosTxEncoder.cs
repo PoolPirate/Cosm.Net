@@ -7,7 +7,7 @@ using Cosmos.Crypto.Secp256K1;
 using Cosmos.Tx.V1Beta1;
 using Google.Protobuf;
 
-namespace Cosm.Net.CosmosSdk.Tx;
+namespace Cosm.Net.CosmosSdk.Services;
 public class CosmosTxEncoder : ITxEncoder
 {
     private readonly IOfflineSigner _signer;
@@ -19,7 +19,7 @@ public class CosmosTxEncoder : ITxEncoder
         _chainConfig = chainConfig;
     }
 
-    public byte[] GetSignSignDoc(ICosmTx tx, GasFeeAmount gasFee, ulong accountNumber, ulong sequence) 
+    public byte[] GetSignSignDoc(ICosmTx tx, GasFeeAmount gasFee, ulong accountNumber, ulong sequence)
         => new SignDoc()
         {
             AccountNumber = accountNumber,

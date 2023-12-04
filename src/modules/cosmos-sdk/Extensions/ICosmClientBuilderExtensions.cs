@@ -1,13 +1,12 @@
 ﻿using Cosm.Net.Client;
-using Cosm.Net.CosmosSdk.Tx;
-using Cosm.Net.Modules;
+using Cosm.Net.CosmosSdk.Services;
 
 namespace Cosm.Net.CosmosSdk.Extensions;
 public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder AddCosmosSdk(this CosmClientBuilder builder)
     {
-        builder.RegisterModule<ITendermintService, TendermintService>();
+        builder.RegisterModule<ITendermintModule, TendermintModule>();
 
         builder.RegisterModule<IAccountModule, AccountModule>();
         builder.RegisterModule<IAuthModule, AuthModule>();

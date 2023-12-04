@@ -12,12 +12,13 @@
 	  <IncludeSymbols>True</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  <RootNamespace>Cosm.Net.Osmosis</RootNamespace>
-	  <Version>0.9.0-beta6</Version>
+	  <Version>0.9.0-beta7</Version>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net.Core" Version="0.9.0-beta6" />
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.9.0-beta6" PrivateAssets="all" />
+		<PackageReference Include="Cosm.Net.Core" Version="0.9.0-beta7" />
+		<PackageReference Include="Cosm.Net.CosmosSdk" Version="0.9.0-beta7" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.9.0-beta7" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.59.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,9 +31,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Protobuf Include="../../../lib/protobuf/gogoproto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/protobuf" GrpcServices="None" />
-		<Protobuf Include="../../../lib/cosmos-proto/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="None" />
-		<Protobuf Include="../../../lib/cosmos-sdk/proto/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="None" />
 		<Protobuf Include="../../../lib/osmosis/proto/osmosis/accum/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/osmosis/proto;../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="Client" />
 		<Protobuf Include="../../../lib/osmosis/proto/osmosis/concentratedliquidity/**/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/osmosis/proto;../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="Client" />
 		<Protobuf Include="../../../lib/osmosis/proto/osmosis/cosmwasmpool/V1beta1/*.proto" ProtoRoot="../../../lib" AdditionalImportDirs="../../../lib/osmosis/proto;../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis" GrpcServices="Client" />

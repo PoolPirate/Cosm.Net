@@ -3,6 +3,6 @@
 namespace Cosm.Net.CosmosSdk;
 public static class ICosmClientExtensions
 {
-    public static ITendermintService Tendermint(this ICosmClient client)
-        => client.Module<ITendermintService>();
+    public static ITendermintModule Tendermint(this ICosmClient client)
+        => client.Module<ITendermintModule>();
 }

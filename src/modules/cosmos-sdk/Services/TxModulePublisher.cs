@@ -5,7 +5,7 @@ using Cosm.Net.Tx;
 using Cosmos.Tx.V1Beta1;
 using Google.Apis.Auth.OAuth2;
 
-namespace Cosm.Net.CosmosSdk.Tx;
+namespace Cosm.Net.CosmosSdk.Services;
 public class TxModulePublisher : ITxPublisher
 {
     private readonly ITxModule _txModule;
