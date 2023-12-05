@@ -13,13 +13,13 @@
 	<IncludeSymbols>True</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<RootNamespace>Cosm.Net.Wasm</RootNamespace>
-	<Version>0.9.0-beta7</Version>
+	<Version>0.9.0-beta8</Version>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net.Core" Version="0.9.0-beta7" />
-		<PackageReference Include="Cosm.Net.CosmosSdk" Version="0.9.0-beta7" />
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.9.0-beta7" PrivateAssets="all" />
+		<PackageReference Include="Cosm.Net.Core" Version="0.9.0-beta8" />
+		<PackageReference Include="Cosm.Net.CosmosSdk" Version="0.9.0-beta8" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.9.0-beta8" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.59.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
