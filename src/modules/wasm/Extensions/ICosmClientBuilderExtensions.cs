@@ -1,32 +1,26 @@
 ﻿
 using Cosm.Net.Client;
 using Cosm.Net.Client.Internal;
-using Cosm.Net.Wasm.Models;
-using Cosm.Net.Wasm.Services;
+using Cosm.Net.Wasm.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Wasm.Extensions;
 public static class ICosmClientBuilderExtensions
 {
-    private static readonly ContractSchemaStore _contractSchemaStore = new ContractSchemaStore();
-
-    public static CosmClientBuilder AddWasmd(this CosmClientBuilder builder)
+    public static CosmClientBuilder AddWasmd(this CosmClientBuilder builder, Action<IWasmConfiguration>? wasmConfigAction = null)
     {
         builder.RegisterModule<IWasmModule, WasmModule>();
 
+        var config = new WasmConfiguration();
+        wasmConfigAction?.Invoke(config);
+
         ((IInternalCosmClientBuilder) builder).ServiceCollection.AddSingleton(provider =>
         {
-            _contractSchemaStore.InitProvider(provider);
-            return _contractSchemaStore;
+            var schemaStore = config.GetSchemaStore();
+            schemaStore.InitProvider(provider);
+            return schemaStore;
         });
 
-        return builder;
-    }
-
-    public static CosmClientBuilder RegisterContractSchema<TContract>(this CosmClientBuilder builder)
-        where TContract : IContract
-    {
-        _contractSchemaStore.RegisterContractSchema<TContract>();
         return builder;
     }
 }
