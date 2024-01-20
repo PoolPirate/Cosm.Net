@@ -9,7 +9,7 @@ public class CosmTxBuilder
 
     public CosmTxBuilder()
     {
-        _messages = new List<ITxMessage>();
+        _messages = [];
     }
 
     public CosmTxBuilder AddMessage(ITxMessage msg)

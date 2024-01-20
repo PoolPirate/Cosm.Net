@@ -1,41 +1,18 @@
-﻿using Cosm.Net.Client;
-using Cosm.Net.CosmosSdk.Services;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Client;
+using Cosm.Net.CosmosHub.Modules;
+using Cosm.Net.Extensions;
+using System.Reflection;
 
-namespace Cosm.Net.CosmosSdk.Extensions;
+namespace Cosm.Net.CosmosHub.Extensions;
 public static class ICosmClientBuilderExtensions
 {
-    public static CosmClientBuilder AddCosmosSdk(this CosmClientBuilder builder)
-    {
-        builder.RegisterModule<ITendermintModule, TendermintModule>();
-
-        builder.RegisterModule<IAccountModule, AccountModule>();
-        builder.RegisterModule<IAuthModule, AuthModule>();
-        builder.RegisterModule<IAuthzModule, AuthzModule>();
-        builder.RegisterModule<IBankModule, BankModule>();
-        builder.RegisterModule<ICircuitModule, CircuitModule>();
-        builder.RegisterModule<IConsensusModule, ConsensusModule>();
-        builder.RegisterModule<IDistributionModule, DistributionModule>();
-        builder.RegisterModule<IEvidenceModule, EvidenceModule>();
-        builder.RegisterModule<IFeeGrantModule, FeeGrantModule>();
-        builder.RegisterModule<IGovModule, GovModule>();
-        builder.RegisterModule<IMintModule, MintModule>();
-        builder.RegisterModule<INftModule, NftModule>();
-        builder.RegisterModule<IParamsModule, ParamsModule>();
-        builder.RegisterModule<IProtocolPoolModule, ProtocolPoolModule>();
-        builder.RegisterModule<ISlashingModule, SlashingModule>();
-        builder.RegisterModule<IStakingModule, StakingModule>();
-        builder.RegisterModule<ITxModule, TxModule>();
-        builder.RegisterModule<IUpgradeModule, UpgradeModule>();
-
-        return builder;
-    }
-
-    public static CosmTxClientBuilder UseCosmosTxStructure(this CosmTxClientBuilder builder)
-    {
-        builder.WithTxEncoder<CosmosTxEncoder>();
-        builder.WithTxPublisher<TxModulePublisher>();
-        builder.WithAccountDataProvider<CosmosChainDataProvider>();
-
-        return builder;
-    }
+    public static CosmClientBuilder InstallCosmosHub(this CosmClientBuilder builder, string bech32Prefix = "cosmos") 
+        => builder
+            .AsInternal().UseCosmosTxStructure()
+            .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
+            .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()
+            .AsInternal().RegisterModule<ITendermintModuleAdapter, TendermintModule>()
+            .AsInternal().RegisterModule<ITxModuleAdapter, TxModule>();
 }

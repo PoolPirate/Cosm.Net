@@ -54,7 +54,7 @@ public class ContractSchema
         var contractClassBuilder = new ClassBuilder(contractClassName)
             .WithVisibility(ClassVisibility.Internal)
             .WithIsPartial(true)
-            .AddField(new FieldBuilder("global::Cosm.Net.Wasm.IWasmModule", "_wasm"))
+            .AddField(new FieldBuilder("global::Cosm.Net.Adapters.IWasmAdapater", "_wasm"))
             .AddField(new FieldBuilder("global::System.String", "_contractAddress"))
             .AddBaseType("global::Cosm.Net.Wasm.Models.IContract", true)
             .AddFunctions(GenerateQueryFunctions(await JsonSchema.FromJsonAsync(Query.ToJsonString()), responseSchemas))
@@ -84,12 +84,10 @@ public class ContractSchema
         }
         else
         {
-            if(typeBuilder.GetSyntaxId() != builder.GetSyntaxId())
-            {
-                return ForceAddSourceComponent(typeName, builder);
-            }
-
-            return typeName;
+            //
+            return typeBuilder.GetSyntaxId() != builder.GetSyntaxId() 
+                ? ForceAddSourceComponent(typeName, builder) 
+                : typeName;
         }
     }
 
@@ -136,15 +134,14 @@ public class ContractSchema
 
             var argumentsSchema = txSchema.Properties.Single().Value;
             var msgName = argumentsSchema.Name;
-
+            
             var functions = new List<FunctionBuilder>
             {
                 new FunctionBuilder($"{NameUtils.ToValidFunctionName(msgName)}")
                 .WithVisibility(FunctionVisibility.Public)
-                .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.ITxMessage<global::Cosmwasm.Wasm.V1.MsgExecuteContract>")
+                .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.ITxMessage")
                 .WithSummaryComment(txSchema.Description)
-                .AddArgument("string", "txSender")
-                .AddArgument("global::System.Collections.Generic.IEnumerable<global::Cosmos.Base.V1Beta1.Coin>", "funds")
+                .AddArgument("global::System.Collections.Generic.IEnumerable<global::Cosm.Net.Models.Coin>", "funds")
                 .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
                     .ToVariableAssignment("innerJsonRequest"))
                 .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
@@ -226,17 +223,14 @@ public class ContractSchema
             foreach(var function in functions)
             {
                 yield return function
+                    .AddArgument("global::System.String?", "txSender", true, "null")
                     .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
-                    .AddStatement(new ConstructorCallBuilder("global::Cosmwasm.Wasm.V1.MsgExecuteContract")
-                        .AddInitializer("Funds", "funds", true)
-                        .AddInitializer("Contract", "_contractAddress")
-                        .AddInitializer("Sender", "txSender")
-                        .AddInitializer("Msg", "global::Google.Protobuf.ByteString.CopyFrom(encodedRequest)")
-                        .ToVariableAssignment("executionMessage"))
-                    .AddStatement(new ConstructorCallBuilder($"global::Cosm.Net.Tx.Msg.TxMessage<global::Cosmwasm.Wasm.V1.MsgExecuteContract>")
-                        .AddArgument("executionMessage")
-                        .ToVariableAssignment("txMessage"))
-                    .AddStatement("return txMessage");
+                    .AddStatement("return " + new MethodCallBuilder("_wasm", "EncodeContractCall")
+                        .AddArgument("_contractAddress")
+                        .AddArgument("global::Google.Protobuf.ByteString.CopyFrom(encodedRequest)")
+                        .AddArgument("funds")
+                        .AddArgument("txSender")
+                        .Build());
             }
         }
     }
@@ -351,7 +345,7 @@ public class ContractSchema
                 yield return function
                     .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
                     .AddStatement("var encodedResponse = await _wasm.SmartContractStateAsync(_contractAddress, global::Google.Protobuf.ByteString.CopyFrom(encodedRequest))")
-                    .AddStatement("var jsonResponse = global::System.Text.Encoding.UTF8.GetString(encodedResponse.Data.Span)")
+                    .AddStatement("var jsonResponse = global::System.Text.Encoding.UTF8.GetString(encodedResponse.Span)")
                     .AddStatement($"return global::System.Text.Json.JsonSerializer.Deserialize<{responseType.Name}>(jsonResponse)");
             }
         }

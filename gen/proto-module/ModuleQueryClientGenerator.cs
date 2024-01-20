@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Generators.Common.SourceGeneratorKit;
+using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Diagnostics;

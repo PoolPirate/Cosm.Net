@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Models;
+using Cosm.Net.Osmosis.Modules;
 using Cosm.Net.Services;
 using System.Numerics;
 

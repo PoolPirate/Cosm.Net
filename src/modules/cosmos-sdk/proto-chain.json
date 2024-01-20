@@ -1,0 +1,37 @@
+﻿{
+  "repoDir": "lib",
+  "protoDir": "proto",
+  "chainRepoName": "cosmos-sdk",
+  "protoDependencies": [
+    {
+      "name": "github.com/cosmos/cosmos-proto",
+      "dirName": "cosmos-proto",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/regen-network/protobuf",
+      "dirName": "regen-protobuf",
+      "protoDirs": [
+        {
+          "in": "gogoproto",
+          "out": "gogoproto"
+        }
+      ]
+    },
+    {
+      "name": "github.com/googleapis/googleapis",
+      "dirName": "googleapis",
+      "protoDirs": [
+        {
+          "in": "google",
+          "out": "google"
+        }
+      ]
+    }
+  ]
+}

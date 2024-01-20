@@ -1,19 +1,13 @@
 ﻿using Cosm.Net.Wasm.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Org.BouncyCastle.Math.EC.Multiplier;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Cosm.Net.Adapters;
 
 namespace Cosm.Net.Wasm.Services;
 public class ContractSchemaStore
 {
     private IServiceProvider? _provider;
-    private readonly Dictionary<Type, Func<IWasmModule, string, IContract>> _contractConstructors = [];
+    private readonly Dictionary<Type, Func<IWasmAdapater, string, IContract>> _contractConstructors = [];
 
     public void InitProvider(IServiceProvider provider)
     {
@@ -21,7 +15,7 @@ public class ContractSchemaStore
         {
             return;
         }
-
+        
         _provider = provider;
     }
 
@@ -38,7 +32,7 @@ public class ContractSchemaStore
             "Check that the source generator ran successfully!");
 
         var constructor = contractType.GetConstructor([
-            typeof(IWasmModule),
+            typeof(IWasmAdapater),
             typeof(string)
         ]) ?? throw new InvalidOperationException("Failed to register contract. Contract implementation does not contain a valid constructor." +
             "Check that the source generator ran successfully!");
@@ -58,7 +52,7 @@ public class ContractSchemaStore
         }
         //
         return (TContract) contractConstructor.Invoke(
-            GetProvider().GetRequiredService<IWasmModule>(),
+            GetProvider().GetRequiredService<IWasmAdapater>(),
             contractAddress
         );
     }

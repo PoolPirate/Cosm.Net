@@ -13,25 +13,15 @@
 	<IncludeSymbols>True</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<RootNamespace>Cosm.Net.Wasm</RootNamespace>
-	<Version>0.9.0-beta8</Version>
+	<Version>0.10.0-beta1</Version>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net.Core" Version="0.9.0-beta8" />
-		<PackageReference Include="Cosm.Net.CosmosSdk" Version="0.9.0-beta8" />
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.9.0-beta8" PrivateAssets="all" />
-		<PackageReference Include="Grpc.Tools" Version="2.59.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="Cosm.Net" Version="0.10.0-beta1" />
 		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
 		<Protobuf_OutputPath>obj/lib</Protobuf_OutputPath>
 	</PropertyGroup>
-	
-	<ItemGroup>
-		<Protobuf Include="../../../lib/wasmd/proto/**/*.proto" ProtoRoot="../../../lib" GrpcServices="Client" AdditionalImportDirs="../../../lib/cosmos-proto/proto;../../../lib/cosmos-sdk/proto;../../../lib/protobuf;../../../lib/googleapis;../../../lib/wasmd/proto" />
-	</ItemGroup>
 </Project>

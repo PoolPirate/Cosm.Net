@@ -1,6 +1,6 @@
 ﻿
 using Cosm.Net.Client;
-using Cosm.Net.Client.Internal;
+using Cosm.Net.Adapters;
 using Cosm.Net.Wasm.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,12 +9,15 @@ public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder AddWasmd(this CosmClientBuilder builder, Action<IWasmConfiguration>? wasmConfigAction = null)
     {
-        builder.RegisterModule<IWasmModule, WasmModule>();
+        if (!builder.AsInternal().HasModule<IWasmAdapater>())
+        {
+            throw new InvalidOperationException($"No {nameof(IWasmAdapater)} set. Make sure to install a chain that supports wasmd before calling {nameof(AddWasmd)}");
+        }
 
         var config = new WasmConfiguration();
         wasmConfigAction?.Invoke(config);
 
-        ((IInternalCosmClientBuilder) builder).ServiceCollection.AddSingleton(provider =>
+        builder.AsInternal().ServiceCollection.AddSingleton(provider =>
         {
             var schemaStore = config.GetSchemaStore();
             schemaStore.InitProvider(provider);

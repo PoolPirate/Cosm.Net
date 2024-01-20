@@ -5,7 +5,7 @@ using Cosm.Net.Tx;
 namespace Cosm.Net.Client;
 public interface ICosmTxClient : ICosmClient
 {
-    public ITxChainConfiguration Chain {  get; }
+    public IChainConfiguration Chain {  get; }
 
     public Task<TxSimulation> SimulateAsync(ICosmTx tx);
     public Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee);

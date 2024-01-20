@@ -15,13 +15,13 @@ public class SequentialTxScheduler : ITxScheduler
     private readonly IOfflineSigner _signer;
     private readonly ITxPublisher _txPublisher;
     private readonly IChainDataProvider _accountDataProvider;
-    private readonly ITxChainConfiguration _chainConfiguration;
+    private readonly IChainConfiguration _chainConfiguration;
 
     public ulong AccountNumber { get; private set; }
     public ulong CurrentSequence { get; private set; }
 
     public SequentialTxScheduler(ITxEncoder txEncoder, IOfflineSigner signer,
-        ITxPublisher txPublisher, IChainDataProvider accountDataProvider, ITxChainConfiguration chainConfiguration)
+        ITxPublisher txPublisher, IChainDataProvider accountDataProvider, IChainConfiguration chainConfiguration)
     {
         _txChannel = Channel.CreateUnbounded<QueueEntry>(new UnboundedChannelOptions()
         {

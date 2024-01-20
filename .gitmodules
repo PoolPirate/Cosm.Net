@@ -1,18 +1,12 @@
-[submodule "lib/cosmos-sdk"]
-	path = lib/cosmos-sdk
-	url = https://github.com/cosmos/cosmos-sdk
-[submodule "lib/cosmos-proto"]
-	path = lib/cosmos-proto
-	url = https://github.com/cosmos/cosmos-proto
-[submodule "lib/protobuf"]
-	path = lib/protobuf
-	url = https://github.com/regen-network/protobuf
-[submodule "lib/googleapis"]
-	path = lib/googleapis
-	url = https://github.com/googleapis/googleapis.git
-[submodule "lib/wasmd"]
-	path = lib/wasmd
-	url = https://github.com/CosmWasm/wasmd.git
-[submodule "lib/osmosis"]
-	path = lib/osmosis
+[submodule "src/modules/osmosis/lib/osmosis"]
+	path = src/modules/osmosis/lib/osmosis
 	url = https://github.com/osmosis-labs/osmosis.git
+[submodule "src/modules/cosmos-sdk/lib/cosmos-sdk"]
+	path = src/modules/cosmos-sdk/lib/cosmos-sdk
+	url = https://github.com/cosmos/cosmos-sdk.git
+[submodule "src/modules/injective/lib/injective-core"]
+	path = src/modules/injective/lib/injective-core
+	url = https://github.com/OpenDeFiFoundation/injective-core.git
+[submodule "src/Cosm.Net/lib/cosmos-sdk"]
+	path = src/Cosm.Net/lib/cosmos-sdk
+	url = https://github.com/cosmos/cosmos-sdk.git

@@ -6,4 +6,5 @@ public interface IInternalCosmClient
     public IServiceProvider ServiceProvider { get; }
 
     public IEnumerable<(Type, IModule)> GetAllModules();
+
 }

@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Generators.Proto",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gen", "gen", "{51E53C22-CDD0-450C-BA6E-4215C0A32965}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.CosmosSdk", "src\modules\cosmos-sdk\Cosm.Net.CosmosSdk.csproj", "{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.CosmosHub", "src\modules\cosmos-sdk\Cosm.Net.CosmosHub.csproj", "{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Wasm", "src\modules\wasm\Cosm.Net.Wasm.csproj", "{0A02612D-A842-46F5-8D56-E2324BB4EE75}"
 EndProject
@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Injective", "src\modules\injective\Cosm.Net.Injective.csproj", "{D6310898-E5A9-4094-9365-6223EF6B13EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +92,10 @@ Global
 		{8F5694EA-9149-43C8-BA4F-727E281488DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F5694EA-9149-43C8-BA4F-727E281488DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F5694EA-9149-43C8-BA4F-727E281488DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6310898-E5A9-4094-9365-6223EF6B13EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6310898-E5A9-4094-9365-6223EF6B13EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6310898-E5A9-4094-9365-6223EF6B13EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6310898-E5A9-4094-9365-6223EF6B13EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{FFDEFF65-5A11-4089-B77D-08E12E6614B4} = {5CA21658-0440-4F13-BB84-4D0365D5F796}
 		{ECD6B766-F3B4-4606-86E4-7068AF3413B0} = {51E53C22-CDD0-450C-BA6E-4215C0A32965}
 		{8F5694EA-9149-43C8-BA4F-727E281488DB} = {51E53C22-CDD0-450C-BA6E-4215C0A32965}
+		{D6310898-E5A9-4094-9365-6223EF6B13EC} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}

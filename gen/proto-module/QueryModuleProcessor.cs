@@ -2,12 +2,8 @@
 using Cosm.Net.Generators.Common.Util;
 using Cosm.Net.Generators.Common.Extensions;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace Cosm.Net.Generators;
@@ -43,6 +39,13 @@ public static class QueryModuleProcessor
             _ = interfaceCodeBuilder.AppendLine(interfaceMethod);
         }
 
+        string constructorSyntax = $$"""
+            public {{moduleType.Name}}(global::Grpc.Net.Client.GrpcChannel channel)
+            {
+                _client = new {{NameUtils.FullyQualifiedTypeName(queryClientType)}}(channel);
+            }
+            """;
+
         return
             $$"""
             using global::Cosm.Net.Modules;
@@ -54,6 +57,9 @@ public static class QueryModuleProcessor
             }
 
             internal partial class {{moduleType.Name}} : I{{moduleType.Name}} {
+                private readonly {{NameUtils.FullyQualifiedTypeName(queryClientType)}} _client;
+
+             {{(!moduleType.InstanceConstructors.Any(x => x.Parameters.Any()) ? constructorSyntax : "")}}
             {{methodCodeBuilder}}
             }
 
@@ -69,7 +75,7 @@ public static class QueryModuleProcessor
         var functionBuilder = new FunctionBuilder(queryMethod.Name)
             .WithReturnType((INamedTypeSymbol) queryMethod.ReturnType);
 
-        var queryFunctionCall = new MethodCallBuilder("Service", queryMethod);
+        var queryFunctionCall = new MethodCallBuilder("_client", queryMethod);
         var requestCtorCall = new ConstructorCallBuilder((INamedTypeSymbol) requestType);
 
         foreach(var property in requestProps)

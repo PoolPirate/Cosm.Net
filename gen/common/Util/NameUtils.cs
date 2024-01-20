@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Cosm.Net.Generators.Common.Util;
@@ -62,7 +63,23 @@ public static class NameUtils
     {
         var sb = new StringBuilder();
 
-        sb.Append($"global::{symbol.ContainingNamespace}.{symbol.Name}");
+        sb.Append($"global::{symbol.ContainingNamespace}");
+
+        var parentNames = new List<string>();
+        var parentType = symbol.ContainingType;
+        while(parentType is not null)
+        {
+            parentNames.Add(parentType.Name);
+            parentType = parentType.ContainingType;
+        }
+
+        parentNames.Reverse();
+        foreach(var parentName in parentNames)
+        { 
+            sb.Append($".{parentName}"); 
+        }
+
+        sb.Append($".{symbol.Name}");
 
         if (symbol is INamedTypeSymbol namedType && namedType.TypeArguments.Length > 0)
         {
