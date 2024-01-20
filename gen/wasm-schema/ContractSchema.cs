@@ -11,21 +11,29 @@ namespace Cosm.Net.Generators.CosmWasm;
 public class ContractSchema
 {
     [JsonPropertyName("contract_name")]
+    [JsonRequired]
     public string ContractName { get; set; } = null!;
     [JsonPropertyName("contract_version")]
+    [JsonRequired]
     public string ContractVersion { get; set; } = null!;
     [JsonPropertyName("idl_version")]
+    [JsonRequired]
     public string IdlVersion { get; set; } = null!;
 
     [JsonPropertyName("instantiate")]
+    [JsonRequired]
     public JsonObject Instantiate { get; set; } = null!;
     [JsonPropertyName("execute")]
+    [JsonRequired]
     public JsonObject Execute { get; set; } = null!;
     [JsonPropertyName("query")]
+    [JsonRequired]
     public JsonObject Query { get; set; } = null!;
     [JsonPropertyName("migrate")]
+    [JsonRequired]
     public JsonObject Migrate { get; set; } = null!;
     [JsonPropertyName("responses")]
+    [JsonRequired]
     public JsonObject Responses { get; set; } = null!;
 
     private readonly Dictionary<string, int> _typeNames = [];
@@ -69,6 +77,7 @@ public class ContractSchema
 
         return
             $$"""
+            #nullable enable
             namespace {{targetNamespace}};
             {{contractClassBuilder.Build(generateFieldConstructor: true, generateInterface: true, interfaceName: targetInterface)}}
 
@@ -148,9 +157,9 @@ public class ContractSchema
                     .AddArgument($"""
                     [
                         new global::System.Collections.Generic.KeyValuePair<
-                            global::System.String, global::System.Text.Json.Nodes.JsonNode>(
+                            global::System.String, global::System.Text.Json.Nodes.JsonNode?>(
                             "{msgName}", innerJsonRequest
-                        )
+                        )!
                     ]
                     """)
                     .ToVariableAssignment("jsonRequest"))
@@ -214,7 +223,7 @@ public class ContractSchema
                                 paramTypes[paramIndex].HasDefaultValue, paramTypes[paramIndex].ExplicitDefaultValue)
                             .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
                                 .AddArgument($"\"{argName}\"")
-                                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object) {argName})")
+                                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
                                 .Build());
                     }
                 }
@@ -225,12 +234,13 @@ public class ContractSchema
                 yield return function
                     .AddArgument("global::System.String?", "txSender", true, "null")
                     .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
-                    .AddStatement("return " + new MethodCallBuilder("_wasm", "EncodeContractCall")
+                    .AddStatement("var response = " + new MethodCallBuilder("_wasm", "EncodeContractCall")
                         .AddArgument("_contractAddress")
                         .AddArgument("global::Google.Protobuf.ByteString.CopyFrom(encodedRequest)")
                         .AddArgument("funds")
                         .AddArgument("txSender")
-                        .Build());
+                        .Build())
+                    .AddStatement("return response ?? throw new global::System.Text.Json.JsonException(\"Parsing contract response failed\")");
             }
         }
     }
@@ -268,7 +278,7 @@ public class ContractSchema
                     .AddArgument($"""
                     [
                         new global::System.Collections.Generic.KeyValuePair<
-                            global::System.String, global::System.Text.Json.Nodes.JsonNode>(
+                            global::System.String, global::System.Text.Json.Nodes.JsonNode?>(
                             "{queryName}", innerJsonRequest
                         )
                     ]
@@ -311,7 +321,7 @@ public class ContractSchema
                                 paramType.HasDefaultValue, paramType.ExplicitDefaultValue)
                             .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
                                 .AddArgument($"\"{argName}\"")
-                                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object) {argName})")
+                                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
                                 .Build());
                     }
                 }
@@ -346,7 +356,7 @@ public class ContractSchema
                     .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
                     .AddStatement("var encodedResponse = await _wasm.SmartContractStateAsync(_contractAddress, global::Google.Protobuf.ByteString.CopyFrom(encodedRequest))")
                     .AddStatement("var jsonResponse = global::System.Text.Encoding.UTF8.GetString(encodedResponse.Span)")
-                    .AddStatement($"return global::System.Text.Json.JsonSerializer.Deserialize<{responseType.Name}>(jsonResponse)");
+                    .AddStatement($"return global::System.Text.Json.JsonSerializer.Deserialize<{responseType.Name}>(jsonResponse) ?? throw new global::System.Text.Json.JsonException(\"Parsing contract response failed\")");
             }
         }
     }
@@ -489,7 +499,11 @@ public class ContractSchema
                 .WithSetterVisibility(SetterVisibility.Init)
                 .WithIsRequired(!schemaType.HasDefaultValue)
                 .WithJsonPropertyName(property.Key)
-                .WithSummaryComment(property.Value.Description)
+                .WithSummaryComment(property.Value.Description).WithDefaultValue(schemaType.HasDefaultValue
+                    ? schemaType.Name == "string" && double.TryParse(schemaType.ExplicitDefaultValue, out _)
+                        ? $"\"{schemaType.ExplicitDefaultValue}\""
+                        : schemaType.ExplicitDefaultValue
+                    : null)
             );
         }
 
@@ -538,8 +552,15 @@ public class ContractSchema
             {
                 string argName = NameUtils.ToValidVariableName(property.Name);
 
-                innerFunc.AddArgument(property.Type, argName);
-                innerCtorCall.AddInitializer(property.Name, argName);
+                if (property.Type == "object")
+                {
+                    innerCtorCall.AddInitializer(property.Name, "new object()");
+                }
+                else
+                {
+                    innerFunc.AddArgument(property.Type, argName);
+                    innerCtorCall.AddInitializer(property.Name, argName);
+                }
             }
 
             innerFunc.AddStatement($"return {innerCtorCall.ToInlineCall()}");
@@ -672,6 +693,7 @@ public class ContractSchema
         foreach(var property in objectSchema.ActualProperties)
         {
             var schemaType = GetOrGenerateMergingSchemaType(property.Value, definitionsSource);
+
             classBuilder.AddProperty(
                 new PropertyBuilder(
                     schemaType.Name,
@@ -680,6 +702,11 @@ public class ContractSchema
                 .WithIsRequired(!schemaType.HasDefaultValue)
                 .WithJsonPropertyName(property.Key)
                 .WithSummaryComment(property.Value.Description)
+                .WithDefaultValue(schemaType.HasDefaultValue 
+                    ? schemaType.Name == "string" && double.TryParse(schemaType.ExplicitDefaultValue, out _)
+                        ? $"\"{schemaType.ExplicitDefaultValue}\""
+                        : schemaType.ExplicitDefaultValue
+                    : null)
             );
         }
 

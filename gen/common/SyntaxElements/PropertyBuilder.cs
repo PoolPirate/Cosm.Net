@@ -18,10 +18,12 @@ public class PropertyBuilder : ISyntaxBuilder
 {
     public string Type { get; private set; }
     public string Name { get; private set; }
+    public string? DefaultValue { get; private set; }
+
     private PropertyVisibility _visibility = PropertyVisibility.Public;
     private SetterVisibility _setterVisibility = SetterVisibility.Public;
     private bool _isRequired = false;
-    
+
     private string? _jsonPropertyName;
     private string? _summaryComment;
 
@@ -61,6 +63,12 @@ public class PropertyBuilder : ISyntaxBuilder
         return this;
     }
 
+    public PropertyBuilder WithDefaultValue(string? defaultValue)
+    {
+        DefaultValue = defaultValue;
+        return this;
+    }
+
     public string Build() 
         => $$"""
             {{(_summaryComment is not null ? CommentUtils.MakeSummaryComment(_summaryComment) : "")}}
@@ -68,7 +76,7 @@ public class PropertyBuilder : ISyntaxBuilder
             {{_visibility.ToString().ToLower()}} {{(_isRequired ? "required" : "")}} {{Type}} {{Name}} { get; {{
             (_setterVisibility == SetterVisibility.Init 
                 ? "init" 
-                : $"{_setterVisibility.ToString().ToLower()} set")}}; }
+                : $"{_setterVisibility.ToString().ToLower()} set")}}; } {{(DefaultValue is not null ? $"= {DefaultValue};" : "")}}
             """;
 
     public override int GetHashCode()
