@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Cosm.Net.Client;
 public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 {
-    private readonly ServiceCollection _services = new ServiceCollection();
+    private readonly ServiceCollection _services = [];
     private readonly List<Type> _moduleTypes = [];
     private ChainInfo? _chainInfo = null;
 

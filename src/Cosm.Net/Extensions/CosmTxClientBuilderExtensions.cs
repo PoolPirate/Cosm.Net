@@ -1,6 +1,5 @@
 ﻿using Cosm.Net.Client;
 using Cosm.Net.Client.Internal;
-using Cosm.Net.CosmosSdk.Services;
 using Cosm.Net.Services;
 
 namespace Cosm.Net.Extensions;

@@ -13,11 +13,11 @@
 	<IncludeSymbols>True</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<RootNamespace>Cosm.Net.Wasm</RootNamespace>
-	<Version>0.10.0-beta1</Version>
+	<Version>0.10.0-beta2</Version>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net" Version="0.10.0-beta1" />
+		<PackageReference Include="Cosm.Net" Version="0.10.0-beta2" />
 		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
 	</ItemGroup>
 
