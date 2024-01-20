@@ -147,23 +147,22 @@ public class ContractSchema
             var functions = new List<FunctionBuilder>
             {
                 new FunctionBuilder($"{NameUtils.ToValidFunctionName(msgName)}")
-                .WithVisibility(FunctionVisibility.Public)
-                .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.ITxMessage")
-                .WithSummaryComment(txSchema.Description)
-                .AddArgument("global::System.Collections.Generic.IEnumerable<global::Cosm.Net.Models.Coin>", "funds")
-                .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
-                    .ToVariableAssignment("innerJsonRequest"))
-                .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
-                    .AddArgument($"""
-                    [
-                        new global::System.Collections.Generic.KeyValuePair<
-                            global::System.String, global::System.Text.Json.Nodes.JsonNode?>(
-                            "{msgName}", innerJsonRequest
-                        )!
-                    ]
-                    """)
-                    .ToVariableAssignment("jsonRequest"))
-
+                    .WithVisibility(FunctionVisibility.Public)
+                    .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.ITxMessage")
+                    .WithSummaryComment(txSchema.Description)
+                    .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
+                        .ToVariableAssignment("innerJsonRequest"))
+                    .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
+                        .AddArgument($"""
+                        [
+                            new global::System.Collections.Generic.KeyValuePair<
+                                global::System.String, global::System.Text.Json.Nodes.JsonNode?>(
+                                "{msgName}", innerJsonRequest
+                            )!
+                        ]
+                        """)
+                        .ToVariableAssignment("jsonRequest")
+                    )
             };
 
             var requiredProps = argumentsSchema.RequiredProperties.ToList();
@@ -232,7 +231,9 @@ public class ContractSchema
             foreach(var function in functions)
             {
                 yield return function
+                    .AddArgument("global::System.Collections.Generic.IEnumerable<global::Cosm.Net.Models.Coin>?", "funds", true, "null")
                     .AddArgument("global::System.String?", "txSender", true, "null")
+                    .AddStatement("funds = funds ?? global::System.Array.Empty<global::Cosm.Net.Models.Coin>()")
                     .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
                     .AddStatement("var response = " + new MethodCallBuilder("_wasm", "EncodeContractCall")
                         .AddArgument("_contractAddress")
