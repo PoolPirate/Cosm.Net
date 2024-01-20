@@ -3,6 +3,7 @@ using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
 using Cosm.Net.Tx;
+using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
@@ -52,7 +53,16 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     private async Task InitializeTxClientAync()
     {
         var txScheduler = _provider.GetRequiredService<ITxScheduler>();
-        await txScheduler.InitializeAsync();
+
+        try
+        {
+            await txScheduler.InitializeAsync();
+        }
+        catch(RpcException e)
+            when (e.StatusCode == StatusCode.NotFound && e.Status.Detail.StartsWith("account") && e.Status.Detail.EndsWith("not found"))
+        {
+            throw new Exception("Account not found on chain. Cosmos chains create accounts when they receive funds for the first time.");
+        }
     }
 
     private void AssertReady(bool requireTxClient)
