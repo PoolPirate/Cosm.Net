@@ -14,8 +14,18 @@ public class CosmWasmGenerator : ISourceGenerator
     public void Initialize(GeneratorInitializationContext context) 
         => context.RegisterForSyntaxNotifications(() => ContractTypeReceiver);
 
-    public void Execute(GeneratorExecutionContext context) 
-        => MakeJITHappy(context);
+    public void Execute(GeneratorExecutionContext context)
+    {
+        try
+        {
+            MakeJITHappy(context);
+        }
+        catch(Exception ex)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(
+                GeneratorDiagnostics.ExecutionFailed, Location.None, ex));
+        }
+    }
 
     public void MakeJITHappy(GeneratorExecutionContext context)
     {
@@ -31,15 +41,14 @@ public class CosmWasmGenerator : ISourceGenerator
             var schemaFile = context.AdditionalFiles
                 .Where(x => x.Path.EndsWith(schemaPath))
                 .FirstOrDefault();
+            var schemaText = schemaFile.GetText()?.ToString();
 
-            if(schemaFile is null)
+            if(schemaFile is null || schemaText is null)
             {
                 context.ReportDiagnostic(Diagnostic.Create(
                     GeneratorDiagnostics.SchemaFileNotFound, contractType.Locations[0], Array.Empty<object>()));
                 continue;
             }
-
-            var schemaText = schemaFile.GetText()!.ToString();
 
             ContractSchema contractSchema = null!;
 
