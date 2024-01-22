@@ -4,25 +4,25 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<LangVersion>latest</LangVersion>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Title>Cosm.Net.Injective</Title>
-	<Authors>Playwo</Authors>
-	<Company></Company>
-	<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
-	<IncludeSymbols>True</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	<RootNamespace>Cosm.Net.Injective</RootNamespace>
-	<Version>0.10.0-beta2</Version>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>Cosm.Net.Sei</Title>
+	  <Authors>Playwo</Authors>
+	  <Company></Company>
+	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <RootNamespace>Cosm.Net.Sei</RootNamespace>
+	  <Version>0.10.0-beta2</Version>
   </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Cosm.Net" Version="0.10.0-beta2" />
+		<PackageReference Include="Cosm.Net.Wasm" Version="0.10.0-beta2" />
 		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.10.0-beta2" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.59.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		</PackageReference>		
 		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
 	</ItemGroup>
 
@@ -38,10 +38,16 @@
 		<Protobuf Include="./proto/cosmos_proto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/amino/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/gogoproto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
-
+		
 		<Protobuf Include="./proto/cosmos/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
-		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/cosmwasm/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		
+		<Protobuf Include="./proto/dex/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/epoch/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/mint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/oracle/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/tokenfactory/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>

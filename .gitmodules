@@ -10,3 +10,6 @@
 [submodule "src/Cosm.Net/lib/cosmos-sdk"]
 	path = src/Cosm.Net/lib/cosmos-sdk
 	url = https://github.com/cosmos/cosmos-sdk.git
+[submodule "src/modules/sei/lib/sei-chain"]
+	path = src/modules/sei/lib/sei-chain
+	url = https://github.com/sei-protocol/sei-chain.git
