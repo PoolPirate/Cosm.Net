@@ -2,6 +2,7 @@
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
+using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,7 +62,9 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         catch(RpcException e)
             when (e.StatusCode == StatusCode.NotFound && e.Status.Detail.StartsWith("account") && e.Status.Detail.EndsWith("not found"))
         {
-            throw new Exception("Account not found on chain. Cosmos chains create accounts when they receive funds for the first time.");
+            var signer = _provider.GetRequiredService<IOfflineSigner>();
+            throw new Exception($"Your account {signer.GetAddress(Chain.Bech32Prefix)} was not found on chain. " + 
+                "Cosmos chains create accounts when they receive funds for the first time.");
         }
     }
 
