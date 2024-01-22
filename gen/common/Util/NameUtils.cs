@@ -56,6 +56,8 @@ public static class NameUtils
             "switch" => "@switch",
             "int" => "@int",
             "string" => "@string",
+            "operator" => "@operator",
+            "delegate" => "@delegate",
             _ => name,
         };
 
