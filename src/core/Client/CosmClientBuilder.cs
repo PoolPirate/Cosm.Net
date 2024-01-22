@@ -37,10 +37,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
             throw new InvalidOperationException($"{nameof(ChainInfo)} already set.");
         }
 
-        _chainInfo = new ChainInfo()
-        {
-            Bech32Prefix = bech32Prefix
-        };
+        _chainInfo = new ChainInfo(bech32Prefix);
         return this;
     }
 
