@@ -54,7 +54,7 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
             _ => throw new InvalidOperationException("Unsupported BroadcastMode")
         };
 
-        var response = await BroadcastTxAsync(txBytes, signMode, headers);
+        var response = await BroadcastTxAsync(txBytes, signMode, headers, deadline, cancellationToken);
         return new TxSubmission(response.TxResponse.Code, response.TxResponse.Txhash, response.TxResponse.RawLog);
     }
     async Task<TxSimulation> ITxModuleAdapter.SimulateAsync(ByteString txBytes, Metadata? headers,
