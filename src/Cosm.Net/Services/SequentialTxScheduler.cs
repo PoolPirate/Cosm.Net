@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Exceptions;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Exceptions;
 using Cosm.Net.Models;
 using Cosm.Net.Services;
 using Cosm.Net.Signer;
@@ -13,15 +14,15 @@ public class SequentialTxScheduler : ITxScheduler
     private readonly Channel<QueueEntry> _txChannel;
     private readonly ITxEncoder _txEncoder;
     private readonly IOfflineSigner _signer;
+    private readonly IAuthModuleAdapter _authAdapter;
     private readonly ITxPublisher _txPublisher;
-    private readonly IChainDataProvider _accountDataProvider;
     private readonly IChainConfiguration _chainConfiguration;
 
     public ulong AccountNumber { get; private set; }
     public ulong CurrentSequence { get; private set; }
 
-    public SequentialTxScheduler(ITxEncoder txEncoder, IOfflineSigner signer,
-        ITxPublisher txPublisher, IChainDataProvider accountDataProvider, IChainConfiguration chainConfiguration)
+    public SequentialTxScheduler(ITxEncoder txEncoder, IOfflineSigner signer, IAuthModuleAdapter authAdapter,
+        ITxPublisher txPublisher, IChainConfiguration chainConfiguration)
     {
         _txChannel = Channel.CreateUnbounded<QueueEntry>(new UnboundedChannelOptions()
         {
@@ -32,8 +33,8 @@ public class SequentialTxScheduler : ITxScheduler
 
         _txEncoder = txEncoder;
         _signer = signer;
+        _authAdapter = authAdapter;
         _txPublisher = txPublisher;
-        _accountDataProvider = accountDataProvider;
         _chainConfiguration = chainConfiguration;
 
         _ = Task.Run(BackgroundTxProcessor);
@@ -41,7 +42,7 @@ public class SequentialTxScheduler : ITxScheduler
 
     public async Task InitializeAsync()
     {
-        var accountData = await _accountDataProvider.GetAccountDataAsync(
+        var accountData = await _authAdapter.GetAccountAsync(
             _signer.GetAddress(_chainConfiguration.Bech32Prefix));
 
         AccountNumber = accountData.AccountNumber;

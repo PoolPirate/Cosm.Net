@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Crypto;
+﻿namespace Cosm.Net.Wallet.Crypto;
 public enum BIP39Wordlist
 {
     English,

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Cosm.Net.Crypto;
+namespace Cosm.Net.Wallet.Crypto;
 public static class BIP39
 {
     public static byte[] MnemonicToSeed(string mnemonic, string password = "")

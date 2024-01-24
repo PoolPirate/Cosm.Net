@@ -23,7 +23,6 @@ While building the lib I focused on 3 core aspects.
 
 #### Modules
 
-- [Wasmd](https://www.nuget.org/packages/Cosm.Net.Wasm)
 - [CosmosHub](https://www.nuget.org/packages/Cosm.Net.CosmosHub)
 - [Osmosis](https://www.nuget.org/packages/Cosm.Net.Osmosis)
 
@@ -94,8 +93,6 @@ await txClient.InitializeAsync();
 ```
 
 ### Adding Capability to interact with smart-contracts
-
-If you have the `Cosm.Net.Wasm` package installed and already have generated contracts bindings, you can register them in your client builder like this:
 
 ```cs
 
@@ -178,7 +175,7 @@ await txClient.SimulateAndPublishTxAsync(txBuilder.Build());
 ### CosmWasm
 
 1. Create a new class library project (It will not work in the same project!)
-2. Add the nuget packages `Cosm.Net.Generators.CosmWasm` and `Cosm.Net.Wasm`
+2. Add the nuget packages `Cosm.Net.Generators.CosmWasm` and `Cosm.Net`
 3. Get the schema files for the desired contracts (json schema files)
 4. Create a schemas directory in your project and put the schemas into there
 5. In your .csproj reference each schema file as AdditionalFile
@@ -190,12 +187,12 @@ await txClient.SimulateAndPublishTxAsync(txBuilder.Build());
 	</ItemGroup>
 ```
 
-6. Create a partial interface for each contract you want to generate bindings for that inherits from `Cosm.Net.Wasm.Models.IContract`
+6. Create a partial interface for each contract you want to generate bindings for that inherits from `Cosm.Net.Models.IContract`
 7. Add the `ContractSchemaFilePath` Attribute to the interface and specify the filename of your schema. (Just the file name, not the path!)
 
 ```cs
-using Cosm.Net.Wasm.Attributes;
-using Cosm.Net.Wasm.Models;
+using Cosm.Net.Attributes;
+using Cosm.Net.Models;
 
 namespace LevanaContracts.Factory;
 [ContractSchemaFilePath("factory.json")]

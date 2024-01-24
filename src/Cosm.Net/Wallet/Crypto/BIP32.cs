@@ -1,4 +1,5 @@
-﻿using Org.BouncyCastle.Asn1.Sec;
+﻿using Cosm.Net.Wallet.Crypto;
+using Org.BouncyCastle.Asn1.Sec;
 using System.Globalization;
 using System.Numerics;
 using System.Security.Cryptography;

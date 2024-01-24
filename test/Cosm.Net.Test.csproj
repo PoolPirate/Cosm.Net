@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Cosm.Net\Cosm.Net.csproj" />
-    <ProjectReference Include="..\src\modules\wasm\Cosm.Net.Wasm.csproj" />
   </ItemGroup>
 	
     <ItemGroup>

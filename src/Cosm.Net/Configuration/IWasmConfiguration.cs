@@ -1,6 +1,6 @@
-﻿using Cosm.Net.Wasm.Models;
+﻿using Cosm.Net.Models;
 
-namespace Cosm.Net.Wasm.Configuration;
+namespace Cosm.Net.Configuration;
 public interface IWasmConfiguration
 {
     public IWasmConfiguration RegisterContractSchema<TContract>()

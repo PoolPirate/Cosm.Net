@@ -21,11 +21,6 @@ public interface IInternalCosmClientBuilder
         where TConfiguration : class;
     public CosmClientBuilder WithGasFeeProvider<TGasFeeProvider>(bool overrideExisting = false)
         where TGasFeeProvider : class, IGasFeeProvider;
-    public CosmClientBuilder WithChainDataProvider<TAccountDataProvider, TConfiguration>(TConfiguration configuration, bool overrideExisting = false)
-        where TAccountDataProvider : class, IChainDataProvider<TConfiguration>
-        where TConfiguration : class;
-    public CosmClientBuilder WithChainDataProvider<TAccountDataProvider>(bool overrideExisting = false)
-        where TAccountDataProvider : class, IChainDataProvider;
     public CosmClientBuilder WithTxPublisher<TTxPublisher, TConfiguration>(TConfiguration configuration, bool overrideExisting = false)
         where TTxPublisher : class, ITxPublisher<TConfiguration>
         where TConfiguration : class;

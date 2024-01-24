@@ -13,12 +13,12 @@
 	<IncludeSymbols>True</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	<RootNamespace>Cosm.Net.Injective</RootNamespace>
-	<Version>0.10.0-beta2</Version>
+	<Version>0.10.0-beta5</Version>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net" Version="0.10.0-beta2" />
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.10.0-beta2" PrivateAssets="all" />
+		<PackageReference Include="Cosm.Net" Version="0.10.0-beta5" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="0.10.0-beta5" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.59.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -42,6 +42,8 @@
 		<Protobuf Include="./proto/cosmos/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/cosmwasm/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+
+		<Protobuf Include="./proto/injective/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>

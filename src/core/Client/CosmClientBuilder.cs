@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Client.Internal;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Client.Internal;
 using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
@@ -258,57 +259,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    CosmClientBuilder IInternalCosmClientBuilder.WithChainDataProvider<TChainDataProvider>(bool overrideExisting)
-    {
-        if(_services.Any(x => x.ServiceType == typeof(IChainDataProvider)))
-        {
-            if(!overrideExisting)
-            {
-                throw new InvalidOperationException("IChainDataProvider already registered");
-            }
-
-            _services.Replace(new ServiceDescriptor(typeof(IChainDataProvider), typeof(TChainDataProvider), ServiceLifetime.Singleton));
-        }
-        else
-        {
-            _services.AddSingleton<IChainDataProvider, TChainDataProvider>();
-        }
-
-        return this;
-    }
-    CosmClientBuilder IInternalCosmClientBuilder.WithChainDataProvider<TChainDataProvider, TConfiguration>(TConfiguration configuration, bool overrideExisting)
-    {
-        if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
-        {
-            if(!overrideExisting)
-            {
-                throw new InvalidOperationException("Configuration type has already been registered");
-            }
-
-            _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
-        }
-        else
-        {
-            _services.AddSingleton(configuration);
-        }
-
-        if(_services.Any(x => x.ServiceType == typeof(IChainDataProvider)))
-        {
-            if(!overrideExisting)
-            {
-                throw new InvalidOperationException($"{nameof(IChainDataProvider)} already registered");
-            }
-
-            _services.Replace(new ServiceDescriptor(typeof(IChainDataProvider), typeof(TChainDataProvider), ServiceLifetime.Singleton));
-        }
-        else
-        {
-            _services.AddSingleton<IChainDataProvider, TChainDataProvider>();
-        }
-
-        return this;
-    }
-
     CosmClientBuilder IInternalCosmClientBuilder.WithGasFeeProvider<TGasFeeProvider>(bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
@@ -370,9 +320,22 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             throw new InvalidOperationException($"No {nameof(ChainInfo)} set. Make sure to install a chain before building the client.");
         }
-        if(!_services.Any(x => x.ServiceType == typeof(IChainDataProvider)))
+
+        if(!_services.Any(x => x.ServiceType == typeof(IAuthModuleAdapter)))
         {
-            throw new InvalidOperationException($"No {nameof(IChainDataProvider)} set. Make sure to install a chain before building the client.");
+            throw new InvalidOperationException($"No {nameof(IAuthModuleAdapter)} set. Make sure to install a chain before building the client.");
+        }
+        if(!_services.Any(x => x.ServiceType == typeof(ITendermintModuleAdapter)))
+        {
+            throw new InvalidOperationException($"No {nameof(ITendermintModuleAdapter)} set. Make sure to install a chain before building the client.");
+        }
+        if(!_services.Any(x => x.ServiceType == typeof(ITxModuleAdapter)))
+        {
+            throw new InvalidOperationException($"No {nameof(ITxModuleAdapter)} set. Make sure to install a chain before building the client.");
+        }
+        if(!_services.Any(x => x.ServiceType == typeof(IWasmAdapater)))
+        {
+            throw new InvalidOperationException($"No {nameof(IWasmAdapater)} set. Make sure to install a chain before building the client.");
         }
     }
 

@@ -64,7 +64,7 @@ public class ContractSchema
             .WithIsPartial(true)
             .AddField(new FieldBuilder("global::Cosm.Net.Adapters.IWasmAdapater", "_wasm"))
             .AddField(new FieldBuilder("global::System.String", "_contractAddress"))
-            .AddBaseType("global::Cosm.Net.Wasm.Models.IContract", true)
+            .AddBaseType("global::Cosm.Net.Models.IContract", true)
             .AddFunctions(GenerateQueryFunctions(await JsonSchema.FromJsonAsync(Query.ToJsonString()), responseSchemas))
             .AddFunctions(GenerateMsgFunctions(await JsonSchema.FromJsonAsync(Execute.ToJsonString())));
 

@@ -1,11 +1,6 @@
 ﻿namespace Cosm.Net.Exceptions;
-public class TxPublishException : Exception
+public class TxPublishException(long code, string reason) 
+    : Exception($"Eror Code {code}: {reason}")
 {
-    public long Code { get; }
-
-    public TxPublishException(long code, string reason)
-        :base($"Eror Code {code}: {reason}")
-    {
-        Code = code;
-    }
+    public long Code { get; } = code;
 }

@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Crypto;
 using Cosm.Net.Encoding;
 using Cosm.Net.Signer;
+using Cosm.Net.Wallet.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Secp256k1Net;
 using System.Security.Cryptography;

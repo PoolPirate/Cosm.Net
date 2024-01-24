@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Crypto;
+﻿namespace Cosm.Net.Wallet.Crypto;
 public static class BIP32Curves
 {
     public const string ED25519 = "ed25519 seed";

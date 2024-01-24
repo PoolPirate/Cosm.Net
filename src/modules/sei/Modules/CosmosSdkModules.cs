@@ -9,11 +9,12 @@ namespace Cosm.Net.Sei.Modules;
 //internal partial class AccountModule : IModule<AccountModule, Cosmos.Accounts.V1.Query.QueryClient> { }
 internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Query.QueryClient>, IAuthModuleAdapter
 {
-    async Task<ByteString> IAuthModuleAdapter.AccountAsync(string address, Metadata? headers, DateTime? deadline, CancellationToken cancellationToken)
+    async Task<AccountData> IAuthModuleAdapter.GetAccountAsync(string address, Metadata? headers,
+        DateTime? deadline, CancellationToken cancellationToken)
     {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
-        //var accountResponse = await AccountAsync(address, headers, deadline, cancellationToken);
-        return accountData.Account.Value;
+        var account = Cosmos.Auth.V1Beta1.BaseAccount.Parser.ParseFrom(accountData.Account.Value);
+        return new AccountData(account.AccountNumber, account.Sequence);
     }
 }
 internal partial class AuthzModule : IModule<AuthzModule, Cosmos.Authz.V1Beta1.Query.QueryClient> { }

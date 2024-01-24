@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Client.Internal;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
@@ -38,9 +39,9 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
     public async Task InitializeAsync()
     {
-        var dataProvider = _provider.GetRequiredService<IChainDataProvider>();
+        var tendermintAdapter = _provider.GetRequiredService<ITendermintModuleAdapter>();
 
-        var chainId = await dataProvider.GetChainIdAsync();
+        var chainId = await tendermintAdapter.GetChainId();
         _chainConfig.Initialize(chainId);
 
         if (_isTxClient)

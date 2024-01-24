@@ -1,9 +1,9 @@
-﻿using Cosm.Net.Wasm.Models;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Cosm.Net.Adapters;
+using Cosm.Net.Models;
 
-namespace Cosm.Net.Wasm.Services;
+namespace Cosm.Net.Services;
 public class ContractSchemaStore
 {
     private IServiceProvider? _provider;

@@ -1,7 +1,7 @@
-﻿using Cosm.Net.Wasm.Models;
-using Cosm.Net.Wasm.Services;
+﻿using Cosm.Net.Models;
+using Cosm.Net.Services;
 
-namespace Cosm.Net.Wasm.Configuration;
+namespace Cosm.Net.Configuration;
 internal class WasmConfiguration : IWasmConfiguration
 {
     private readonly ContractSchemaStore _contractSchemaStore = new ContractSchemaStore();
