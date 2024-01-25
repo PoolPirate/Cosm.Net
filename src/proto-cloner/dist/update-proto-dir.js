@@ -68,29 +68,69 @@ async function clearDirectory(dirPath) {
 async function checkoutVersion(chain, repo, version) {
     const repoOutPath = node_path_1.default.join(chain.repoDir, repo.dirName);
     const repoUrl = `https://${repo.name}`;
-    const currentVersion = await execAndWait(`cd ${repoOutPath} && git tag --points-at HEAD`);
-    const currentRepoUrl = await execAndWait(`cd ${repoOutPath} && git remote get-url origin`);
-    if (currentVersion == version && repoUrl == currentRepoUrl) {
-        console.log(`Found matching version for ${repoUrl} locally`);
-        return;
-    }
-    if (version == "latest" && repoUrl == currentRepoUrl) {
-        console.log(`Found clone of ${repoUrl} locally, pulling...`);
-        await execAndWait(`cd ${repoOutPath} && git reset --hard && git pull`);
-        return;
-    }
     if ((0, node_fs_1.existsSync)(repoOutPath)) {
-        (0, node_fs_1.rmSync)(repoOutPath, { force: true, recursive: true });
+        if (!(await tryCheckoutVersionLocally(repoUrl, repoOutPath, version))) {
+            (0, node_fs_1.rmSync)(repoOutPath, { force: true, recursive: true });
+        }
+        else {
+            return;
+        }
     }
     const command = version == "latest"
         ? `git clone ${repoUrl} --single-branch ${repoOutPath}`
         : `git clone ${repoUrl} --branch ${version} --single-branch ${repoOutPath}`;
     console.log(command);
-    await execAndWait(command);
+    const res = await execAndWait(command);
+    if (res.err.includes(`not found in upstream origin`)) {
+        const versionParts = version.split("-");
+        if (versionParts.length != 3 ||
+            (versionParts[2] != null && versionParts[2].length != 12)) {
+            console.error(`Branch ${version} could not be found in repository and parsing it as a commit hash failed!`);
+            process.exit(1);
+        }
+        const commitHash = versionParts[2];
+        console.log(`${version} appears to be a commit hash instead of a branch. Cloning and checking out commit.`);
+        const command2 = `git clone ${repoUrl} ${repoOutPath} && cd ${repoOutPath} && git reset --hard ${commitHash}`;
+        console.log(command2);
+        const resetRes = await execAndWait(command2);
+        if (!resetRes.std.includes("HEAD is now at")) {
+            console.error(resetRes.err);
+            console.error(`Failed to check out commit hash ${commitHash}. Please manually resolve dependency ${repoUrl}`);
+            process.exit(1);
+        }
+    }
+}
+async function tryCheckoutVersionLocally(repoUrl, repoPath, version) {
+    const currentVersion = await execAndWait(`cd ${repoPath} && git tag --points-at HEAD`).then((x) => x.std);
+    const currentRepoUrl = await execAndWait(`cd ${repoPath} && git remote get-url origin`).then((x) => x.std);
+    if (currentVersion == version && repoUrl == currentRepoUrl) {
+        console.log(`Found matching version for ${repoUrl} locally`);
+        return true;
+    }
+    if (version == "latest" && repoUrl == currentRepoUrl) {
+        console.log(`Found clone of ${repoUrl} locally, pulling...`);
+        await execAndWait(`cd ${repoPath} && git reset --hard && git pull`);
+        return true;
+    }
+    const versionParts = version.split("-");
+    if (versionParts.length != 3 ||
+        (versionParts[2] != null && versionParts[2].length != 12)) {
+        return false;
+    }
+    const commitHash = versionParts[2];
+    const commitCheckoutResp = await execAndWait(`cd ${repoPath} && git reset --hard ${commitHash}`);
+    if (commitCheckoutResp.std.includes("HEAD is now at")) {
+        console.log(`Found matching version for ${repoUrl} locally`);
+        return true;
+    }
+    return false;
 }
 async function execAndWait(command) {
     return await new Promise((resolve) => (0, node_child_process_1.exec)(command, (err, stdout, stderr) => {
-        resolve(stdout.trim());
+        resolve({
+            std: stdout.trim(),
+            err: stderr.trim(),
+        });
     }));
 }
 function collectProtoDirs(sourcePath, protoDirs, targetPath) {

@@ -13,3 +13,6 @@
 [submodule "src/modules/sei/lib/sei-chain"]
 	path = src/modules/sei/lib/sei-chain
 	url = https://github.com/sei-protocol/sei-chain.git
+[submodule "src/modules/secret/lib/SecretNetwork"]
+	path = src/modules/secret/lib/SecretNetwork
+	url = https://github.com/scrtlabs/SecretNetwork.git
