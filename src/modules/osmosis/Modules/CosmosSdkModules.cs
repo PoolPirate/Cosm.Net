@@ -26,7 +26,8 @@ internal partial class DistributionModule : IModule<DistributionModule, Cosmos.S
 internal partial class EvidenceModule : IModule<EvidenceModule, Cosmos.Evidence.V1Beta1.Query.QueryClient> { }
 internal partial class FeeGrantModule : IModule<FeeGrantModule, Cosmos.Feegrant.V1Beta1.Query.QueryClient> { }
 internal partial class GovModule : IModule<GovModule, Cosmos.Gov.V1Beta1.Query.QueryClient> { }
-internal partial class MintModule : IModule<MintModule, Cosmos.Mint.V1Beta1.Query.QueryClient> { }
+//Custom variant of that module exposed on Osmosis Chain
+//internal partial class MintModule : IModule<MintModule, Cosmos.Mint.V1Beta1.Query.QueryClient> { }
 internal partial class NftModule : IModule<NftModule, Cosmos.Nft.V1Beta1.Query.QueryClient> { }
 internal partial class ParamsModule : IModule<ParamsModule, Cosmos.Params.V1Beta1.Query.QueryClient> { }
 //Module not exposed on Osmosis Chain
@@ -51,7 +52,6 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
             BroadcastMode.Unspecified => Cosmos.Tx.V1Beta1.BroadcastMode.Unspecified,
             BroadcastMode.Sync => Cosmos.Tx.V1Beta1.BroadcastMode.Sync,
             BroadcastMode.Async => Cosmos.Tx.V1Beta1.BroadcastMode.Async,
-            BroadcastMode.Block => Cosmos.Tx.V1Beta1.BroadcastMode.Block,
             _ => throw new InvalidOperationException("Unsupported BroadcastMode")
         };
 
