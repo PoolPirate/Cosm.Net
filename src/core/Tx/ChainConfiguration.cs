@@ -15,7 +15,7 @@ internal class ChainConfiguration : IChainConfiguration
 
     public void Initialize(string chainId)
     {
-        if (_isInitialized)
+        if(_isInitialized)
         {
             throw new InvalidOperationException($"{nameof(ChainConfiguration)} already initialized");
         }

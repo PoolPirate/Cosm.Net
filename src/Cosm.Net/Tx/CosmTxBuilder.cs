@@ -4,7 +4,7 @@ namespace Cosm.Net.Tx;
 public class CosmTxBuilder
 {
     private readonly List<ITxMessage> _messages;
-    private string _memo = string.Empty;
+    private string _memo = String.Empty;
     private ulong _timeoutHeight = 0;
 
     public CosmTxBuilder()
@@ -30,6 +30,6 @@ public class CosmTxBuilder
         return this;
     }
 
-    public CosmTx Build() 
+    public CosmTx Build()
         => new CosmTx(_memo, _timeoutHeight, _messages.ToArray());
 }

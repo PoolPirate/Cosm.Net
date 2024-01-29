@@ -1,12 +1,12 @@
-﻿using Cosm.Net.Generators.Common.SyntaxElements;
+﻿using Cosm.Net.Generators.Common.Extensions;
+using Cosm.Net.Generators.Common.SyntaxElements;
 using Cosm.Net.Generators.Common.Util;
-using Cosm.Net.Generators.Common.Extensions;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cosm.Net.Generators;
+namespace Cosm.Net.Generators.Proto;
 public static class QueryModuleProcessor
 {
     public static ITypeSymbol GetQueryClientType(INamedTypeSymbol moduleType)
@@ -15,7 +15,7 @@ public static class QueryModuleProcessor
             .Select(x => x.TypeArguments[0])
             .First();
 
-    public static string GetQueryModuleGeneratedCode(INamedTypeSymbol moduleType, ITypeSymbol queryClientType, 
+    public static string GetQueryModuleGeneratedCode(INamedTypeSymbol moduleType, ITypeSymbol queryClientType,
         IEnumerable<INamedTypeSymbol> messageTypes)
     {
         var queryMethods = GetQueryClientQueryMethods(queryClientType);
@@ -31,7 +31,7 @@ public static class QueryModuleProcessor
             _ = interfaceCodeBuilder.AppendLine(interfaceMethod);
         }
 
-        foreach(var messageType in  messageTypes)
+        foreach(var messageType in messageTypes)
         {
             (string interfaceMethod, string methodCode) = GetMessageTypeGeneratedCode(messageType);
 
@@ -82,21 +82,21 @@ public static class QueryModuleProcessor
         {
             string paramName = NameUtils.ToValidVariableName(property.Name);
 
-            functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
-            requestCtorCall.AddInitializer(property, paramName);
+            _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
+            _ = requestCtorCall.AddInitializer(property, paramName);
         }
 
-        var requestVarName = "__request";
-        functionBuilder.AddStatement(requestCtorCall.ToVariableAssignment(requestVarName));
-        queryFunctionCall.AddArgument(requestVarName);
+        string requestVarName = "__request";
+        _ = functionBuilder.AddStatement(requestCtorCall.ToVariableAssignment(requestVarName));
+        _ = queryFunctionCall.AddArgument(requestVarName);
 
         foreach(var parameter in queryParams)
         {
-            functionBuilder.AddArgument((INamedTypeSymbol) parameter.Type, parameter.Name, 
+            _ = functionBuilder.AddArgument((INamedTypeSymbol) parameter.Type, parameter.Name,
                 parameter.HasExplicitDefaultValue, parameter.HasExplicitDefaultValue ? parameter.ExplicitDefaultValue : default);
         }
 
-        functionBuilder.AddStatement($"return {queryFunctionCall.Build()}");
+        _ = functionBuilder.AddStatement($"return {queryFunctionCall.Build()}");
 
         return (functionBuilder.BuildInterfaceDefinition(), functionBuilder.BuildMethodCode());
     }
@@ -122,14 +122,14 @@ public static class QueryModuleProcessor
         {
             string paramName = NameUtils.ToValidVariableName(property.Name);
 
-            functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
-            msgObjectBuilder.AddInitializer(property, paramName);
+            _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
+            _ = msgObjectBuilder.AddInitializer(property, paramName);
         }
 
         string msgVarName = "__msg";
-        functionBuilder.AddStatement(msgObjectBuilder.ToVariableAssignment(msgVarName));
-        txObjectBuilder.AddArgument(msgVarName);
-        functionBuilder.AddStatement($"return {txObjectBuilder.ToInlineCall()}");
+        _ = functionBuilder.AddStatement(msgObjectBuilder.ToVariableAssignment(msgVarName));
+        _ = txObjectBuilder.AddArgument(msgVarName);
+        _ = functionBuilder.AddStatement($"return {txObjectBuilder.ToInlineCall()}");
 
         return (functionBuilder.BuildInterfaceDefinition(), functionBuilder.BuildMethodCode());
     }

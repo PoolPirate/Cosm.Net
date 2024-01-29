@@ -1,5 +1,6 @@
 ﻿using Cosm.Net.Generators.Common.SourceGeneratorKit;
-using Cosm.Net.Generators.Common.Util;
+using Cosm.Net.Generators.CosmWasm.Models;
+using Cosm.Net.Generators.CosmWasm.TypeGen;
 using Microsoft.CodeAnalysis;
 using System.Text.Json;
 
@@ -11,7 +12,7 @@ public class CosmWasmGenerator : ISourceGenerator
     private const string ContractSchemaFilePathAttribute = "ContractSchemaFilePathAttribute";
     private readonly InterfacesWithAttributeReceiver ContractTypeReceiver = new InterfacesWithAttributeReceiver(ContractSchemaFilePathAttribute);
 
-    public void Initialize(GeneratorInitializationContext context) 
+    public void Initialize(GeneratorInitializationContext context)
         => context.RegisterForSyntaxNotifications(() => ContractTypeReceiver);
 
     public void Execute(GeneratorExecutionContext context)
@@ -24,6 +25,7 @@ public class CosmWasmGenerator : ISourceGenerator
         {
             context.ReportDiagnostic(Diagnostic.Create(
                 GeneratorDiagnostics.ExecutionFailed, Location.None, ex));
+            throw;
         }
     }
 
@@ -36,12 +38,12 @@ public class CosmWasmGenerator : ISourceGenerator
 
         foreach(var contractType in ContractTypeReceiver.Types)
         {
-            var schemaPath = contractType.FindAttribute(ContractSchemaFilePathAttribute)!
+            string schemaPath = contractType.FindAttribute(ContractSchemaFilePathAttribute)!
                 .ConstructorArguments[0].Value!.ToString();
             var schemaFile = context.AdditionalFiles
                 .Where(x => x.Path.EndsWith(schemaPath))
                 .FirstOrDefault();
-            var schemaText = schemaFile.GetText()?.ToString();
+            string? schemaText = schemaFile.GetText()?.ToString();
 
             if(schemaFile is null || schemaText is null)
             {
@@ -50,11 +52,11 @@ public class CosmWasmGenerator : ISourceGenerator
                 continue;
             }
 
-            ContractSchema contractSchema = null!;
+            ContractAPISchema contractSchema = null!;
 
             try
             {
-                contractSchema = JsonSerializer.Deserialize<ContractSchema>(schemaText)!;
+                contractSchema = JsonSerializer.Deserialize<ContractAPISchema>(schemaText)!;
             }
             catch(Exception ex)
             {
@@ -63,13 +65,13 @@ public class CosmWasmGenerator : ISourceGenerator
                 continue;
             }
 
-            string code = contractSchema.GenerateCSharpCodeFileAsync(
-                contractType.Name, contractType.ContainingNamespace.ToString())
+            string codeFile = CosmWasmTypeGenerator.GenerateCosmWasmBindingFile(
+                contractSchema, contractType.Name, contractType.ContainingNamespace.ToString())
                 .GetAwaiter().GetResult();
 
             try
             {
-                context.AddSource($"{contractType.Name}.generated.cs", code);
+                context.AddSource($"{contractType.Name}.generated.cs", codeFile);
             }
             catch
             {

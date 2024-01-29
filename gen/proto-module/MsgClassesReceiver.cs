@@ -1,9 +1,8 @@
 ﻿using Cosm.Net.Generators.Common.SourceGeneratorKit;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Cosm.Net.Generators;
+namespace Cosm.Net.Generators.Proto;
 public class MsgClassesReceiver : SyntaxReceiver
 {
     private readonly List<INamedTypeSymbol> MsgTypeCandidates = [];
@@ -13,13 +12,13 @@ public class MsgClassesReceiver : SyntaxReceiver
 
     protected override bool ShouldCollectTypeSymbol(INamedTypeSymbol classSymbol)
     {
-        if (IsMsgCandidate(classSymbol)) 
+        if(IsMsgCandidate(classSymbol))
         {
             var matchingMsgResponseType = MsgResponseCandidates.Find(x => AreMatchingCandidates(classSymbol, x));
 
-            if (matchingMsgResponseType is not null)
+            if(matchingMsgResponseType is not null)
             {
-                MsgResponseCandidates.Remove(matchingMsgResponseType);
+                _ = MsgResponseCandidates.Remove(matchingMsgResponseType);
                 Types.Add(classSymbol);
             }
             else
@@ -27,15 +26,15 @@ public class MsgClassesReceiver : SyntaxReceiver
                 MsgTypeCandidates.Add(classSymbol);
             }
         }
-        else if (IsMsgResponseCandidate(classSymbol))
+        else if(IsMsgResponseCandidate(classSymbol))
         {
             var matchingMsgType = MsgTypeCandidates.Find(x => AreMatchingCandidates(x, classSymbol));
 
-            if (matchingMsgType is not null)
+            if(matchingMsgType is not null)
             {
-                MsgTypeCandidates.Remove(matchingMsgType);
+                _ = MsgTypeCandidates.Remove(matchingMsgType);
                 Types.Add(matchingMsgType);
-            } 
+            }
             else
             {
                 MsgResponseCandidates.Add(classSymbol);

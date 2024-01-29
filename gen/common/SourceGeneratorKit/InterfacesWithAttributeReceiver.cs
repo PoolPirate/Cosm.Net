@@ -1,5 +1,4 @@
-﻿using Cosm.Net.Generators.Common.Util;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
 namespace Cosm.Net.Generators.Common.SourceGeneratorKit;
 public class InterfacesWithAttributeReceiver : SyntaxReceiver

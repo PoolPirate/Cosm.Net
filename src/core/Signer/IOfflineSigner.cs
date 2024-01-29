@@ -2,6 +2,7 @@
 public interface IOfflineSigner
 {
     public byte[] PublicKey { get; }
+
     public string GetAddress(string prefix);
 
     public void SignMessage(ReadOnlySpan<byte> message, Span<byte> signatureOutput);

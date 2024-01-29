@@ -1,6 +1,4 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
@@ -28,7 +26,7 @@ public class MethodCallBuilder
 
     public MethodCallBuilder AddArgument(string sourceExpression)
     {
-        _typedArgumentsBuilder.AddArgument(sourceExpression);
+        _ = _typedArgumentsBuilder.AddArgument(sourceExpression);
         return this;
     }
 
@@ -36,12 +34,12 @@ public class MethodCallBuilder
     {
         var sb = new StringBuilder();
 
-        sb.Append(_target);
-        sb.Append('.');
-        sb.Append(_methodName);
-        sb.Append('(');
-        sb.Append(_typedArgumentsBuilder.Build());
-        sb.Append(')');
+        _ = sb.Append(_target);
+        _ = sb.Append('.');
+        _ = sb.Append(_methodName);
+        _ = sb.Append('(');
+        _ = sb.Append(_typedArgumentsBuilder.Build());
+        _ = sb.Append(')');
 
         return sb.ToString();
     }

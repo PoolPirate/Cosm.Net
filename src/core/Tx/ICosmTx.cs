@@ -1,5 +1,4 @@
 ﻿using Cosm.Net.Tx.Msg;
-using Google.Protobuf;
 
 namespace Cosm.Net.Tx;
 public interface ICosmTx

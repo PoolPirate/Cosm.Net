@@ -34,12 +34,12 @@ public class CallArgumentsBuilder : ISyntaxBuilder
         for(int i = 0; i < _arguments.Count; i++)
         {
             var argument = _arguments[i];
-            sb.Append(argument.SourceExpression);
+            _ = sb.Append(argument.SourceExpression);
 
             if(i + 1 < _arguments.Count)
             {
-                sb.Append(", ");
-            }            
+                _ = sb.Append(", ");
+            }
         }
 
         return sb.ToString();
@@ -48,7 +48,7 @@ public class CallArgumentsBuilder : ISyntaxBuilder
     public SyntaxId GetSyntaxId()
     {
         int hashCode = HashCode.Combine(
-            nameof(CallArgumentsBuilder), 
+            nameof(CallArgumentsBuilder),
             _arguments.Count
         );
         return new SyntaxId(hashCode);

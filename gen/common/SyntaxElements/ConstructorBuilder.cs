@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +7,13 @@ namespace Cosm.Net.Generators.Common.SyntaxElements;
 public class ConstructorBuilder : ISyntaxBuilder
 {
     private readonly List<FieldBuilder> _fields;
+    private readonly List<PropertyBuilder> _properties;
     private readonly string _className;
 
-    public ConstructorBuilder(string className) 
+    public ConstructorBuilder(string className)
     {
         _fields = [];
+        _properties = [];
         _className = className;
     }
 
@@ -22,10 +23,27 @@ public class ConstructorBuilder : ISyntaxBuilder
         return this;
     }
 
-    public ConstructorBuilder AddInitializedFields(IEnumerable<FieldBuilder> fields) { 
+    public ConstructorBuilder AddInitializedProperty(PropertyBuilder property)
+    {
+        _properties.Add(property);
+        return this;
+    }
+
+    public ConstructorBuilder AddInitializedFields(IEnumerable<FieldBuilder> fields)
+    {
         foreach(var field in fields)
         {
-            AddInitializedField(field);
+            _ = AddInitializedField(field);
+        }
+
+        return this;
+    }
+
+    public ConstructorBuilder AddInitializedProperties(IEnumerable<PropertyBuilder> properties)
+    {
+        foreach(var property in properties)
+        {
+            _ = AddInitializedProperty(property);
         }
 
         return this;
@@ -37,16 +55,29 @@ public class ConstructorBuilder : ISyntaxBuilder
         var argumentBuilder = new TypedArgumentsBuilder();
 
         foreach(var field in _fields)
-        { 
-            if (field.Name.StartsWith("_"))
+        {
+            if(field.Name.StartsWith("_"))
             {
-                assignmentSb.AppendLine($"{field.Name} = {field.Name.Substring(1)};");
-                argumentBuilder.AddArgument(field.Type, field.Name.Substring(1));
-            } 
+                _ = assignmentSb.AppendLine($"{field.Name} = {field.Name.Substring(1)};");
+                _ = argumentBuilder.AddArgument(field.Type, field.Name.Substring(1));
+            }
             else
             {
-                assignmentSb.AppendLine($"{field.Name} = _{field.Name};");
-                argumentBuilder.AddArgument(field.Type, $"_{field.Name}");
+                _ = assignmentSb.AppendLine($"{field.Name} = _{field.Name};");
+                _ = argumentBuilder.AddArgument(field.Type, $"_{field.Name}");
+            }
+        }
+        foreach(var property in _properties)
+        {
+            if(property.Name.StartsWith("_"))
+            {
+                _ = assignmentSb.AppendLine($"{property.Name} = {property.Name.Substring(1)};");
+                _ = argumentBuilder.AddArgument(property.Type, property.Name.Substring(1));
+            }
+            else
+            {
+                _ = assignmentSb.AppendLine($"{property.Name} = _{property.Name};");
+                _ = argumentBuilder.AddArgument(property.Type, $"_{property.Name}");
             }
         }
 
@@ -67,7 +98,7 @@ public class ConstructorBuilder : ISyntaxBuilder
             innerSyntaxId = innerSyntaxId.Combine(syntaxId);
         }
 
-        var hashCode = HashCode.Combine(
+        int hashCode = HashCode.Combine(
             innerSyntaxId,
             _className
         );

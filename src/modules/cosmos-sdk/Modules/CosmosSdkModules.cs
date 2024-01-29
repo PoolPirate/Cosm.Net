@@ -41,7 +41,7 @@ internal partial class TendermintModule : IModule<TendermintModule, Cosmos.Base.
 }
 internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.ServiceClient>, ITxModuleAdapter
 {
-    async Task<TxSubmission> ITxModuleAdapter.BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers, 
+    async Task<TxSubmission> ITxModuleAdapter.BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers,
         DateTime? deadline, CancellationToken cancellationToken)
     {
         var signMode = mode switch
@@ -55,7 +55,7 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
         var response = await BroadcastTxAsync(txBytes, signMode, headers, deadline, cancellationToken);
         return new TxSubmission(response.TxResponse.Code, response.TxResponse.Txhash, response.TxResponse.RawLog);
     }
-    async Task<TxSimulation> ITxModuleAdapter.SimulateAsync(ByteString txBytes, Metadata? headers, 
+    async Task<TxSimulation> ITxModuleAdapter.SimulateAsync(ByteString txBytes, Metadata? headers,
         DateTime? deadline, CancellationToken cancellationToken)
     {
         var response = await SimulateAsync(txBytes, headers, deadline, cancellationToken);

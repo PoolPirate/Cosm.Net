@@ -15,12 +15,12 @@ public static class NameUtils
     public static string ToValidNamespaceName(string name)
     {
         var finalSb = new StringBuilder();
-        var parts = ReplaceAll(name, '_', '.', ' ', '/', '\\', '+')
+        string[] parts = ReplaceAll(name, '_', '.', ' ', '/', '\\', '+')
             .Split(['_'], StringSplitOptions.RemoveEmptyEntries);
 
-        foreach(var part in parts)
+        foreach(string? part in parts)
         {
-            finalSb.Append(Capitalize(part));
+            _ = finalSb.Append(Capitalize(part));
         }
 
         return finalSb.ToString();
@@ -40,7 +40,7 @@ public static class NameUtils
 
     public static string ReplaceAll(string name, char replacement, params char[] oldChars)
     {
-        foreach(var oldChar in oldChars)
+        foreach(char oldChar in oldChars)
         {
             name = name.Replace(oldChar, replacement);
         }
@@ -48,8 +48,8 @@ public static class NameUtils
         return name;
     }
 
-    public static string EscapeVariableName(string name) 
-        => name.ToLower() switch
+    public static string EscapeVariableName(string name)
+        => name switch
         {
             "params" => "parameters",
             "namespace" => "@namespace",
@@ -65,7 +65,7 @@ public static class NameUtils
     {
         var sb = new StringBuilder();
 
-        sb.Append($"global::{symbol.ContainingNamespace}");
+        _ = sb.Append($"global::{symbol.ContainingNamespace}");
 
         var parentNames = new List<string>();
         var parentType = symbol.ContainingType;
@@ -76,23 +76,23 @@ public static class NameUtils
         }
 
         parentNames.Reverse();
-        foreach(var parentName in parentNames)
-        { 
-            sb.Append($".{parentName}"); 
+        foreach(string parentName in parentNames)
+        {
+            _ = sb.Append($".{parentName}");
         }
 
-        sb.Append($".{symbol.Name}");
+        _ = sb.Append($".{symbol.Name}");
 
-        if (symbol is INamedTypeSymbol namedType && namedType.TypeArguments.Length > 0)
+        if(symbol is INamedTypeSymbol namedType && namedType.TypeArguments.Length > 0)
         {
-            sb.Append('<');
+            _ = sb.Append('<');
 
             foreach(var typeArg in namedType.TypeArguments)
             {
-                sb.Append(FullyQualifiedTypeName(typeArg));
+                _ = sb.Append(FullyQualifiedTypeName(typeArg));
             }
 
-            sb.Append('>');
+            _ = sb.Append('>');
         }
 
         return sb.ToString();

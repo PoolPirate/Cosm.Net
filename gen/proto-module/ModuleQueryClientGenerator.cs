@@ -1,11 +1,9 @@
 ﻿using Cosm.Net.Generators.Common.SourceGeneratorKit;
-using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
 using System;
-using System.Diagnostics;
 using System.Linq;
 
-namespace Cosm.Net.Generators;
+namespace Cosm.Net.Generators.Proto;
 
 [Generator]
 public class ModuleQueryClientGenerator : ISourceGenerator
@@ -17,7 +15,7 @@ public class ModuleQueryClientGenerator : ISourceGenerator
     {
     }
 
-    public void Initialize(GeneratorInitializationContext context) 
+    public void Initialize(GeneratorInitializationContext context)
         => context.RegisterForSyntaxNotifications(() => new AggregateSyntaxContextReceiver(QueryTypeReceiver, MsgClassesReceiver));
 
     public void Execute(GeneratorExecutionContext context)
@@ -29,7 +27,7 @@ public class ModuleQueryClientGenerator : ISourceGenerator
 
         foreach(var moduleType in QueryTypeReceiver.Types)
         {
-            if (moduleType.DeclaredAccessibility != Accessibility.Internal)
+            if(moduleType.DeclaredAccessibility != Accessibility.Internal)
             {
                 context.ReportDiagnostic(Diagnostic.Create("CN0011", "Analyzer", "Module classes need to be internal", DiagnosticSeverity.Error, DiagnosticSeverity.Error, true, 7, location: moduleType.Locations[0]));
             }

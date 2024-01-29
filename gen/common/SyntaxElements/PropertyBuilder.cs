@@ -1,5 +1,6 @@
 ﻿using Cosm.Net.Generators.Common.Util;
 using System;
+using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
 public enum PropertyVisibility
@@ -48,7 +49,7 @@ public class PropertyBuilder : ISyntaxBuilder
     public PropertyBuilder WithIsRequired(bool isRequired = true)
     {
         _isRequired = isRequired;
-        return this;        
+        return this;
     }
 
     public PropertyBuilder WithSummaryComment(string summaryComment)
@@ -69,15 +70,25 @@ public class PropertyBuilder : ISyntaxBuilder
         return this;
     }
 
-    public string Build() 
-        => $$"""
-            {{(_summaryComment is not null ? CommentUtils.MakeSummaryComment(_summaryComment) : "")}}
-            {{(_jsonPropertyName is not null ? $"[System.Text.Json.Serialization.JsonPropertyName(\"{_jsonPropertyName}\")]" : "")}}
-            {{_visibility.ToString().ToLower()}} {{(_isRequired ? "required" : "")}} {{Type}} {{Name}} { get; {{
-            (_setterVisibility == SetterVisibility.Init 
-                ? "init" 
-                : $"{_setterVisibility.ToString().ToLower()} set")}}; } {{(DefaultValue is not null ? $"= {DefaultValue};" : "")}}
+    public string Build()
+    {
+        var headerSb = new StringBuilder();
+
+        if (_summaryComment is not null)
+        {
+            headerSb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
+        }
+        if (_jsonPropertyName is not null)
+        {
+            headerSb.AppendLine($"[System.Text.Json.Serialization.JsonPropertyName(\"{_jsonPropertyName}\")]");
+        }
+
+        return $$"""
+            {{headerSb}} {{_visibility.ToString().ToLower()}} {{(_isRequired ? "required" : "")}} {{Type}} {{Name}} { get; {{(_setterVisibility == SetterVisibility.Init
+                    ? "init"
+                    : $"{_setterVisibility.ToString().ToLower()} set")}}; } {{(DefaultValue is not null ? $"= {DefaultValue};" : "")}}
             """;
+    }
 
     public override int GetHashCode()
         => System.HashCode.Combine(

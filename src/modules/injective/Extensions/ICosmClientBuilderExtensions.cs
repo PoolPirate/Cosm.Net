@@ -1,8 +1,8 @@
-﻿using Cosm.Net.Client;
-using Cosm.Net.Adapters;
-using System.Reflection;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Client;
 using Cosm.Net.Extensions;
 using Cosm.Net.Injective.Modules;
+using System.Reflection;
 
 namespace Cosm.Net.Injective.Extensions;
 public static class ICosmClientBuilderExtensions

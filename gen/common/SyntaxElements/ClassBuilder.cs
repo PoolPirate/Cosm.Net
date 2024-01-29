@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cosm.Net.Generators.Common.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,10 +34,17 @@ public class ClassBuilder : ITypeBuilder
     private readonly List<PropertyBuilder> _properties;
     private readonly List<FieldBuilder> _fields;
     private readonly List<BaseType> _baseTypes;
+    private readonly List<ITypeBuilder> _innerTypes;
+
     private string _name;
     private ClassVisibility _visibility = ClassVisibility.Public;
     private bool _isPartial = false;
     private bool _isAbstract = false;
+
+    private string? _jsonConverterType;
+    private string? _summaryComment;
+
+    string ITypeBuilder.TypeName => _name;
 
     public ClassBuilder(string name)
     {
@@ -44,6 +52,7 @@ public class ClassBuilder : ITypeBuilder
         _properties = [];
         _fields = [];
         _baseTypes = [];
+        _innerTypes = [];
         _name = name;
     }
 
@@ -80,9 +89,21 @@ public class ClassBuilder : ITypeBuilder
         return this;
     }
 
+    public ClassBuilder AddInnerType(ITypeBuilder typeBuilder)
+    {
+        _innerTypes.Add(typeBuilder);
+        return this;
+    }
+
     public ClassBuilder AddBaseType(string name, bool isInterface)
     {
         _baseTypes.Add(new BaseType(name, isInterface));
+        return this;
+    }
+
+    public ClassBuilder WithJsonConverterType(string jsonConverterType)
+    {
+        _jsonConverterType = jsonConverterType;
         return this;
     }
 
@@ -104,6 +125,12 @@ public class ClassBuilder : ITypeBuilder
         return this;
     }
 
+    public ClassBuilder WithSummaryComment(string summaryComment)
+    {
+        _summaryComment = summaryComment;
+        return this;
+    }
+
     public string Build(bool generateFieldConstructor = false, bool generateInterface = false, string? interfaceName = null)
     {
         var bodySb = new StringBuilder();
@@ -111,20 +138,24 @@ public class ClassBuilder : ITypeBuilder
 
         foreach(var function in _functions)
         {
-            bodySb.AppendLine(function.BuildMethodCode());
+            _ = bodySb.AppendLine(function.BuildMethodCode());
         }
         foreach(var property in _properties)
         {
-            bodySb.AppendLine(property.Build());
+            _ = bodySb.AppendLine(property.Build());
         }
         foreach(var field in _fields)
         {
-            bodySb.AppendLine(field.Build());
+            _ = bodySb.AppendLine(field.Build());
+        }
+        foreach(var type in _innerTypes)
+        {
+            _ = bodySb.AppendLine(type.Build());
         }
 
         var orderedBaseTypes = _baseTypes.OrderBy(x => !x.IsInterface).ToList();
 
-        if (generateInterface)
+        if(generateInterface)
         {
             orderedBaseTypes.Add(new BaseType($"I{_name}", true));
         }
@@ -133,47 +164,73 @@ public class ClassBuilder : ITypeBuilder
         {
             var baseType = orderedBaseTypes[i];
 
-            if (i == 0)
+            if(i == 0)
             {
-                baseTypeSb.Append(" : ");
+                _ = baseTypeSb.Append(" : ");
             }
 
-            baseTypeSb.Append(baseType.Name);
+            _ = baseTypeSb.Append(baseType.Name);
 
-            if (i < orderedBaseTypes.Count - 1)
+            if(i < orderedBaseTypes.Count - 1)
             {
-                baseTypeSb.Append(", ");
+                _ = baseTypeSb.Append(", ");
             }
         }
 
-        return 
-            $$"""
-            {{(!generateInterface ? ""
-                : new InterfaceBuilder(interfaceName ?? $"I{_name}")
-                    .AddFunctions(_functions)
-                    .AddBaseTypes(_baseTypes)
-                    .WithIsPartial(_isPartial)
-                    .Build()
-            )}}
-            {{_visibility.ToString().ToLower()}}
-            {{(_isPartial ? " partial" : "")}} 
-            {{(_isAbstract ? " abstract" : "")}}
-            class {{_name}} 
-                {{baseTypeSb}}
-            {
-            {{(!generateFieldConstructor ? ""
-                : new ConstructorBuilder(_name)
+        var outputSb = new StringBuilder();
+
+        if (generateInterface)
+        {
+            outputSb.AppendLine(
+                new InterfaceBuilder(interfaceName ?? $"I{_name}")
+                .AddFunctions(_functions)
+                .AddBaseTypes(_baseTypes)
+                .WithIsPartial(_isPartial)
+                .Build());
+        }
+
+        if (_summaryComment is not null)
+        {
+            outputSb.AppendLine(
+                CommentUtils.MakeSummaryComment(_summaryComment));
+        }
+
+        if (_jsonConverterType is not null)
+        {
+            outputSb.AppendLine($"[global::System.Text.Json.Serialization.JsonConverter(typeof({_jsonConverterType}))]");
+        }
+
+        outputSb.Append(_visibility.ToString().ToLower());
+
+        if (_isPartial)
+        {
+            outputSb.Append(" partial");
+        }
+        if (_isAbstract)
+        {
+            outputSb.Append(" abstract");
+        }
+        outputSb.AppendLine($" class {_name} {baseTypeSb}");
+        outputSb.AppendLine("{");
+
+        if (generateFieldConstructor)
+        {
+            outputSb.AppendLine(
+                new ConstructorBuilder(_name)
                     .AddInitializedFields(_fields)
-                    .Build())}}
-            {{bodySb}}
-            }
-            """;
+                    .AddInitializedProperties(_properties)
+                    .Build());
+        }
+
+        outputSb.AppendLine(bodySb.ToString().TrimEnd('\n', '\r'));
+        outputSb.AppendLine("}");
+        return outputSb.ToString();
     }
 
-    public string Build() 
+    public string Build()
         => Build(false);
 
-    public SyntaxId GetSyntaxId() 
+    public SyntaxId GetSyntaxId()
         => GetContentId().Combine(new SyntaxId(HashCode.Combine(_name)));
 
     public SyntaxId GetContentId()
@@ -182,7 +239,8 @@ public class ClassBuilder : ITypeBuilder
             nameof(ClassBuilder),
             _visibility,
             _isPartial,
-            _isAbstract
+            _isAbstract,
+            _jsonConverterType
         ));
 
         foreach(var syntaxId in _properties.Select(x => x.GetSyntaxId()))
@@ -198,6 +256,10 @@ public class ClassBuilder : ITypeBuilder
             innerSyntaxId = innerSyntaxId.Combine(syntaxId);
         }
         foreach(var syntaxId in _baseTypes.Select(x => x.GetSyntaxId()))
+        {
+            innerSyntaxId = innerSyntaxId.Combine(syntaxId);
+        }
+        foreach(var syntaxId in _innerTypes.Select(x => x.GetSyntaxId()))
         {
             innerSyntaxId = innerSyntaxId.Combine(syntaxId);
         }

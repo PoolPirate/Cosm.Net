@@ -19,22 +19,21 @@ public static class GeneratorDiagnostics
     );
 
     public static readonly DiagnosticDescriptor SchemaFileNotFound = new DiagnosticDescriptor(
-        "CWG0001", 
+        "CWG0001",
         "Schema file not found",
         "Schema file not found. Ensure the build action is set to \"C# Analyzer additional file\".",
-        DiagnosticCategory.Usage, 
-        DiagnosticSeverity.Warning, 
-        true
-    );
-
-        public static readonly DiagnosticDescriptor SchemaFileMalformed = new DiagnosticDescriptor(
-        "CWG0002",
-        "Schema file could not be parsed",
-        "Schema file could not be parsed. An exception occured: {0}.",
         DiagnosticCategory.Usage,
         DiagnosticSeverity.Warning,
         true
     );
 
+    public static readonly DiagnosticDescriptor SchemaFileMalformed = new DiagnosticDescriptor(
+    "CWG0002",
+    "Schema file could not be parsed",
+    "Schema file could not be parsed. An exception occured: {0}.",
+    DiagnosticCategory.Usage,
+    DiagnosticSeverity.Warning,
+    true
+);
 
 }

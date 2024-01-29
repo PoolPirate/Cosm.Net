@@ -4,7 +4,7 @@ using Cosm.Net.Models;
 using Cosm.Net.Tx;
 
 namespace Cosm.Net.Services;
-public class TxModulePublisher(ITxModuleAdapter txModule, ITxEncoder txEncoder, IGasFeeProvider gasFeeProvider) 
+public class TxModulePublisher(ITxModuleAdapter txModule, ITxEncoder txEncoder, IGasFeeProvider gasFeeProvider)
     : ITxPublisher
 {
     private readonly ITxModuleAdapter _txModule = txModule;
@@ -14,7 +14,7 @@ public class TxModulePublisher(ITxModuleAdapter txModule, ITxEncoder txEncoder, 
     public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, ulong sequence)
     {
         var encodedTx = _txEncoder.EncodeTx(tx, sequence, _gasFeeProvider.BaseGasFeeDenom);
-       return await _txModule.SimulateAsync(encodedTx);
+        return await _txModule.SimulateAsync(encodedTx);
     }
 
     public async Task<string> PublishTxAsync(ISignedCosmTx tx)

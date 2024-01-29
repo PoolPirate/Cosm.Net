@@ -8,6 +8,7 @@ using System.Text;
 namespace Cosm.Net.Generators.Common.SyntaxElements;
 public enum FunctionVisibility
 {
+    Omit,
     Public,
     Private,
 }
@@ -16,6 +17,7 @@ public class FunctionBuilder : ISyntaxBuilder
 {
     private readonly List<string> _statements;
     private TypedArgumentsBuilder _argumentBuilder;
+    private readonly Dictionary<string, string> _argumentComments;
 
     private readonly string _name;
 
@@ -27,8 +29,9 @@ public class FunctionBuilder : ISyntaxBuilder
 
     public FunctionBuilder(string name)
     {
-         _argumentBuilder = new TypedArgumentsBuilder();
+        _argumentBuilder = new TypedArgumentsBuilder();
         _statements = [];
+        _argumentComments = [];
         _name = name;
     }
 
@@ -64,42 +67,60 @@ public class FunctionBuilder : ISyntaxBuilder
 
     public FunctionBuilder WithIsStatic(bool isStatic = true)
     {
-        _isStatic = isStatic; 
+        _isStatic = isStatic;
         return this;
     }
 
-    public FunctionBuilder AddStatement(string statement)
+    public FunctionBuilder AddStatement(string statement, bool requireSemicolon = true)
     {
-        _statements.Add(statement);
+        _statements.Add($"{statement}{(requireSemicolon ? ";" : "")}");
         return this;
     }
 
     public FunctionBuilder AddArgument(INamedTypeSymbol type, string argumentName,
-        bool hasExplicityDefaultValue = false, object? defaultValue = null)
+        bool hasExplicityDefaultValue = false, object? defaultValue = null, string? xmlComment = null)
     {
-        _argumentBuilder.AddArgument(type, argumentName, hasExplicityDefaultValue, defaultValue);
+        AddArgumentXmlComment(argumentName, xmlComment);
+        _ = _argumentBuilder.AddArgument(type, argumentName, hasExplicityDefaultValue, defaultValue);
         return this;
     }
 
     public FunctionBuilder AddArgument(string type, string argumentName,
-    bool hasExplicityDefaultValue = false, object? defaultValue = null)
+    bool hasExplicityDefaultValue = false, object? defaultValue = null, string? xmlComment = null)
     {
-        _argumentBuilder.AddArgument(type, argumentName, hasExplicityDefaultValue, defaultValue);
+        AddArgumentXmlComment(argumentName, xmlComment);
+        _ = _argumentBuilder.AddArgument(type, argumentName, hasExplicityDefaultValue, defaultValue);
         return this;
+    }
+
+    private void AddArgumentXmlComment(string argumentName, string? xmlComment)
+    {
+        if(xmlComment is not null)
+        {
+            if(_argumentComments.ContainsKey(argumentName))
+            {
+                throw new InvalidOperationException("xmlComment for that argument already set!");
+            }
+            _argumentComments.Add(argumentName, xmlComment);
+        }
     }
 
     public string BuildInterfaceDefinition()
     {
-        var sb = new StringBuilder();
-
-        if (_summaryComment is not null)
+        if (_visibility == FunctionVisibility.Omit)
         {
-            sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
+            return String.Empty;
         }
 
-        sb.Append($"""
-        {_visibility.ToString().ToLower()} {(_returnType is null ? "void" : _returnType)} {_name}({_argumentBuilder.Build()});
-        """);
+        var sb = new StringBuilder();
+
+        if(_summaryComment is not null)
+        {
+            _ = sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
+        }
+
+            sb.Append($"{_visibility.ToString().ToLower()} ");
+        _ = sb.Append($"{(_returnType is null ? "void" : _returnType)} {_name}({_argumentBuilder.Build()});");
 
         return sb.ToString();
     }
@@ -110,30 +131,38 @@ public class FunctionBuilder : ISyntaxBuilder
 
         if(_summaryComment is not null)
         {
-            sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
-        }
-        sb.Append($"{_visibility.ToString().ToLower()} ");
-
-        if (_isStatic)
-        {
-            sb.Append("static ");
-        }
-        if (_isAsync)
-        {
-            sb.Append("async ");
+            _ = sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
         }
 
-        sb.Append($"""
+        foreach(var argumentComment in _argumentComments)
+        {
+            sb.AppendLine(CommentUtils.MakeParamComment(argumentComment.Key, argumentComment.Value));
+        }
+
+        if (_visibility != FunctionVisibility.Omit)
+        {
+            _ = sb.Append($"{_visibility.ToString().ToLower()} ");
+        }
+        if(_isStatic)
+        {
+            _ = sb.Append("static ");
+        }
+        if(_isAsync)
+        {
+            _ = sb.Append("async ");
+        }
+
+        _ = sb.Append($"""
         {(_returnType is null ? "void" : _returnType)} {_name}({_argumentBuilder.Build()})
         """);
-        sb.AppendLine("{");
+        _ = sb.AppendLine("{");
 
-        foreach(var statement in _statements)
+        foreach(string statement in _statements)
         {
-            sb.AppendLine($"{statement};");
+            _ = sb.AppendLine($"{statement}");
         }
 
-        sb.AppendLine("}");
+        _ = sb.AppendLine("}");
 
         return sb.ToString();
     }

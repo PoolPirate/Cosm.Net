@@ -1,6 +1,5 @@
 ﻿using Cosm.Net.Models;
 using Cosm.Net.Tx;
-using Cosm.Net.Tx.Msg;
 using Google.Protobuf;
 
 namespace Cosm.Net.Services;

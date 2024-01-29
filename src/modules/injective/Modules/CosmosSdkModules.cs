@@ -14,7 +14,7 @@ internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Quer
     {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
 
-        if (accountData.Account.TypeUrl == $"/{(global::Injective.Types.V1Beta1.EthAccount.Descriptor.FullName)}")
+        if(accountData.Account.TypeUrl == $"/{(global::Injective.Types.V1Beta1.EthAccount.Descriptor.FullName)}")
         {
             var account = global::Injective.Types.V1Beta1.EthAccount.Parser.ParseFrom(accountData.Account.Value);
             return new AccountData(account.BaseAccount.AccountNumber, account.BaseAccount.Sequence);

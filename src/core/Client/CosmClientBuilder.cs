@@ -33,7 +33,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 
     CosmClientBuilder IInternalCosmClientBuilder.WithChainInfo(string bech32Prefix)
     {
-        if (_chainInfo is not null)
+        if(_chainInfo is not null)
         {
             throw new InvalidOperationException($"{nameof(ChainInfo)} already set.");
         }
@@ -58,22 +58,23 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         var types = assembly.GetTypes();
         var moduleTypes = assembly.GetTypes()
             .Where(x => x.IsClass)
-            .Select(x => new {
+            .Select(x => new
+            {
                 ModuleType = x,
                 InterfaceType = GetModuleInterfaceFromModule(x)
             })
             .Where(x => x.InterfaceType is not null);
 
-        var registerMethod = typeof(IInternalCosmClientBuilder).GetMethod(nameof(IInternalCosmClientBuilder.RegisterModule), 
+        var registerMethod = typeof(IInternalCosmClientBuilder).GetMethod(nameof(IInternalCosmClientBuilder.RegisterModule),
             BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
         foreach(var modTypes in moduleTypes)
         {
-            registerMethod.MakeGenericMethod(modTypes.InterfaceType, modTypes.ModuleType).Invoke(this, []);
+            _ = registerMethod.MakeGenericMethod(modTypes.InterfaceType, modTypes.ModuleType).Invoke(this, []);
         }
 
         return this;
 
-        Type GetModuleInterfaceFromModule(Type moduleType) 
+        Type GetModuleInterfaceFromModule(Type moduleType)
             => types
                 .Where(x => x.IsInterface)
                 .Where(x => x.IsAssignableFrom(moduleType))
@@ -81,23 +82,23 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 .SingleOrDefault();
     }
 
-     bool IInternalCosmClientBuilder.HasModule<TIModule>()
-        => _services.Any(x => x.ServiceType == typeof(TIModule));
+    bool IInternalCosmClientBuilder.HasModule<TIModule>()
+       => _services.Any(x => x.ServiceType == typeof(TIModule));
 
     public CosmClientBuilder WithSigner(IOfflineSigner signer, bool overrideExisting = false)
     {
         if(_services.Any(x => x.ServiceType == typeof(IOfflineSigner)))
         {
-            if (!overrideExisting)
+            if(!overrideExisting)
             {
                 throw new InvalidOperationException($"{nameof(IOfflineSigner)} already set.");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(IOfflineSigner), signer));
+            _ = _services.Replace(new ServiceDescriptor(typeof(IOfflineSigner), signer));
         }
         else
         {
-            _services.AddSingleton(signer);
+            _ = _services.AddSingleton(signer);
         }
 
         return this;
@@ -113,11 +114,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException("ITxScheduler already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(ITxScheduler), typeof(TTxScheduler), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxScheduler), typeof(TTxScheduler), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<ITxScheduler, TTxScheduler>();
+            _ = _services.AddSingleton<ITxScheduler, TTxScheduler>();
         }
 
         return this;
@@ -128,30 +129,30 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     {
         if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
         {
-            if (!overrideExisting)
+            if(!overrideExisting)
             {
                 throw new InvalidOperationException("Configuration type has already been registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
+            _ = _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
         }
         else
         {
-            _services.AddSingleton(configuration);
+            _ = _services.AddSingleton(configuration);
         }
 
         if(_services.Any(x => x.ServiceType == typeof(ITxScheduler)))
         {
-            if (!overrideExisting)
+            if(!overrideExisting)
             {
                 throw new InvalidOperationException($"{nameof(ITxScheduler)} already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(ITxScheduler), typeof(TTxScheduler), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxScheduler), typeof(TTxScheduler), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<ITxScheduler, TTxScheduler>();
+            _ = _services.AddSingleton<ITxScheduler, TTxScheduler>();
         }
 
         return this;
@@ -166,16 +167,16 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException("ITxEncoder already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(ITxEncoder), typeof(TTxEncoder), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxEncoder), typeof(TTxEncoder), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<ITxEncoder, TTxEncoder>();
+            _ = _services.AddSingleton<ITxEncoder, TTxEncoder>();
         }
 
         return this;
     }
-     CosmClientBuilder IInternalCosmClientBuilder.WithTxEncoder<TTxEncoder, TConfiguration>(TConfiguration configuration, bool overrideExisting)
+    CosmClientBuilder IInternalCosmClientBuilder.WithTxEncoder<TTxEncoder, TConfiguration>(TConfiguration configuration, bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
         {
@@ -184,11 +185,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException("Configuration type has already been registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
+            _ = _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
         }
         else
         {
-            _services.AddSingleton(configuration);
+            _ = _services.AddSingleton(configuration);
         }
 
         if(_services.Any(x => x.ServiceType == typeof(ITxEncoder)))
@@ -198,11 +199,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException($"{nameof(ITxEncoder)} already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(ITxEncoder), typeof(TTxEncoder), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxEncoder), typeof(TTxEncoder), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<ITxEncoder, TTxEncoder>();
+            _ = _services.AddSingleton<ITxEncoder, TTxEncoder>();
         }
 
         return this;
@@ -217,11 +218,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException("ITxPublisher already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(ITxPublisher), typeof(ITxPublisher), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxPublisher), typeof(ITxPublisher), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<ITxPublisher, TTxPublisher>();
+            _ = _services.AddSingleton<ITxPublisher, TTxPublisher>();
         }
 
         return this;
@@ -235,11 +236,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException("Configuration type has already been registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
+            _ = _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
         }
         else
         {
-            _services.AddSingleton(configuration);
+            _ = _services.AddSingleton(configuration);
         }
 
         if(_services.Any(x => x.ServiceType == typeof(ITxPublisher)))
@@ -249,11 +250,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException($"{nameof(ITxPublisher)} already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(ITxPublisher), typeof(TTxPublisher), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxPublisher), typeof(TTxPublisher), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<ITxPublisher, TTxPublisher>();
+            _ = _services.AddSingleton<ITxPublisher, TTxPublisher>();
         }
 
         return this;
@@ -268,11 +269,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException("IGasFeeProvider already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(IGasFeeProvider), typeof(TGasFeeProvider), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(IGasFeeProvider), typeof(TGasFeeProvider), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<IGasFeeProvider, TGasFeeProvider>();
+            _ = _services.AddSingleton<IGasFeeProvider, TGasFeeProvider>();
         }
 
         return this;
@@ -286,11 +287,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException("Configuration type has already been registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
+            _ = _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
         }
         else
         {
-            _services.AddSingleton(configuration);
+            _ = _services.AddSingleton(configuration);
         }
 
         if(_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
@@ -300,11 +301,11 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 throw new InvalidOperationException($"{nameof(IGasFeeProvider)} already registered");
             }
 
-            _services.Replace(new ServiceDescriptor(typeof(IGasFeeProvider), typeof(TGasFeeProvider), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(IGasFeeProvider), typeof(TGasFeeProvider), ServiceLifetime.Singleton));
         }
         else
         {
-            _services.AddSingleton<IGasFeeProvider, TGasFeeProvider>();
+            _ = _services.AddSingleton<IGasFeeProvider, TGasFeeProvider>();
         }
 
         return this;
@@ -344,7 +345,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         AssertValidReadClientServices();
 
         var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix);
-        _services.AddSingleton<IChainConfiguration>(chainConfig);
+        _ = _services.AddSingleton<IChainConfiguration>(chainConfig);
 
         var provider = _services.BuildServiceProvider();
         return new CosmClient(provider, _moduleTypes, chainConfig, false);
@@ -382,7 +383,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         AssertValidTxClientServices();
 
         var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix);
-        _services.AddSingleton<IChainConfiguration>(chainConfig);
+        _ = _services.AddSingleton<IChainConfiguration>(chainConfig);
 
         var provider = _services.BuildServiceProvider();
         return new CosmClient(provider, _moduleTypes, chainConfig, true);

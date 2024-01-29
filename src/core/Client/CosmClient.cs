@@ -31,7 +31,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
         _isTxClient = isTxClient;
 
-        if (_isTxClient)
+        if(_isTxClient)
         {
             _gasFeeProvider = _provider.GetRequiredService<IGasFeeProvider>();
         }
@@ -41,13 +41,18 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     {
         var tendermintAdapter = _provider.GetRequiredService<ITendermintModuleAdapter>();
 
-        var chainId = await tendermintAdapter.GetChainId();
+        string chainId = await tendermintAdapter.GetChainId();
         _chainConfig.Initialize(chainId);
 
-        if (_isTxClient)
+        if(_isTxClient)
         {
             await InitializeTxClientAync();
         }
+
+        var initializeables =_provider.GetServices<IInitializeableService>();
+
+        await Task.WhenAll(initializeables.Select(
+            async initializeable => await initializeable.InitializeAsync()));
 
         _isInitialized = true;
     }
@@ -61,21 +66,21 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
             await txScheduler.InitializeAsync();
         }
         catch(RpcException e)
-            when (e.StatusCode == StatusCode.NotFound && e.Status.Detail.StartsWith("account") && e.Status.Detail.EndsWith("not found"))
+            when(e.StatusCode == StatusCode.NotFound && e.Status.Detail.StartsWith("account") && e.Status.Detail.EndsWith("not found"))
         {
             var signer = _provider.GetRequiredService<IOfflineSigner>();
-            throw new Exception($"Your account {signer.GetAddress(Chain.Bech32Prefix)} was not found on chain. " + 
+            throw new Exception($"Your account {signer.GetAddress(Chain.Bech32Prefix)} was not found on chain. " +
                 "Cosmos chains create accounts when they receive funds for the first time.");
         }
     }
 
     private void AssertReady(bool requireTxClient)
     {
-        if (!_isInitialized)
+        if(!_isInitialized)
         {
             throw new InvalidOperationException($"Client not initialized. Call {nameof(ICosmClient)}.{nameof(ICosmClient.InitializeAsync)} before using it.");
         }
-        if (!_isTxClient && requireTxClient)
+        if(!_isTxClient && requireTxClient)
         {
             throw new InvalidOperationException($"Method can only be called on {nameof(ICosmTxClient)}");
         }

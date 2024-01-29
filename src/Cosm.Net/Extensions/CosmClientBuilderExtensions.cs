@@ -13,7 +13,7 @@ public static class CosmTxClientBuilderExtensions
             .AsInternal().WithGasFeeProvider<ConstantGasFeeProvider, ConstantGasFeeProvider.Configuration>(
                 new ConstantGasFeeProvider.Configuration(feeDenom, gasPrice));
 
-    public static CosmClientBuilder UseCosmosTxStructure(this IInternalCosmClientBuilder builder) 
+    public static CosmClientBuilder UseCosmosTxStructure(this IInternalCosmClientBuilder builder)
         => builder
             .WithTxEncoder<CosmosTxEncoder>()
             .AsInternal().WithTxPublisher<TxModulePublisher>();
@@ -28,7 +28,7 @@ public static class CosmTxClientBuilderExtensions
         var config = new WasmConfiguration();
         wasmConfigAction?.Invoke(config);
 
-        builder.AsInternal().ServiceCollection.AddSingleton(provider =>
+        _ = builder.AsInternal().ServiceCollection.AddSingleton(provider =>
         {
             var schemaStore = config.GetSchemaStore();
             schemaStore.InitProvider(provider);

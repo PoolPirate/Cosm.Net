@@ -20,11 +20,11 @@ internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.Q
         _chain = chain;
     }
 
-    ITxMessage IWasmAdapater.EncodeContractCall(string contractAddress, ByteString encodedRequest, IEnumerable<Coin> funds, string? txSender)
+    ITxMessage IWasmAdapater.EncodeContractCall(IContract contract, ByteString encodedRequest, IEnumerable<Coin> funds, string? txSender)
     {
         var msg = new Cosmwasm.Wasm.V1.MsgExecuteContract()
         {
-            Contract = contractAddress,
+            Contract = contract.ContractAddress,
             Msg = encodedRequest,
             Sender = txSender ?? _signer.GetAddress(_chain.Bech32Prefix),
         };
@@ -41,9 +41,9 @@ internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.Q
         return new TxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg);
     }
 
-    async Task<ByteString> IWasmAdapater.SmartContractStateAsync(string address, ByteString queryData)
+    async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData)
     {
-        var response = await SmartContractStateAsync(address, queryData, default, default, default);
+        var response = await SmartContractStateAsync(contract.ContractAddress, queryData, default, default, default);
         return response.Data;
     }
 }

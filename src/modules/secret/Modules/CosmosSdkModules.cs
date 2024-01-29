@@ -10,7 +10,7 @@ internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Quer
 {
     async Task<AccountData> IAuthModuleAdapter.GetAccountAsync(string address, Metadata? headers,
         DateTime? deadline, CancellationToken cancellationToken)
-    {   
+    {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
         var account = Cosmos.Auth.V1Beta1.BaseAccount.Parser.ParseFrom(accountData.Account.Value);
         return new AccountData(account.AccountNumber, account.Sequence);

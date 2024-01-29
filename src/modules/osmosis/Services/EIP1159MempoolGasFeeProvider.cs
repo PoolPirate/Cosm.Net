@@ -1,7 +1,6 @@
 ﻿using Cosm.Net.Models;
 using Cosm.Net.Osmosis.Modules;
 using Cosm.Net.Services;
-using System.Numerics;
 
 namespace Cosm.Net.Osmosis.Services;
 internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasFeeProvider.Configuration>
@@ -18,7 +17,7 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
     public int RefreshIntervalSeconds { get; private set; }
 
     private bool _started;
-    private object _startupLock = new object();
+    private readonly object _startupLock = new object();
     private readonly PeriodicTimer _refreshTimer;
 
     public EIP1159MempoolGasFeeProvider(Configuration configuration, ITxFeesModule txFeesModule)
@@ -48,13 +47,13 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
 
     private async Task<decimal> GetCurrentBaseFeeAsync()
     {
-        var gasPricee18 = decimal.Parse((await _txFeesModule.GetEipBaseFeeAsync()).BaseFee);
+        decimal gasPricee18 = Decimal.Parse((await _txFeesModule.GetEipBaseFeeAsync()).BaseFee);
         return gasPricee18 / GasPriceDenom;
     }
 
     public async ValueTask<GasFeeAmount> GetFeeForGasAsync(ulong gasWanted)
     {
-        if (CurrentBaseGasPrice.HasValue)
+        if(CurrentBaseGasPrice.HasValue)
         {
             return new GasFeeAmount(
                 gasWanted,
@@ -62,7 +61,7 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
                 (ulong) Math.Ceiling(gasWanted * (CurrentBaseGasPrice.Value + GasPriceOffset)));
         }
 
-        lock (_startupLock)
+        lock(_startupLock)
         {
             if(!_started)
             {

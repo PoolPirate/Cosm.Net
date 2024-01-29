@@ -24,6 +24,8 @@ public class EnumerationBuilder : ITypeBuilder
     private string? _summaryComment;
     private string? _jsonConverter;
 
+    string ITypeBuilder.TypeName => _name;
+
     public EnumerationBuilder(string name)
     {
         _enumerationValues = [];
@@ -60,13 +62,13 @@ public class EnumerationBuilder : ITypeBuilder
 
         foreach(var entry in _enumerationValues)
         {
-            valueSb.AppendLine(
+            _ = valueSb.AppendLine(
                 $$"""
                 {{(entry.SummaryComment is not null ? CommentUtils.MakeSummaryComment(entry.SummaryComment) : "")}}
                 {{entry.Value}},
                 """);
         }
-        
+
         return
             $$"""
             {{(_summaryComment is not null ? CommentUtils.MakeSummaryComment(_summaryComment) : "")}}

@@ -1,5 +1,4 @@
-﻿using Cosm.Net.Generators.Common.Util;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,24 +44,24 @@ public class ObjectInitializerBuilder
     {
         var sb = new StringBuilder();
 
-        if (_arguments.Count == 0)
+        if(_arguments.Count == 0)
         {
-            return string.Empty;
+            return String.Empty;
         }
 
-        sb.AppendLine("{");
+        _ = sb.AppendLine("{");
 
         foreach(var argument in _arguments)
         {
-            if (argument.IsReadonlyList)
+            if(argument.IsReadonlyList)
             {
                 throw new InvalidOperationException("Tried to use inline initializer for readonly list property");
             }
 
-            sb.AppendLine($"{argument.TargetPropertyName} = {argument.SourceExpression},");
+            _ = sb.AppendLine($"{argument.TargetPropertyName} = {argument.SourceExpression},");
         }
 
-        sb.AppendLine("}");
+        _ = sb.AppendLine("}");
 
         return sb.ToString();
     }
@@ -73,10 +72,10 @@ public class ObjectInitializerBuilder
 
         if(_arguments.Count == 0)
         {
-            return string.Empty;
+            return String.Empty;
         }
 
-        sb.AppendLine("{");
+        _ = sb.AppendLine("{");
 
         foreach(var argument in _arguments)
         {
@@ -85,10 +84,10 @@ public class ObjectInitializerBuilder
                 continue;
             }
 
-            sb.AppendLine($"{argument.TargetPropertyName} = {argument.SourceExpression},");
+            _ = sb.AppendLine($"{argument.TargetPropertyName} = {argument.SourceExpression},");
         }
 
-        sb.AppendLine("};");
+        _ = sb.AppendLine("};");
 
         foreach(var argument in _arguments)
         {
@@ -97,7 +96,7 @@ public class ObjectInitializerBuilder
                 continue;
             }
 
-            sb.AppendLine($"{variableName}.{argument.TargetPropertyName}.AddRange({argument.SourceExpression});");
+            _ = sb.AppendLine($"{variableName}.{argument.TargetPropertyName}.AddRange({argument.SourceExpression});");
         }
 
         return sb.ToString();

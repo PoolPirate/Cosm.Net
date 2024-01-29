@@ -23,19 +23,19 @@ public class ConstructorCallBuilder
 
     public ConstructorCallBuilder AddArgument(string sourceExpression)
     {
-        _argumentsBuilder.AddArgument(sourceExpression);
+        _ = _argumentsBuilder.AddArgument(sourceExpression);
         return this;
     }
 
     public ConstructorCallBuilder AddInitializer(IPropertySymbol property, string sourceExpression)
     {
-        _objectInitializerBuilder.AddArgument(property, sourceExpression);
+        _ = _objectInitializerBuilder.AddArgument(property, sourceExpression);
         return this;
     }
 
     public ConstructorCallBuilder AddInitializer(string propertyName, string sourceExpression, bool isReadonlyList = false)
     {
-        _objectInitializerBuilder.AddArgument(propertyName, sourceExpression, isReadonlyList);
+        _ = _objectInitializerBuilder.AddArgument(propertyName, sourceExpression, isReadonlyList);
         return this;
     }
 
@@ -43,13 +43,13 @@ public class ConstructorCallBuilder
     {
         var sb = new StringBuilder();
 
-        sb.Append("new ");
-        sb.Append(_constructedType);
-        sb.Append('(');
-        sb.Append(_argumentsBuilder.Build());
-        sb.Append(')');
+        _ = sb.Append("new ");
+        _ = sb.Append(_constructedType);
+        _ = sb.Append('(');
+        _ = sb.Append(_argumentsBuilder.Build());
+        _ = sb.Append(')');
 
-        sb.Append(_objectInitializerBuilder.ToInlineInitializer());
+        _ = sb.Append(_objectInitializerBuilder.ToInlineInitializer());
 
         return sb.ToString();
     }
@@ -58,13 +58,13 @@ public class ConstructorCallBuilder
     {
         var sb = new StringBuilder();
 
-        sb.Append($"var {variableName} = new ");
-        sb.Append(_constructedType);
-        sb.Append('(');
-        sb.Append(_argumentsBuilder.Build());
-        sb.Append(')');
+        _ = sb.Append($"var {variableName} = new ");
+        _ = sb.Append(_constructedType);
+        _ = sb.Append('(');
+        _ = sb.Append(_argumentsBuilder.Build());
+        _ = sb.Append(')');
 
-        sb.Append(_objectInitializerBuilder.ToMultilineInitializer(variableName));
+        _ = sb.Append(_objectInitializerBuilder.ToMultilineInitializer(variableName));
 
         return sb.ToString();
     }

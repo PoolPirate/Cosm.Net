@@ -1,14 +1,14 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Exceptions;
 using Cosm.Net.Models;
-using Cosm.Net.Services;
 using Cosm.Net.Signer;
+using Cosm.Net.Tx;
 using System.Threading.Channels;
 
 using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee,
     System.Threading.Tasks.TaskCompletionSource<string>? CompletionSource);
 
-namespace Cosm.Net.Tx;
+namespace Cosm.Net.Services;
 public class SequentialTxScheduler : ITxScheduler
 {
     private readonly Channel<QueueEntry> _txChannel;
@@ -77,8 +77,8 @@ public class SequentialTxScheduler : ITxScheduler
 
     private async Task ProcessTxAsync(QueueEntry entry)
     {
-        var signDoc = _txEncoder.GetSignSignDoc(entry.Tx, entry.GasFee, AccountNumber, CurrentSequence);
-        var signature = _signer.SignMessage(signDoc);
+        byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, entry.GasFee, AccountNumber, CurrentSequence);
+        byte[] signature = _signer.SignMessage(signDoc);
 
         var signedTx = new SignedTx(entry.Tx, entry.GasFee, CurrentSequence, signature);
 

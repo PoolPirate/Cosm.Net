@@ -1,11 +1,9 @@
-﻿using System.Numerics;
-
-namespace Cosm.Net.Models;
+﻿namespace Cosm.Net.Models;
 public class GasFeeAmount
 {
     public ulong GasWanted { get; }
-    public string FeeDenom {  get; }
-    public ulong FeeAmount {  get; }
+    public string FeeDenom { get; }
+    public ulong FeeAmount { get; }
 
     public GasFeeAmount(ulong gasWanted, string feeDenom, ulong feeAmount)
     {

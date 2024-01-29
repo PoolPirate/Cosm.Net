@@ -55,7 +55,7 @@ public sealed class Secp256k1Wallet : IOfflineSigner
     private static byte[] DerivePrivateKeyFromMnemonic(string mnemonic, string passphrase, BIP39Wordlist wordlist)
     {
         //ToDo: Validate mnemonic
-        var seed = BIP39.MnemonicToSeed(mnemonic, passphrase);
+        byte[] seed = BIP39.MnemonicToSeed(mnemonic, passphrase);
         string path = $"m/{44 + 2147483648u}'/{118 + 2147483648u}'/{0 + 2147483648u}'/0'/0'";
 
         var (key, _) = BIP32.DerivePath(seed, path, BIP32Curves.Secp256k1);
@@ -86,7 +86,7 @@ public sealed class Secp256k1Wallet : IOfflineSigner
 
     public byte[] SignMessage(ReadOnlySpan<byte> message)
     {
-        var buffer = new byte[Secp256k1.SERIALIZED_SIGNATURE_SIZE];
+        byte[] buffer = new byte[Secp256k1.SERIALIZED_SIGNATURE_SIZE];
         SignMessage(message, buffer);
         return buffer;
     }

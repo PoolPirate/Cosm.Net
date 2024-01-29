@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
@@ -44,20 +43,20 @@ public class InterfaceBuilder
 
     public InterfaceBuilder AddBaseTypes(IEnumerable<BaseType> baseTypes)
     {
-        foreach(var  baseType in baseTypes)
+        foreach(var baseType in baseTypes)
         {
-            if (!baseType.IsInterface)
+            if(!baseType.IsInterface)
             {
                 continue;
             }
 
-            AddBaseInterface(baseType.Name);
+            _ = AddBaseInterface(baseType.Name);
         }
 
         return this;
     }
 
-    public InterfaceBuilder WithVisibility(InterfaceVisibility visibility) 
+    public InterfaceBuilder WithVisibility(InterfaceVisibility visibility)
     {
         _visibility = visibility;
         return this;
@@ -74,22 +73,22 @@ public class InterfaceBuilder
         var functionsSb = new StringBuilder();
         var baseInterfacesSb = new StringBuilder();
 
-        foreach (var function in _functions)
+        foreach(var function in _functions)
         {
-            functionsSb.AppendLine(function.BuildInterfaceDefinition());
+            _ = functionsSb.AppendLine(function.BuildInterfaceDefinition());
         }
         for(int i = 0; i < _baseInterfaces.Count; i++)
         {
-            if (i == 0)
+            if(i == 0)
             {
-                baseInterfacesSb.Append(" : ");
+                _ = baseInterfacesSb.Append(" : ");
             }
 
-            baseInterfacesSb.Append(_baseInterfaces[i]);
+            _ = baseInterfacesSb.Append(_baseInterfaces[i]);
 
-            if (i < _baseInterfaces.Count - 1)
+            if(i < _baseInterfaces.Count - 1)
             {
-                baseInterfacesSb.Append(", ");
+                _ = baseInterfacesSb.Append(", ");
             }
         }
 

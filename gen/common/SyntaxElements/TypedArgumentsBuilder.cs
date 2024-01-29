@@ -16,7 +16,7 @@ public class TypedArgumentsBuilder : ISyntaxBuilder
         _arguments = [];
     }
 
-    public TypedArgumentsBuilder AddArgument(INamedTypeSymbol type, string variableName, 
+    public TypedArgumentsBuilder AddArgument(INamedTypeSymbol type, string variableName,
         bool hasExplicityDefaultValue = false, object? defaultValue = null)
     {
         _arguments.Add(ArgumentToString(type, variableName, hasExplicityDefaultValue, defaultValue));
@@ -36,13 +36,13 @@ public class TypedArgumentsBuilder : ISyntaxBuilder
 
         for(int i = 0; i < _arguments.Count; i++)
         {
-            var argument = _arguments[i];
+            string argument = _arguments[i];
 
-            sb.Append(argument);
+            _ = sb.Append(argument);
 
-            if (i + 1 < _arguments.Count)
+            if(i + 1 < _arguments.Count)
             {
-                sb.Append(", ");
+                _ = sb.Append(", ");
             }
         }
 
