@@ -1,10 +1,10 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Client;
-using Cosm.Net.CosmosHub.Modules;
+using Cosm.Net.Gaia.Modules;
 using Cosm.Net.Extensions;
 using System.Reflection;
 
-namespace Cosm.Net.CosmosHub.Extensions;
+namespace Cosm.Net.Gaia.Extensions;
 public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder InstallCosmosHub(this CosmClientBuilder builder, string bech32Prefix = "cosmos")

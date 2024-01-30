@@ -1,6 +1,6 @@
 ﻿using Cosm.Net.Modules;
 
-namespace Cosm.Net.CosmosHub.Modules;
+namespace Cosm.Net.Gaia.Modules;
 internal partial class IbcFeeModule : IModule<IbcFeeModule, global::Ibc.Applications.Fee.V1.Query.QueryClient> { }
 internal partial class IbcInterchainAccountsControllerModule 
     : IModule<IbcInterchainAccountsControllerModule, global::Ibc.Applications.InterchainAccounts.Controller.V1.Query.QueryClient> { }

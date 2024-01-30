@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Generators.Proto",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gen", "gen", "{51E53C22-CDD0-450C-BA6E-4215C0A32965}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.CosmosHub", "src\modules\cosmos-sdk\Cosm.Net.CosmosHub.csproj", "{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Gaia", "src\modules\gaia\Cosm.Net.Gaia.csproj", "{A1ADDEEE-5D05-4343-8F51-A9FDA3058AC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Sei", "src\modules\sei\Cosm.Net.Sei.csproj", "{F0F6681F-5A05-467B-AA81-89F1F605CE1D}"
 EndProject

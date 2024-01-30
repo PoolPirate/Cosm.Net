@@ -5,13 +5,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Title>Cosm.Net.CosmosHub</Title>
+		<Title>Cosm.Net.Gaia</Title>
 		<Authors>Playwo</Authors>
 		<Company></Company>
 		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<RootNamespace>Cosm.Net.CosmosHub</RootNamespace>
+		<RootNamespace>Cosm.Net.Gaia</RootNamespace>
 		<Version>0.10.0-beta6</Version>
 	</PropertyGroup>
 
