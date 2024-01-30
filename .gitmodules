@@ -1,15 +1,15 @@
-[submodule "src/modules/osmosis/lib/osmosis"]
-	path = src/modules/osmosis/lib/osmosis
-	url = https://github.com/osmosis-labs/osmosis.git
 [submodule "src/modules/cosmos-sdk/lib/cosmos-sdk"]
 	path = src/modules/cosmos-sdk/lib/cosmos-sdk
+	url = https://github.com/cosmos/cosmos-sdk.git
+[submodule "src/Cosm.Net/lib/cosmos-sdk"]
+	path = src/Cosm.Net/lib/cosmos-sdk
 	url = https://github.com/cosmos/cosmos-sdk.git
 [submodule "src/modules/injective/lib/injective-core"]
 	path = src/modules/injective/lib/injective-core
 	url = https://github.com/OpenDeFiFoundation/injective-core.git
-[submodule "src/Cosm.Net/lib/cosmos-sdk"]
-	path = src/Cosm.Net/lib/cosmos-sdk
-	url = https://github.com/cosmos/cosmos-sdk.git
+[submodule "src/modules/osmosis/lib/osmosis"]
+	path = src/modules/osmosis/lib/osmosis
+	url = https://github.com/osmosis-labs/osmosis.git
 [submodule "src/modules/sei/lib/sei-chain"]
 	path = src/modules/sei/lib/sei-chain
 	url = https://github.com/sei-protocol/sei-chain.git
