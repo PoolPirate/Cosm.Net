@@ -38,25 +38,59 @@ async function main(configPath) {
     for (let i = 0; i < protoChain.protoDependencies.length; i++) {
         const repo = protoChain.protoDependencies[i];
         const baseLine = lines.find((x) => x.startsWith(repo.name));
-        if (baseLine == null) {
+        if (baseLine == null && !repo.isExternal) {
+            console.error(`Failed to find dependency ${repo.name} in go.mod file`);
+            process.exit(1);
+        }
+        if (repo.forceExternal && !repo.isExternal) {
+            console.error(`Dependency ${repo.name} marked as forceExternal but is not marked as external`);
+        }
+        if (baseLine != null && repo.isExternal && !repo.forceExternal) {
+            console.error(`Found dependency ${repo.name} in go.mod file, but expected it to be an external dependency`);
+            process.exit(1);
+        }
+        if (repo.forceExternal) {
+            await checkoutVersion(protoChain, repo, repo.externalVersion ?? "latest");
+        }
+        else if (baseLine == null) {
             await checkoutVersion(protoChain, repo, "latest");
         }
         else {
-            const replacementLine = lines.find((x) => x.startsWith(`${repo.name} =>`));
+            const replacementLine = lines.find((x) => x.startsWith(`${repo.name}`) && x.includes("=>"));
             if (replacementLine != null) {
                 console.warn(`Found replacement for repo ${repo.name} in go.mod: ${replacementLine}`);
                 const replacement = replacementLine.split("=>")[1].trim();
-                const replacementVersion = replacement.split(" ")[1].trim();
-                repo.name = replacement.split(" ")[0];
-                await checkoutVersion(protoChain, repo, replacementVersion);
+                const versionInfo = parseVersion(repo, replacement);
+                repo.name = versionInfo.repoUrl;
+                await checkoutVersion(protoChain, repo, versionInfo.version);
             }
             else {
-                const version = baseLine.split(" ")[1];
-                await checkoutVersion(protoChain, repo, version);
+                const versionInfo = parseVersion(repo, baseLine);
+                await checkoutVersion(protoChain, repo, versionInfo.version);
             }
         }
         collectProtoDirs(node_path_1.default.join(protoChain.repoDir, repo.dirName), repo.protoDirs, protoChain.protoDir);
     }
+}
+function parseVersion(repo, godModRepo) {
+    const actualRepoName = godModRepo.split(" ")[0].trim();
+    const actualVersion = godModRepo.split(" ")[1].trim();
+    const repoNameParts = repo.name.split("/");
+    const actualRepoNameParts = actualRepoName.split("/");
+    const repoNameSuffix = repoNameParts.slice(-1)[0].trim();
+    const actualRepoNameSuffix = actualRepoNameParts.slice(-1)[0].trim();
+    if (repoNameSuffix == actualRepoNameSuffix ||
+        repoNameParts.length == actualRepoNameParts.length ||
+        actualRepoNameSuffix[0] == "v") {
+        return {
+            repoUrl: actualRepoNameParts.slice(0, repoNameParts.length).join("/"),
+            version: actualVersion,
+        };
+    }
+    return {
+        repoUrl: actualRepoNameParts.slice(0, repoNameParts.length).join("/"),
+        version: `${actualRepoNameSuffix}/${actualVersion}`,
+    };
 }
 async function clearDirectory(dirPath) {
     if (!(0, node_fs_1.existsSync)(dirPath)) {

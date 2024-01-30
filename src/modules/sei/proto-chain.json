@@ -5,6 +5,7 @@
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",
+      "isExternal": false,
       "dirName": "wasmd",
       "protoDirs": [
         {
@@ -14,18 +15,9 @@
       ]
     },
     {
-      "name": "github.com/sei-protocol/sei-tendermint",
-      "dirName": "sei-tendermint",
-      "protoDirs": [
-        {
-          "in": "proto",
-          "out": "."
-        }
-      ]
-    },
-    {
-      "name": "github.com/cosmos/cosmos-proto",
-      "dirName": "cosmos-proto",
+      "name": "github.com/tendermint/tendermint",
+      "isExternal": false,
+      "dirName": "tendermint",
       "protoDirs": [
         {
           "in": "proto",
@@ -35,6 +27,7 @@
     },
     {
       "name": "github.com/cosmos/cosmos-sdk",
+      "isExternal": false,
       "dirName": "cosmos-sdk",
       "protoDirs": [
         {
@@ -44,7 +37,43 @@
       ]
     },
     {
+      "name": "github.com/cosmos/ibc-go",
+      "isExternal": false,
+      "dirName": "ibc-go",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/confio/ics23",
+      "isExternal": true,
+      "forceExternal": true,
+      "externalVersion": "rust/v0.8.0",
+      "dirName": "ics23",
+      "protoDirs": [
+        {
+          "in": ".",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/cosmos-proto",
+      "isExternal": true,
+      "dirName": "cosmos-proto",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
       "name": "github.com/regen-network/protobuf",
+      "isExternal": true,
       "dirName": "regen-protobuf",
       "protoDirs": [
         {
@@ -55,6 +84,7 @@
     },
     {
       "name": "github.com/googleapis/googleapis",
+      "isExternal": true,
       "dirName": "googleapis",
       "protoDirs": [
         {

@@ -1,0 +1,12 @@
+﻿using Cosm.Net.Modules;
+
+namespace Cosm.Net.Osmosis.Modules;
+internal partial class IbcFeeModule : IModule<IbcFeeModule, global::Ibc.Applications.Fee.V1.Query.QueryClient> { }
+internal partial class IbcInterchainAccountsControllerModule 
+    : IModule<IbcInterchainAccountsControllerModule, global::Ibc.Applications.InterchainAccounts.Controller.V1.Query.QueryClient> { }
+internal partial class IbcInterchainAccountsHostModule 
+    : IModule<IbcInterchainAccountsHostModule, global::Ibc.Applications.InterchainAccounts.Host.V1.Query.QueryClient> { }
+internal partial class IbcTransferModule : IModule<IbcTransferModule, global::Ibc.Applications.Transfer.V1.Query.QueryClient> { }
+internal partial class IbChannelModule : IModule<IbChannelModule, global::Ibc.Core.Channel.V1.Query.QueryClient> { }
+internal partial class IbcClientModule : IModule<IbcClientModule, global::Ibc.Core.Client.V1.Query.QueryClient> { }
+internal partial class IbConnectionModule : IModule<IbConnectionModule, global::Ibc.Core.Connection.V1.Query.QueryClient> { }

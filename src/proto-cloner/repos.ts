@@ -2,6 +2,9 @@ import { readFileSync } from "node:fs";
 
 export type Repo = {
   name: string;
+  isExternal: boolean;
+  forceExternal: boolean | null;
+  externalVersion: string | null;
   dirName: string;
   protoDirs: ProtoDir[];
 };

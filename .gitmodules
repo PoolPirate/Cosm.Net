@@ -1,6 +1,3 @@
-[submodule "src/modules/cosmos-sdk/lib/cosmos-sdk"]
-	path = src/modules/cosmos-sdk/lib/cosmos-sdk
-	url = https://github.com/cosmos/cosmos-sdk.git
 [submodule "src/Cosm.Net/lib/cosmos-sdk"]
 	path = src/Cosm.Net/lib/cosmos-sdk
 	url = https://github.com/cosmos/cosmos-sdk.git
@@ -16,3 +13,6 @@
 [submodule "src/modules/secret/lib/SecretNetwork"]
 	path = src/modules/secret/lib/SecretNetwork
 	url = https://github.com/scrtlabs/SecretNetwork.git
+[submodule "src/modules/cosmos-sdk/lib/gaia"]
+	path = src/modules/cosmos-sdk/lib/gaia
+	url = https://github.com/cosmos/gaia.git

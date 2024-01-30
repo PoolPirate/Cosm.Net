@@ -5,8 +5,8 @@ using Google.Protobuf;
 using Grpc.Core;
 
 namespace Cosm.Net.CosmosHub.Modules;
-
-internal partial class AccountModule : IModule<AccountModule, Cosmos.Accounts.V1.Query.QueryClient> { }
+//Module not exposed on this chain
+//internal partial class AccountModule : IModule<AccountModule, Cosmos.Accounts.V1.Query.QueryClient> { }
 internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Query.QueryClient>, IAuthModuleAdapter
 {
     async Task<AccountData> IAuthModuleAdapter.GetAccountAsync(string address, Metadata? headers,
@@ -19,7 +19,8 @@ internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Quer
 }
 internal partial class AuthzModule : IModule<AuthzModule, Cosmos.Authz.V1Beta1.Query.QueryClient> { }
 internal partial class BankModule : IModule<BankModule, Cosmos.Bank.V1Beta1.Query.QueryClient> { }
-internal partial class CircuitModule : IModule<CircuitModule, Cosmos.Circuit.V1.Query.QueryClient> { }
+//Module not exposed on this chain
+//internal partial class CircuitModule : IModule<CircuitModule, Cosmos.Circuit.V1.Query.QueryClient> { }
 internal partial class ConsensusModule : IModule<ConsensusModule, Cosmos.Consensus.V1.Query.QueryClient> { }
 internal partial class DistributionModule : IModule<DistributionModule, Cosmos.Staking.V1Beta1.Query.QueryClient> { }
 internal partial class EvidenceModule : IModule<EvidenceModule, Cosmos.Evidence.V1Beta1.Query.QueryClient> { }
@@ -28,7 +29,8 @@ internal partial class GovModule : IModule<GovModule, Cosmos.Gov.V1Beta1.Query.Q
 internal partial class MintModule : IModule<MintModule, Cosmos.Mint.V1Beta1.Query.QueryClient> { }
 internal partial class NftModule : IModule<NftModule, Cosmos.Nft.V1Beta1.Query.QueryClient> { }
 internal partial class ParamsModule : IModule<ParamsModule, Cosmos.Params.V1Beta1.Query.QueryClient> { }
-internal partial class ProtocolPoolModule : IModule<ProtocolPoolModule, Cosmos.Protocolpool.V1.Query.QueryClient> { }
+//Module not exposed on this chain
+//internal partial class ProtocolPoolModule : IModule<ProtocolPoolModule, Cosmos.Protocolpool.V1.Query.QueryClient> { }
 internal partial class SlashingModule : IModule<SlashingModule, Cosmos.Slashing.V1Beta1.Query.QueryClient> { }
 internal partial class StakingModule : IModule<StakingModule, Cosmos.Staking.V1Beta1.Query.QueryClient> { }
 internal partial class TendermintModule : IModule<TendermintModule, Cosmos.Base.Tendermint.V1Beta1.Service.ServiceClient>, ITendermintModuleAdapter

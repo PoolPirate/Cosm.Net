@@ -5,6 +5,7 @@
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",
+      "isExternal": false,
       "dirName": "cosmos-proto",
       "protoDirs": [
         {
@@ -15,6 +16,7 @@
     },
     {
       "name": "github.com/regen-network/protobuf",
+      "isExternal": true,
       "dirName": "regen-protobuf",
       "protoDirs": [
         {
@@ -25,6 +27,7 @@
     },
     {
       "name": "github.com/googleapis/googleapis",
+      "isExternal": true,
       "dirName": "googleapis",
       "protoDirs": [
         {
