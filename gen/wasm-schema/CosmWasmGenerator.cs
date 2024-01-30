@@ -36,6 +36,8 @@ public class CosmWasmGenerator : ISourceGenerator
             return;
         }
 
+        GeneratedTypeAggregator.Reset();
+
         foreach(var contractType in ContractTypeReceiver.Types)
         {
             string schemaPath = contractType.FindAttribute(ContractSchemaFilePathAttribute)!

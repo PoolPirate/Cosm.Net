@@ -4,8 +4,14 @@ using Cosm.Net.Generators.CosmWasm.Models;
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
 public static class GeneratedTypeAggregator
 {
-    private static readonly Dictionary<string, int> _typeNameOccurences = [];
-    private static readonly Dictionary<SyntaxId, ITypeBuilder> _types = [];
+    private static Dictionary<string, int> _typeNameOccurences = [];
+    private static Dictionary<SyntaxId, ITypeBuilder> _types = [];
+
+    public static void Reset()
+    {
+        _typeNameOccurences = [];
+        _types = [];
+    }
 
     public static GeneratedTypeHandle GenerateTypeHandle(ITypeBuilder type)
     {

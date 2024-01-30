@@ -10,8 +10,7 @@ public static class JsonObjectTypeGenerator
     public static GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource) 
         => schema.Type switch
         {
-            JsonObjectType.Array => SchemaTypeGenerator.GetOrGenerateSchemaType(
-                schema.Item ?? throw new NotSupportedException("Unsupported schema, JsonObjectType Array, no Item set"), definitionsSource).ToArray(),
+            JsonObjectType.Array => GenerateArrayType(schema, definitionsSource),
             JsonObjectType.Object => GenerateObjectType(schema, definitionsSource),
             JsonObjectType.Boolean => GenerateParsableType<bool>(schema),
             JsonObjectType.Boolean | JsonObjectType.Null => GenerateParsableType<bool>(schema).ToNullable(),
@@ -31,6 +30,34 @@ public static class JsonObjectTypeGenerator
                 "new object()"
             )
             : ObjectTypeGenerator.GenerateObjectType(schema, definitionsSource);
+
+    private static GeneratedTypeHandle GenerateArrayType(JsonSchema schema, JsonSchema definitionsSource)
+    {
+
+        if(schema.Item is null && (schema.Items is null || schema.Items.Count == 0))
+        {
+            throw new NotSupportedException("Unsupported schema, JsonObjectType Array, no Item type(s) set");
+        }
+        if(schema.Item is not null)
+        {
+            return SchemaTypeGenerator.GetOrGenerateSchemaType(schema.Item, definitionsSource).ToArray();
+        }
+        if(schema.Items.Any(x => !x.HasReference))
+        {
+            throw new NotSupportedException("Unsupported schema, JsonObjectType Array, multiple item types, at least one without Reference");
+        }
+
+        var baseReference = schema.Items.First().Reference!;
+
+        if(schema.Items.Any(x => x.Reference != baseReference))
+        {
+            throw new NotSupportedException("Unsupported schema, JsonObjectType Array, multiple entries of different types");
+        }
+        //
+        return SchemaTypeGenerator
+            .GetOrGenerateSchemaType(baseReference, definitionsSource)
+            .ToArray();
+    }
 
     private static GeneratedTypeHandle GenerateIntegerType(JsonSchema schema)
     {
