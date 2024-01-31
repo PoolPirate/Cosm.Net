@@ -94,6 +94,7 @@ public static class QueryModuleProcessor
         {
             _ = functionBuilder.AddArgument((INamedTypeSymbol) parameter.Type, parameter.Name,
                 parameter.HasExplicitDefaultValue, parameter.HasExplicitDefaultValue ? parameter.ExplicitDefaultValue : default);
+            _ = queryFunctionCall.AddArgument(parameter.Name);
         }
 
         _ = functionBuilder.AddStatement($"return {queryFunctionCall.Build()}");
