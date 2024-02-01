@@ -16,3 +16,6 @@
 [submodule "src/modules/cosmos-sdk/lib/gaia"]
 	path = src/modules/cosmos-sdk/lib/gaia
 	url = https://github.com/cosmos/gaia.git
+[submodule "src/modules/noble/lib/noble"]
+	path = src/modules/noble/lib/noble
+	url = https://github.com/noble-assets/noble.git
