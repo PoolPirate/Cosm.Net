@@ -53,7 +53,7 @@ public class ContractSchemaStore
         }
         //
         return (TContract) contractConstructor.Invoke(
-            GetProvider().GetRequiredService<IWasmAdapater>(),
+            GetProvider().GetService<IWasmAdapater>() ?? throw new InvalidOperationException("This client is connected to a chain that does not support Wasmd"),
             contractAddress,
             codeHash
         );

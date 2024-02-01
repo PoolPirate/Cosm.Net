@@ -334,10 +334,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             throw new InvalidOperationException($"No {nameof(ITxModuleAdapter)} set. Make sure to install a chain before building the client.");
         }
-        if(!_services.Any(x => x.ServiceType == typeof(IWasmAdapater)))
-        {
-            throw new InvalidOperationException($"No {nameof(IWasmAdapater)} set. Make sure to install a chain before building the client.");
-        }
     }
 
     public ICosmClient BuildReadClient()
