@@ -74,11 +74,11 @@ public class PropertyBuilder : ISyntaxBuilder
     {
         var headerSb = new StringBuilder();
 
-        if (_summaryComment is not null)
+        if(_summaryComment is not null)
         {
             headerSb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
         }
-        if (_jsonPropertyName is not null)
+        if(_jsonPropertyName is not null)
         {
             headerSb.AppendLine($"[System.Text.Json.Serialization.JsonPropertyName(\"{_jsonPropertyName}\")]");
         }

@@ -1,13 +1,11 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Client;
-using Cosm.Net.Extensions;
-using Cosm.Net.Secret.Modules;
-using Cosm.Net.Secret.Services;
+using Cosm.Net.Modules;
 using Cosm.Net.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Cosm.Net.Secret.Extensions;
+namespace Cosm.Net.Extensions;
 public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder InstallSecret(this CosmClientBuilder builder, string bech32Prefix = "secret", byte[]? encryptionSeed = null)

@@ -38,7 +38,7 @@ public static class CosmWasmTypeGenerator
             generatedTypesSb.AppendLine(type.Build());
         }
 
-        return 
+        return
             $$"""
             #nullable enable
             namespace {{targetNamespace}};
@@ -47,8 +47,8 @@ public static class CosmWasmTypeGenerator
             """;
     }
 
-    private static string GetContractClassName(string contractInterfaceName) 
-        => contractInterfaceName.StartsWith("I") 
-            ? contractInterfaceName.Substring(1) 
+    private static string GetContractClassName(string contractInterfaceName)
+        => contractInterfaceName.StartsWith("I")
+            ? contractInterfaceName.Substring(1)
             : $"{contractInterfaceName}Implementation";
 }

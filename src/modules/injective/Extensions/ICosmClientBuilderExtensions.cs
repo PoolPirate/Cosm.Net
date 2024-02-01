@@ -1,10 +1,9 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Client;
-using Cosm.Net.Extensions;
-using Cosm.Net.Injective.Modules;
+using Cosm.Net.Modules;
 using System.Reflection;
 
-namespace Cosm.Net.Injective.Extensions;
+namespace Cosm.Net.Extensions;
 public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder InstallInjective(this CosmClientBuilder builder, string bech32Prefix = "inj")

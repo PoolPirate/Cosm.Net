@@ -49,7 +49,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
             await InitializeTxClientAync();
         }
 
-        var initializeables =_provider.GetServices<IInitializeableService>();
+        var initializeables = _provider.GetServices<IInitializeableService>();
 
         await Task.WhenAll(initializeables.Select(
             async initializeable => await initializeable.InitializeAsync()));

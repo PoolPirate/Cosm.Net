@@ -1,11 +1,8 @@
-﻿using Cosm.Net.Adapters;
-using Cosm.Net.Client;
-using Cosm.Net.Extensions;
-using Cosm.Net.Osmosis.Modules;
-using Cosm.Net.Osmosis.Services;
+﻿using Cosm.Net.Modules;
+using Cosm.Net.Services;
 using System.Reflection;
 
-namespace Cosm.Net.Osmosis.Extensions;
+namespace Cosm.Net.Extensions;
 public static class ICosmClientBuilderExtensions
 {
     public static CosmClientBuilder InstallOsmosis(this CosmClientBuilder builder, string bech32Prefix = "osmo")

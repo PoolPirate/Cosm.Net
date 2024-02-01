@@ -43,7 +43,7 @@ public class ContractAPISchema
         return responseSchemas;
     }
 
-    public async Task<JsonSchema> GetQuerySchemaAsync() 
+    public async Task<JsonSchema> GetQuerySchemaAsync()
         => await JsonSchema.FromJsonAsync(Query.ToJsonString());
 
     public async Task<JsonSchema> GetExecuteSchemaAsync()

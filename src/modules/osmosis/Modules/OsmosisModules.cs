@@ -1,6 +1,4 @@
-﻿using Cosm.Net.Modules;
-
-namespace Cosm.Net.Osmosis.Modules;
+﻿namespace Cosm.Net.Modules;
 
 internal partial class ConcentratedLiquidityModule : IModule<ConcentratedLiquidityModule, global::Osmosis.Concentratedliquidity.V1Beta1.Query.QueryClient> { }
 internal partial class DowntimeDetectorModule : IModule<DowntimeDetectorModule, global::Osmosis.Downtimedetector.V1Beta1.Query.QueryClient> { }

@@ -6,25 +6,25 @@ public static class SchemaTypeGenerator
 {
     public static GeneratedTypeHandle GetOrGenerateSchemaType(JsonSchema schema, JsonSchema definitionSource)
     {
-        
+
 
         definitionSource ??= schema;
         schema = GetInnerSchema(schema);
 
-        if (IsBasicEnumerationType(schema))
+        if(IsBasicEnumerationType(schema))
         {
             return EnumerationTypeGenerator.GenerateEnumerationType(schema, definitionSource);
         }
-        if (IsDataEnumerationType(schema))
+        if(IsDataEnumerationType(schema))
         {
             return EnumerationTypeGenerator.GenerateAbstractSelectorType(schema, definitionSource);
         }
-        if (IsNullableInnerTyper(schema))
+        if(IsNullableInnerTyper(schema))
         {
             var innerType = GetOrGenerateSchemaType(schema.AnyOf.Single(x => x.Type != JsonObjectType.Null), definitionSource);
             return innerType.ToNullable();
         }
-        if (IsJsonObjectType(schema))
+        if(IsJsonObjectType(schema))
         {
             return JsonObjectTypeGenerator.GenerateJsonObjectType(schema, definitionSource);
         }
@@ -39,20 +39,20 @@ public static class SchemaTypeGenerator
     /// <returns></returns>
     private static JsonSchema GetInnerSchema(JsonSchema schema)
     {
-        while(TryGetNextInnerSchema(schema, out schema)) 
-        { 
+        while(TryGetNextInnerSchema(schema, out schema))
+        {
         }
         return schema;
     }
 
     private static bool TryGetNextInnerSchema(JsonSchema schema, out JsonSchema innerSchema)
     {
-        if (schema.HasReference && schema.AllOf.Count == 0)
+        if(schema.HasReference && schema.AllOf.Count == 0)
         {
             innerSchema = schema.Reference!;
             return true;
         }
-        if (schema.AllOf.Count == 1)
+        if(schema.AllOf.Count == 1)
         {
             innerSchema = schema.AllOf.Single();
             return true;
@@ -67,8 +67,8 @@ public static class SchemaTypeGenerator
     /// </summary>
     /// <returns></returns>
     private static bool IsBasicEnumerationType(JsonSchema schema)
-        => schema.OneOf.Count > 0 
-        && schema.OneOf.All(x => x.IsEnumeration) 
+        => schema.OneOf.Count > 0
+        && schema.OneOf.All(x => x.IsEnumeration)
         && schema.Type == JsonObjectType.None
         && schema.ActualProperties.Count == 0;
 

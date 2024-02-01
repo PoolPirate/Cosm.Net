@@ -24,7 +24,7 @@ While building the lib I focused on 3 core aspects.
 #### Modules
 
 - [CosmosHub](https://www.nuget.org/packages/Cosm.Net.CosmosHub)
-- [Osmosis](https://www.nuget.org/packages/Cosm.Net.Osmosis)
+- [Osmosis](https://www.nuget.org/packages/Cosm.Net)
 
 #### Generators
 
@@ -159,7 +159,7 @@ await txClient.SimulateAndPublishTxAsync(txBuilder.Build());
 ### Osmosis
 
 - Module support for CosmosSDK and Osmosis
-  - Interfaces located at `Cosm.Net.Osmosis.Modules`
+  - Interfaces located at `Cosm.Net.Modules`
 - Gas helper function for EIP1159
   ```cs
   builder.WithEIP1159MempoolGasPrice("uosmo")

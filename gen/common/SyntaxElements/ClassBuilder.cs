@@ -179,7 +179,7 @@ public class ClassBuilder : ITypeBuilder
 
         var outputSb = new StringBuilder();
 
-        if (generateInterface)
+        if(generateInterface)
         {
             outputSb.AppendLine(
                 new InterfaceBuilder(interfaceName ?? $"I{_name}")
@@ -189,31 +189,31 @@ public class ClassBuilder : ITypeBuilder
                 .Build());
         }
 
-        if (_summaryComment is not null)
+        if(_summaryComment is not null)
         {
             outputSb.AppendLine(
                 CommentUtils.MakeSummaryComment(_summaryComment));
         }
 
-        if (_jsonConverterType is not null)
+        if(_jsonConverterType is not null)
         {
             outputSb.AppendLine($"[global::System.Text.Json.Serialization.JsonConverter(typeof({_jsonConverterType}))]");
         }
 
         outputSb.Append(_visibility.ToString().ToLower());
 
-        if (_isPartial)
+        if(_isPartial)
         {
             outputSb.Append(" partial");
         }
-        if (_isAbstract)
+        if(_isAbstract)
         {
             outputSb.Append(" abstract");
         }
         outputSb.AppendLine($" class {_name} {baseTypeSb}");
         outputSb.AppendLine("{");
 
-        if (generateFieldConstructor)
+        if(generateFieldConstructor)
         {
             outputSb.AppendLine(
                 new ConstructorBuilder(_name)

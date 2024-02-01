@@ -16,12 +16,12 @@ public static class GeneratedTypeAggregator
     public static GeneratedTypeHandle GenerateTypeHandle(ITypeBuilder type)
     {
         var syntaxId = type.GetSyntaxId();
-        if (_types.TryGetValue(syntaxId, out _))
+        if(_types.TryGetValue(syntaxId, out _))
         {
             return new GeneratedTypeHandle(type.TypeName, null);
         }
 
-        if (_typeNameOccurences.TryGetValue(type.TypeName, out int occurences))
+        if(_typeNameOccurences.TryGetValue(type.TypeName, out int occurences))
         {
             _typeNameOccurences[type.TypeName] = occurences + 1;
         }
@@ -38,6 +38,6 @@ public static class GeneratedTypeAggregator
         );
     }
 
-    public static IEnumerable<ITypeBuilder> GetGeneratedTypes() 
+    public static IEnumerable<ITypeBuilder> GetGeneratedTypes()
         => _types.Values;
 }

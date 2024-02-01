@@ -13,17 +13,17 @@ public class GeneratedTypeHandle
 
     public GeneratedTypeHandle ToNullable()
     {
-        if (Name.EndsWith("?"))
+        if(Name.EndsWith("?"))
         {
             return this;
         }
 
         Name = $"{Name}?";
 
-        if (DefaultValue is null)
+        if(DefaultValue is null)
         {
             DefaultValue = "null";
-        } 
+        }
 
         return this;
     }

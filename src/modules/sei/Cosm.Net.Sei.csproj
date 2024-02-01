@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <Title>Cosm.Net.Sei</Title>
-	  <Authors>Playwo</Authors>
-	  <Company></Company>
-	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
-	  <IncludeSymbols>True</IncludeSymbols>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	  <RootNamespace>Cosm.Net.Sei</RootNamespace>
-	  <Version>0.10.0-beta8</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Cosm.Net</Title>
+		<Authors>Playwo</Authors>
+		<Company></Company>
+		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>Cosm.Net</RootNamespace>
+		<Version>0.10.0-beta8</Version>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Cosm.Net" Version="0.10.0-beta8" />
@@ -21,7 +21,7 @@
 		<PackageReference Include="Grpc.Tools" Version="2.59.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>		
+		</PackageReference>
 		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
 	</ItemGroup>
 
@@ -38,12 +38,12 @@
 		<Protobuf Include="./proto/amino/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/gogoproto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/proofs.proto" ProtoRoot="./proto" GrpcServices="None" />
-		
+
 		<Protobuf Include="./proto/cosmos/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/cosmwasm/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/ibc/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
-		
+
 		<Protobuf Include="./proto/dex/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/epoch/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/mint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
@@ -52,11 +52,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="lib\**" />
-	  <Compile Remove="proto\**" />
-	  <EmbeddedResource Remove="lib\**" />
-	  <EmbeddedResource Remove="proto\**" />
-	  <None Remove="lib\**" />
-	  <None Remove="proto\**" />
+		<Compile Remove="lib\**" />
+		<Compile Remove="proto\**" />
+		<EmbeddedResource Remove="lib\**" />
+		<EmbeddedResource Remove="proto\**" />
+		<None Remove="lib\**" />
+		<None Remove="proto\**" />
 	</ItemGroup>
 </Project>

@@ -8,11 +8,11 @@ public static class ObjectTypeGenerator
 {
     public static GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
     {
-        if (schema.ActualProperties.Count == 0)
+        if(schema.ActualProperties.Count == 0)
         {
             throw new NotSupportedException("Generating object type without properties not supported");
         }
-        if (schema.Default is not null)
+        if(schema.Default is not null)
         {
             throw new NotSupportedException("Default not supported for object types");
         }
@@ -48,7 +48,7 @@ public static class ObjectTypeGenerator
             classBuilder.AddProperty(propertyBuilder);
         }
 
-        if (schema.Description is not null)
+        if(schema.Description is not null)
         {
             classBuilder.WithSummaryComment(schema.Description);
         }
@@ -64,8 +64,8 @@ public static class ObjectTypeGenerator
         string typeName = schema.Title ?? definitionName
             ?? (schema.RequiredProperties.Count == 1 && schema.Properties.Count == 1 //Nested message
                 ? $"{NameUtils.ToValidClassName(schema.RequiredProperties.Single())}" +
-                    (schema.ParentSchema is not null && schema.ParentSchema.Description is not null && schema.ParentSchema.Description.Contains("returns") 
-                        ? "Query" 
+                    (schema.ParentSchema is not null && schema.ParentSchema.Description is not null && schema.ParentSchema.Description.Contains("returns")
+                        ? "Query"
                         : "Msg")
                 : null)
             ?? (schema is JsonSchemaProperty p ? NameUtils.ToValidClassName(p.Name) : null)

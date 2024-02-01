@@ -13,14 +13,14 @@ public static class EnumerationTypeGenerator
         var enumerationBuilder = new EnumerationBuilder(typeName)
             .WithJsonConverter($"global::Cosm.Net.Json.SnakeCaseJsonStringEnumConverter<{typeName}>");
 
-        if (schema.Description is not null)
+        if(schema.Description is not null)
         {
             enumerationBuilder.WithSummaryComment(schema.Description);
         }
 
         foreach(var enumerationSchema in schema.OneOf)
         {
-            if (enumerationSchema.Enumeration.Count != 1)
+            if(enumerationSchema.Enumeration.Count != 1)
             {
                 throw new NotSupportedException("Enumeration must only contain one value per entry");
             }
@@ -78,7 +78,7 @@ public static class EnumerationTypeGenerator
             var derivedTypeBuilder = new ClassBuilder(derivedTypeName)
                 .AddBaseType(typeName, false);
 
-            if (enumerationSchema.Description is not null)
+            if(enumerationSchema.Description is not null)
             {
                 derivedTypeBuilder.WithSummaryComment(enumerationSchema.Description);
             }
@@ -112,7 +112,7 @@ public static class EnumerationTypeGenerator
                         """);
                     break;
                 default:
-                    break; 
+                    break;
                     throw new NotSupportedException($"Unsupport RustEnumType {enumType}");
             }
 
@@ -141,7 +141,7 @@ public static class EnumerationTypeGenerator
         baseClassBuilder.AddFunction(baseWriteFunction);
         baseClassBuilder.AddFunction(baseReadFunction);
 
-        if (schema.Description is not null)
+        if(schema.Description is not null)
         {
             baseClassBuilder.WithSummaryComment(schema.Description);
         }
@@ -151,11 +151,11 @@ public static class EnumerationTypeGenerator
 
     private static RustEnumType DetectRustEnumType(JsonSchema schema)
     {
-        if (schema.Type == JsonObjectType.String)
+        if(schema.Type == JsonObjectType.String)
         {
             return RustEnumType.String;
         }
-        if (schema.ActualProperties.Count != 1)
+        if(schema.ActualProperties.Count != 1)
         {
             throw new NotSupportedException("Unsupported Rust Enum with more than 1 property");
         }
@@ -170,8 +170,8 @@ public static class EnumerationTypeGenerator
         string definitionName = definitionsSource.Definitions
                     .FirstOrDefault(x => x.Value == schema).Key;
 
-        string typeName = schema.Title 
-            ?? definitionName 
+        string typeName = schema.Title
+            ?? definitionName
             ?? throw new NotSupportedException("No suitable name for enumeration type found");
 
         return typeName;

@@ -1,6 +1,4 @@
-﻿using Cosm.Net.Modules;
-
-namespace Cosm.Net.Sei.Modules;
+﻿namespace Cosm.Net.Modules;
 internal partial class DexModule : IModule<DexModule, Seiprotocol.Seichain.Dex.Query.QueryClient> { }
 internal partial class EpochModule : IModule<EpochModule, Seiprotocol.Seichain.Epoch.Query.QueryClient> { }
 internal partial class MintModule : IModule<MintModule, Seiprotocol.Seichain.Mint.Query.QueryClient> { }

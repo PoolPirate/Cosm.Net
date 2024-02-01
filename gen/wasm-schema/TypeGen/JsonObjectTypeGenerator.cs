@@ -1,13 +1,11 @@
-﻿using Cosm.Net.Generators.Common.SyntaxElements;
-using Cosm.Net.Generators.Common.Util;
-using Cosm.Net.Generators.CosmWasm.Models;
+﻿using Cosm.Net.Generators.CosmWasm.Models;
 using NJsonSchema;
 using System.Reflection;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
 public static class JsonObjectTypeGenerator
 {
-    public static GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource) 
+    public static GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource)
         => schema.Type switch
         {
             JsonObjectType.Array => GenerateArrayType(schema, definitionsSource),
@@ -23,7 +21,7 @@ public static class JsonObjectTypeGenerator
             _ => throw new NotSupportedException($"Unsupported JsonObjectType {schema.Type}"),
         };
 
-    private static GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource) 
+    private static GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
         => schema.Properties.Count == 0
             ? new GeneratedTypeHandle(
                 "object",
@@ -73,8 +71,8 @@ public static class JsonObjectTypeGenerator
             _ => throw new NotSupportedException($"Unsupported Integer format {schema.Format}")
         };
 
-        return schema.Type.HasFlag(JsonObjectType.Null) 
-            ? type.ToNullable() 
+        return schema.Type.HasFlag(JsonObjectType.Null)
+            ? type.ToNullable()
             : type;
     }
 
@@ -116,8 +114,8 @@ public static class JsonObjectTypeGenerator
 
         string? defaultValueStr = defaultValue?.ToString()?.ToLower();
 
-        if (defaultValueStr is not null && 
-            typeof(TType) == typeof(string) 
+        if(defaultValueStr is not null &&
+            typeof(TType) == typeof(string)
             && (!defaultValueStr.StartsWith("\"") || !defaultValueStr.EndsWith("\"")))
         {
             defaultValueStr = $"\"{defaultValueStr}\"";

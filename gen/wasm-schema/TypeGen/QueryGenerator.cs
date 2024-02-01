@@ -5,10 +5,10 @@ using NJsonSchema;
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
 public static class QueryGenerator
 {
-    public static FunctionBuilder GenerateQueryFunction(JsonSchema querySchema, JsonSchema definitionsSource, 
+    public static FunctionBuilder GenerateQueryFunction(JsonSchema querySchema, JsonSchema definitionsSource,
         IReadOnlyDictionary<string, JsonSchema> responseSchemas)
     {
-        if (querySchema.Properties.Count != 1)
+        if(querySchema.Properties.Count != 1)
         {
             throw new NotSupportedException();
         }
@@ -18,7 +18,7 @@ public static class QueryGenerator
         var argumentsSchema = querySchema.Properties.Single().Value;
         string queryName = argumentsSchema.Name;
 
-        if(!responseSchemas.TryGetValue(queryName, out var responseSchema)) 
+        if(!responseSchemas.TryGetValue(queryName, out var responseSchema))
         {
             throw new NotSupportedException();
         }
@@ -42,7 +42,7 @@ public static class QueryGenerator
                     """)
                     .ToVariableAssignment("jsonRequest"));
 
-        if (querySchema.Description is not null)
+        if(querySchema.Description is not null)
         {
             function.WithSummaryComment(querySchema.Description);
         }

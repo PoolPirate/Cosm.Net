@@ -1,10 +1,8 @@
-﻿using Cosm.Net.Secret.Modules;
-using Cosm.Net.Services;
-using Miscreant;
+﻿using Miscreant;
 using System.Security.Cryptography;
 using X25519;
 
-namespace Cosm.Net.Secret.Services;
+namespace Cosm.Net.Services;
 internal class SecretMessageEncryptor : IInitializeableService
 {
     private readonly static byte[] HkdfSalt = Convert.FromHexString("000000000000000000024bead8df69990852c202db0e0097c1a12ea637d7e96d");
@@ -19,18 +17,18 @@ internal class SecretMessageEncryptor : IInitializeableService
     {
         _registrationModule = registrationModule;
 
-        if (encryptionSeed is not null && encryptionSeed.Length != 32)
+        if(encryptionSeed is not null && encryptionSeed.Length != 32)
         {
             throw new ArgumentException("EncryptionKey must be 32 bytes long.");
         }
-        
+
         encryptionSeed ??= Aead.GenerateKey256();
         var keyPair = X25519.X25519KeyAgreement.GenerateKeyFromPrivateKey(encryptionSeed);
         _encryptionPrivKey = keyPair.PrivateKey;
         _encryptionPubKey = keyPair.PublicKey;
     }
 
-    async ValueTask IInitializeableService.InitializeAsync() 
+    async ValueTask IInitializeableService.InitializeAsync()
     {
         var txKey = await _registrationModule.TxKeyAsync();
         _consensusIoPubKey = txKey.Key_.ToByteArray();
@@ -38,7 +36,7 @@ internal class SecretMessageEncryptor : IInitializeableService
 
     public byte[] GetTxEncryptionKey(ReadOnlySpan<byte> nonce)
     {
-        if (_consensusIoPubKey is null)
+        if(_consensusIoPubKey is null)
         {
             throw new InvalidOperationException("SecretMessageEncryptor has not been initialized!");
         }
@@ -52,7 +50,7 @@ internal class SecretMessageEncryptor : IInitializeableService
 
         return HKDF.DeriveKey(HashAlgorithmName.SHA256, txEncryptionIkm, 32, HkdfSalt);
     }
- 
+
     public byte[] EncryptMessage(ReadOnlySpan<byte> message, out byte[] nonce)
     {
         nonce = Aead.GenerateNonce(32);

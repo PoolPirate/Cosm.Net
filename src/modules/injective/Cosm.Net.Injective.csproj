@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<LangVersion>latest</LangVersion>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Title>Cosm.Net.Injective</Title>
-	<Authors>Playwo</Authors>
-	<Company></Company>
-	<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
-	<IncludeSymbols>True</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	<RootNamespace>Cosm.Net.Injective</RootNamespace>
-	<Version>0.10.0-beta8</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Cosm.Net</Title>
+		<Authors>Playwo</Authors>
+		<Company></Company>
+		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>Cosm.Net</RootNamespace>
+		<Version>0.10.0-beta8</Version>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Cosm.Net" Version="0.10.0-beta8" />
@@ -43,16 +43,16 @@
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/cosmwasm/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/ibc/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
-		
+
 		<Protobuf Include="./proto/injective/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="lib\**" />
-	  <Compile Remove="proto\**" />
-	  <EmbeddedResource Remove="lib\**" />
-	  <EmbeddedResource Remove="proto\**" />
-	  <None Remove="lib\**" />
-	  <None Remove="proto\**" />
+		<Compile Remove="lib\**" />
+		<Compile Remove="proto\**" />
+		<EmbeddedResource Remove="lib\**" />
+		<EmbeddedResource Remove="proto\**" />
+		<None Remove="lib\**" />
+		<None Remove="proto\**" />
 	</ItemGroup>
 </Project>

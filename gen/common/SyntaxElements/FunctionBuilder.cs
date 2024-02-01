@@ -107,7 +107,7 @@ public class FunctionBuilder : ISyntaxBuilder
 
     public string BuildInterfaceDefinition()
     {
-        if (_visibility == FunctionVisibility.Omit)
+        if(_visibility == FunctionVisibility.Omit)
         {
             return String.Empty;
         }
@@ -119,7 +119,7 @@ public class FunctionBuilder : ISyntaxBuilder
             _ = sb.AppendLine(CommentUtils.MakeSummaryComment(_summaryComment));
         }
 
-            sb.Append($"{_visibility.ToString().ToLower()} ");
+        sb.Append($"{_visibility.ToString().ToLower()} ");
         _ = sb.Append($"{(_returnType is null ? "void" : _returnType)} {_name}({_argumentBuilder.Build()});");
 
         return sb.ToString();
@@ -139,7 +139,7 @@ public class FunctionBuilder : ISyntaxBuilder
             sb.AppendLine(CommentUtils.MakeParamComment(argumentComment.Key, argumentComment.Value));
         }
 
-        if (_visibility != FunctionVisibility.Omit)
+        if(_visibility != FunctionVisibility.Omit)
         {
             _ = sb.Append($"{_visibility.ToString().ToLower()} ");
         }
