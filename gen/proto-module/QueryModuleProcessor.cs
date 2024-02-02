@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Cosm.Net.Generators.Common.Extensions;
+using Cosm.Net.Generators.Common.SyntaxElements;
+using Cosm.Net.Generators.Common.Util;
+using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Cosm.Net.Generators.Proto;
 public static class QueryModuleProcessor
 {
+    private const string _cosmosCoinTypeName = "global::Cosmos.Base.V1Beta1.Coin";
+
     public static ITypeSymbol GetQueryClientType(INamedTypeSymbol moduleType)
         => moduleType.AllInterfaces
             .Where(x => x.Name == "ICosmModule")
@@ -78,8 +84,22 @@ public static class QueryModuleProcessor
         {
             string paramName = NameUtils.ToValidVariableName(property.Name);
 
-            _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
-            _ = requestCtorCall.AddInitializer(property, paramName);
+            if (NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) property.Type) == _cosmosCoinTypeName)
+            {
+                _ = functionBuilder.AddArgument($"global::Cosm.Net.Models.Coin", paramName);
+                _ = requestCtorCall.AddInitializer(property, 
+                    $$"""
+                    new {{_cosmosCoinTypeName}}() {
+                        Denom = {{paramName}}.Denom,
+                        Amount = {{paramName}}.Amount.ToString()
+                    }
+                    """);
+            }
+            else
+            {
+                _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
+                _ = requestCtorCall.AddInitializer(property, paramName);
+            }
         }
 
         string requestVarName = "__request";
@@ -119,8 +139,22 @@ public static class QueryModuleProcessor
         {
             string paramName = NameUtils.ToValidVariableName(property.Name);
 
-            _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
-            _ = msgObjectBuilder.AddInitializer(property, paramName);
+            if(NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) property.Type) == _cosmosCoinTypeName)
+            {
+                _ = functionBuilder.AddArgument($"global::Cosm.Net.Models.Coin", paramName);
+                _ = msgObjectBuilder.AddInitializer(property,
+                    $$"""
+                    new {{_cosmosCoinTypeName}}() {
+                        Denom = {{paramName}}.Denom,
+                        Amount = {{paramName}}.Amount.ToString()
+                    }
+                    """);
+            }
+            else
+            {
+                _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
+                _ = msgObjectBuilder.AddInitializer(property, paramName);
+            }
         }
 
         string msgVarName = "__msg";

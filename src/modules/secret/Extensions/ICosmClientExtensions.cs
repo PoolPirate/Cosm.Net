@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Client;
 using Cosm.Net.Extensions;
 using Cosm.Net.Models;
+using Cosm.Net.Modules;
 
 namespace Cosm.Net.Extensions;
 public static class ICosmClientExtensions

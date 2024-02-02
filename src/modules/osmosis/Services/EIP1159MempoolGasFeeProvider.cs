@@ -1,4 +1,7 @@
-﻿namespace Cosm.Net.Services;
+﻿using Cosm.Net.Models;
+using Cosm.Net.Modules;
+
+namespace Cosm.Net.Services;
 internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasFeeProvider.Configuration>
 {
     private const decimal GasPriceDenom = 1000000000000000000;

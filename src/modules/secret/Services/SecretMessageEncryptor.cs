@@ -1,6 +1,7 @@
 ﻿using Miscreant;
 using System.Security.Cryptography;
 using X25519;
+using Cosm.Net.Modules;
 
 namespace Cosm.Net.Services;
 internal class SecretMessageEncryptor : IInitializeableService

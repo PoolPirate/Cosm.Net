@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cosm.Net.Generators.Common.SourceGeneratorKit;
+using Microsoft.CodeAnalysis;
+using System;
 using System.Linq;
 
 namespace Cosm.Net.Generators.Proto;

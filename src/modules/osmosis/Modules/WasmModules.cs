@@ -1,4 +1,12 @@
-﻿namespace Cosm.Net.Modules;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Models;
+using Cosm.Net.Signer;
+using Cosm.Net.Tx;
+using Cosm.Net.Tx.Msg;
+using Google.Protobuf;
+using Grpc.Net.Client;
+
+namespace Cosm.Net.Modules;
 internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.QueryClient>, IWasmAdapater
 {
     private readonly IOfflineSigner _signer;

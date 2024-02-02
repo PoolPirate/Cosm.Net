@@ -1,4 +1,6 @@
-﻿using Cosm.Net.Modules;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Client;
+using Cosm.Net.Modules;
 using Cosm.Net.Services;
 using System.Reflection;
 

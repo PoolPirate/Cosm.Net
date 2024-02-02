@@ -13,7 +13,7 @@
 	  <IncludeSymbols>True</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  <RootNamespace>Cosm.Net.Generators.Common</RootNamespace>
-	  <Version>0.10.0-beta8</Version>
+	  <Version>0.10.0-beta9</Version>
   </PropertyGroup>
 
 	<ItemGroup>
