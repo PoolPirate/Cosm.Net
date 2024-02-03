@@ -4,9 +4,18 @@ using Cosm.Net.Generators.CosmWasm.Models;
 using NJsonSchema;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
-public static class EnumerationTypeGenerator
+public class EnumerationTypeGenerator
 {
-    public static GeneratedTypeHandle GenerateEnumerationType(JsonSchema schema, JsonSchema definitionsSource)
+    private GeneratedTypeAggregator _typeAggregator = null!;
+    private ObjectTypeGenerator _objectTypeGenerator = null!;
+
+    public void Initialize(GeneratedTypeAggregator typeAggregator, ObjectTypeGenerator objectTypeGenerator)
+    {
+        _typeAggregator = typeAggregator;
+        _objectTypeGenerator = objectTypeGenerator;
+    }
+
+    public GeneratedTypeHandle GenerateEnumerationType(JsonSchema schema, JsonSchema definitionsSource)
     {
         string typeName = GenerateTypeName(schema, definitionsSource);
 
@@ -33,7 +42,7 @@ public static class EnumerationTypeGenerator
                     enumerationSchema.Description);
         }
 
-        return GeneratedTypeAggregator.GenerateTypeHandle(enumerationBuilder);
+        return _typeAggregator.GenerateTypeHandle(enumerationBuilder);
     }
 
     private enum RustEnumType
@@ -43,7 +52,7 @@ public static class EnumerationTypeGenerator
         ComplexObject
     }
 
-    public static GeneratedTypeHandle GenerateAbstractSelectorType(JsonSchema schema, JsonSchema definitionsSource)
+    public GeneratedTypeHandle GenerateAbstractSelectorType(JsonSchema schema, JsonSchema definitionsSource)
     {
         string typeName = GenerateTypeName(schema, definitionsSource);
 
@@ -97,14 +106,14 @@ public static class EnumerationTypeGenerator
                         """);
                     break;
                 case RustEnumType.PrimitiveObject:
-                    ObjectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema, definitionsSource);
+                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema, definitionsSource);
                     readCases.Add(
                         $"""
                         "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(document.RootElement.ToString())!
                         """);
                     break;
                 case RustEnumType.ComplexObject:
-                    ObjectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema.ActualProperties.Single().Value, definitionsSource);
+                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema.ActualProperties.Single().Value, definitionsSource);
                     readCases.Add(
                         $"""
                         "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(
@@ -146,7 +155,7 @@ public static class EnumerationTypeGenerator
             baseClassBuilder.WithSummaryComment(schema.Description);
         }
 
-        return GeneratedTypeAggregator.GenerateTypeHandle(baseClassBuilder);
+        return _typeAggregator.GenerateTypeHandle(baseClassBuilder);
     }
 
     private static RustEnumType DetectRustEnumType(JsonSchema schema)

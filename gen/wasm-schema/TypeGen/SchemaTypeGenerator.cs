@@ -2,22 +2,29 @@
 using NJsonSchema;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
-public static class SchemaTypeGenerator
+public class SchemaTypeGenerator
 {
-    public static GeneratedTypeHandle GetOrGenerateSchemaType(JsonSchema schema, JsonSchema definitionSource)
+    private EnumerationTypeGenerator _enumerationGenerator = null!;
+    private JsonObjectTypeGenerator _jsonObjectTypeGenerator = null!;
+
+    public void Initialize(EnumerationTypeGenerator enumerationTypeGenerator, JsonObjectTypeGenerator jsonObjectTypeGenerator)
     {
+        _enumerationGenerator =  enumerationTypeGenerator;
+        _jsonObjectTypeGenerator = jsonObjectTypeGenerator;
+    }
 
-
+    public GeneratedTypeHandle GetOrGenerateSchemaType(JsonSchema schema, JsonSchema definitionSource)
+    {
         definitionSource ??= schema;
         schema = GetInnerSchema(schema);
 
         if(IsBasicEnumerationType(schema))
         {
-            return EnumerationTypeGenerator.GenerateEnumerationType(schema, definitionSource);
+            return _enumerationGenerator.GenerateEnumerationType(schema, definitionSource);
         }
         if(IsDataEnumerationType(schema))
         {
-            return EnumerationTypeGenerator.GenerateAbstractSelectorType(schema, definitionSource);
+            return _enumerationGenerator.GenerateAbstractSelectorType(schema, definitionSource);
         }
         if(IsNullableInnerTyper(schema))
         {
@@ -26,7 +33,7 @@ public static class SchemaTypeGenerator
         }
         if(IsJsonObjectType(schema))
         {
-            return JsonObjectTypeGenerator.GenerateJsonObjectType(schema, definitionSource);
+            return _jsonObjectTypeGenerator.GenerateJsonObjectType(schema, definitionSource);
         }
 
         //

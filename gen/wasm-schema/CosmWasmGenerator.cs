@@ -36,11 +36,11 @@ public class CosmWasmGenerator : ISourceGenerator
             return;
         }
 
-        GeneratedTypeAggregator.Reset();
-
-        foreach(var contractType in ContractTypeReceiver.Types)
+        var contractTypes = ContractTypeReceiver.Types.ToArray();
+        foreach(var contractType in contractTypes)
         {
-            string schemaPath = contractType.FindAttribute(ContractSchemaFilePathAttribute)!
+            string schemaPath = contractType
+                .FindAttribute(ContractSchemaFilePathAttribute)!
                 .ConstructorArguments[0].Value!.ToString();
             var schemaFile = context.AdditionalFiles
                 .Where(x => x.Path.EndsWith(schemaPath))
@@ -67,7 +67,8 @@ public class CosmWasmGenerator : ISourceGenerator
                 continue;
             }
 
-            string codeFile = CosmWasmTypeGenerator.GenerateCosmWasmBindingFile(
+            var generator = new CosmWasmTypeGenerator();
+            string codeFile = generator.GenerateCosmWasmBindingFile(
                 contractSchema, contractType.Name, contractType.ContainingNamespace.ToString())
                 .GetAwaiter().GetResult();
 

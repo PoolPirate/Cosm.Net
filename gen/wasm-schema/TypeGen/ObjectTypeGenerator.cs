@@ -4,9 +4,18 @@ using Cosm.Net.Generators.CosmWasm.Models;
 using NJsonSchema;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
-public static class ObjectTypeGenerator
+public class ObjectTypeGenerator
 {
-    public static GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
+    private GeneratedTypeAggregator _typeAggregator = null!;
+    private SchemaTypeGenerator _schemaTypeGenerator = null!;
+
+    public void Initialize(GeneratedTypeAggregator typeAggregator, SchemaTypeGenerator schemaTypeGenerator)
+    {
+        _typeAggregator = typeAggregator;
+        _schemaTypeGenerator = schemaTypeGenerator;
+    }
+
+    public GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
     {
         if(schema.ActualProperties.Count == 0)
         {
@@ -20,15 +29,15 @@ public static class ObjectTypeGenerator
         string typeName = GenerateTypeName(schema, definitionsSource);
         var classBuilder = new ClassBuilder(typeName);
 
-        return GeneratedTypeAggregator.GenerateTypeHandle(
+        return _typeAggregator.GenerateTypeHandle(
             GenerateObjectTypeContent(classBuilder, schema, definitionsSource));
     }
 
-    public static ClassBuilder GenerateObjectTypeContent(ClassBuilder classBuilder, JsonSchema schema, JsonSchema definitionsSource)
+    public ClassBuilder GenerateObjectTypeContent(ClassBuilder classBuilder, JsonSchema schema, JsonSchema definitionsSource)
     {
         foreach(var property in schema.ActualProperties)
         {
-            var propertyType = SchemaTypeGenerator.GetOrGenerateSchemaType(property.Value, definitionsSource);
+            var propertyType = _schemaTypeGenerator.GetOrGenerateSchemaType(property.Value, definitionsSource);
             var propertyBuilder = new PropertyBuilder(
                     propertyType.Name,
                     NameUtils.ToValidPropertyName(property.Key))

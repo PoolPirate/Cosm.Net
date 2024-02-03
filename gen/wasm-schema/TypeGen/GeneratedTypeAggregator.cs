@@ -2,18 +2,24 @@
 using Cosm.Net.Generators.CosmWasm.Models;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
-public static class GeneratedTypeAggregator
+public class GeneratedTypeAggregator
 {
-    private static Dictionary<string, int> _typeNameOccurences = [];
-    private static Dictionary<SyntaxId, ITypeBuilder> _types = [];
+    private Dictionary<string, int> _typeNameOccurences;
+    private Dictionary<SyntaxId, ITypeBuilder> _types;
 
-    public static void Reset()
+    public GeneratedTypeAggregator()
     {
         _typeNameOccurences = [];
         _types = [];
     }
 
-    public static GeneratedTypeHandle GenerateTypeHandle(ITypeBuilder type)
+    public void Reset()
+    {
+        _typeNameOccurences = [];
+        _types = [];
+    }
+
+    public GeneratedTypeHandle GenerateTypeHandle(ITypeBuilder type)
     {
         var syntaxId = type.GetSyntaxId();
         if(_types.TryGetValue(syntaxId, out _))
@@ -38,6 +44,6 @@ public static class GeneratedTypeAggregator
         );
     }
 
-    public static IEnumerable<ITypeBuilder> GetGeneratedTypes()
+    public IEnumerable<ITypeBuilder> GetGeneratedTypes()
         => _types.Values;
 }

@@ -3,9 +3,18 @@ using NJsonSchema;
 using System.Reflection;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
-public static class JsonObjectTypeGenerator
+public class JsonObjectTypeGenerator
 {
-    public static GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource)
+    private ObjectTypeGenerator _objectTypeGenerator = null!;
+    private SchemaTypeGenerator _schemaTypeGenerator = null!;
+
+    public void Initialize(ObjectTypeGenerator objectTypeGenerator, SchemaTypeGenerator schemaTypeGenerator)
+    {
+        _objectTypeGenerator = objectTypeGenerator;
+        _schemaTypeGenerator = schemaTypeGenerator;
+    }
+
+    public GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource)
         => schema.Type switch
         {
             JsonObjectType.Array => GenerateArrayType(schema, definitionsSource),
@@ -21,15 +30,15 @@ public static class JsonObjectTypeGenerator
             _ => throw new NotSupportedException($"Unsupported JsonObjectType {schema.Type}"),
         };
 
-    private static GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
+    private GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
         => schema.Properties.Count == 0
             ? new GeneratedTypeHandle(
                 "object",
                 "new object()"
             )
-            : ObjectTypeGenerator.GenerateObjectType(schema, definitionsSource);
+            : _objectTypeGenerator.GenerateObjectType(schema, definitionsSource);
 
-    private static GeneratedTypeHandle GenerateArrayType(JsonSchema schema, JsonSchema definitionsSource)
+    private GeneratedTypeHandle GenerateArrayType(JsonSchema schema, JsonSchema definitionsSource)
     {
 
         if(schema.Item is null && (schema.Items is null || schema.Items.Count == 0))
@@ -38,7 +47,7 @@ public static class JsonObjectTypeGenerator
         }
         if(schema.Item is not null)
         {
-            return SchemaTypeGenerator.GetOrGenerateSchemaType(schema.Item, definitionsSource).ToArray();
+            return _schemaTypeGenerator.GetOrGenerateSchemaType(schema.Item, definitionsSource).ToArray();
         }
         if(schema.Items.Any(x => !x.HasReference))
         {
@@ -52,7 +61,7 @@ public static class JsonObjectTypeGenerator
             throw new NotSupportedException("Unsupported schema, JsonObjectType Array, multiple entries of different types");
         }
         //
-        return SchemaTypeGenerator
+        return _schemaTypeGenerator
             .GetOrGenerateSchemaType(baseReference, definitionsSource)
             .ToArray();
     }

@@ -3,9 +3,16 @@ using Cosm.Net.Generators.Common.Util;
 using NJsonSchema;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
-public static class MsgGenerator
+public class MsgGenerator
 {
-    public static FunctionBuilder GenerateMsgFunction(JsonSchema querySchema, JsonSchema definitionsSource,
+    private readonly SchemaTypeGenerator _schemaTypeGenerator;
+
+    public MsgGenerator(SchemaTypeGenerator schemaTypeGenerator)
+    {
+        _schemaTypeGenerator = schemaTypeGenerator;
+    }
+
+    public FunctionBuilder GenerateMsgFunction(JsonSchema querySchema, JsonSchema definitionsSource,
         IReadOnlyDictionary<string, JsonSchema> responseSchemas)
     {
         if(querySchema.Properties.Count != 1)
@@ -56,7 +63,7 @@ public static class MsgGenerator
             string argName = property.Key;
             var argSchema = property.Value;
 
-            var paramType = SchemaTypeGenerator.GetOrGenerateSchemaType(argSchema, definitionsSource);
+            var paramType = _schemaTypeGenerator.GetOrGenerateSchemaType(argSchema, definitionsSource);
 
             function
                 .AddArgument(paramType.Name, argName,
