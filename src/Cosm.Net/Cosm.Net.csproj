@@ -1,30 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Title>Cosm.Net</Title>
-	<Authors>Playwo</Authors>
-	<Company></Company>
-	<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
-	<IncludeSymbols>True</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	<RootNamespace>Cosm.Net</RootNamespace>
-	<LangVersion>preview</LangVersion>
-	<Version>1.0.0</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Cosm.Net</Title>
+		<Authors>Playwo</Authors>
+		<Company></Company>
+		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>Cosm.Net</RootNamespace>
+		<LangVersion>preview</LangVersion>
+		<Version>1.0.1</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Cosm.Net.Core" Version="1.0.0" />
-	  <PackageReference Include="Cosm.Net.Generators.Proto" Version="1.0.0" PrivateAssets="all" />
-	  <PackageReference Include="Grpc.Tools" Version="2.59.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Cosm.Net.Core" Version="1.0.1" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.0.1" PrivateAssets="all" />
+		<PackageReference Include="Grpc.Tools" Version="2.59.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+	</ItemGroup>
 
 	<PropertyGroup>
 		<Protobuf_OutputPath>obj/proto</Protobuf_OutputPath>
