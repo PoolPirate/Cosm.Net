@@ -54,32 +54,47 @@ public class QueryGenerator
             function.WithSummaryComment(querySchema.Description);
         }
 
-        var requiredProps = argumentsSchema.RequiredProperties.ToList();
-        var sortedProperties = argumentsSchema.Properties
-            .OrderBy(x =>
+        var paramTypes = argumentsSchema.Properties
+            .Select(prop =>
             {
-                int index = requiredProps.IndexOf(x.Key);
-                if(index == -1)
+                string argName = prop.Key;
+                var argSchema = prop.Value;
+
+                return new
                 {
-                    index = Int32.MaxValue;
-                }
-                return index;
-            });
+                    Type = _schemaTypeGenerator.GetOrGenerateSchemaType(argSchema, definitionsSource),
+                    ArgName = argName,
+                    ArgSchema = argSchema,
+                };
+            }).ToArray();
 
-        foreach(var property in sortedProperties)
+        foreach(var param in paramTypes.Where(x => x.Type.DefaultValue is null))
         {
-            string argName = property.Key;
-            var argSchema = property.Value;
-
-            var paramType = _schemaTypeGenerator.GetOrGenerateSchemaType(argSchema, definitionsSource);
+            var argName = param.ArgName;
+            var argSchema = param.ArgSchema;
+            var paramType = param.Type;
 
             function
-            .AddArgument(paramType.Name, argName,
-                paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
-            .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
-                .AddArgument($"\"{argName}\"")
-                .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
-                .Build());
+                .AddArgument(paramType.Name, argName,
+                    paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
+                .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                    .AddArgument($"\"{argName}\"")
+                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
+                    .Build());
+        }
+        foreach(var param in paramTypes.Where(x => x.Type.DefaultValue is not null))
+        {
+            var argName = param.ArgName;
+            var argSchema = param.ArgSchema;
+            var paramType = param.Type;
+
+            function
+                .AddArgument(paramType.Name, argName,
+                    paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
+                .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                    .AddArgument($"\"{argName}\"")
+                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
+                    .Build());
         }
 
         return function

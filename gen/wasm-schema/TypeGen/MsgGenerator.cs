@@ -46,24 +46,38 @@ public class MsgGenerator
             function.WithSummaryComment(querySchema.Description);
         }
 
-        var requiredProps = argumentsSchema.RequiredProperties.ToList();
-        var sortedProperties = argumentsSchema.Properties
-            .OrderBy(x =>
+        var paramTypes = argumentsSchema.Properties
+            .Select(prop =>
             {
-                int index = requiredProps.IndexOf(x.Key);
-                if(index == -1)
-                {
-                    index = Int32.MaxValue;
-                }
-                return index;
-            });
+                string argName = prop.Key;
+                var argSchema = prop.Value;
 
-        foreach(var property in sortedProperties)
+                return new {
+                    Type = _schemaTypeGenerator.GetOrGenerateSchemaType(argSchema, definitionsSource),
+                    ArgName = argName,
+                    ArgSchema = argSchema,
+                };
+            }).ToArray();
+
+        foreach(var param in paramTypes.Where(x => x.Type.DefaultValue is null))
         {
-            string argName = property.Key;
-            var argSchema = property.Value;
+            var argName = param.ArgName;
+            var argSchema = param.ArgSchema;
+            var paramType = param.Type;
 
-            var paramType = _schemaTypeGenerator.GetOrGenerateSchemaType(argSchema, definitionsSource);
+            function
+                .AddArgument(paramType.Name, argName,
+                    paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
+                .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
+                    .AddArgument($"\"{argName}\"")
+                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
+                    .Build());
+        }
+        foreach(var param in paramTypes.Where(x => x.Type.DefaultValue is not null))
+        {
+            var argName = param.ArgName;
+            var argSchema = param.ArgSchema;
+            var paramType = param.Type;
 
             function
                 .AddArgument(paramType.Name, argName,
