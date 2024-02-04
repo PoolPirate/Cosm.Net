@@ -5,7 +5,10 @@ using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Cosm.Net.Tx.Msg;
 using Google.Protobuf;
+using Grpc.Core;
 using Grpc.Net.Client;
+using System.Reflection.Metadata;
+using System.Text;
 
 namespace Cosm.Net.Modules;
 internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Compute.V1Beta1.Query.QueryClient>, IWasmAdapater
@@ -53,9 +56,33 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
         }
 
         var (encryptedMessage, nonce) = EncryptMessage(contract.CodeHash, queryData);
-        var queryResponse = await QuerySecretContractAsync(contract.ContractAddress, ByteString.CopyFrom(encryptedMessage));
-        var encodedResponse = _encryptor.DecryptMessage(queryResponse.Data.Span, nonce);
-        return ByteString.CopyFrom(Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(encodedResponse)));
+
+        try
+        {
+            var queryResponse = await QuerySecretContractAsync(contract.ContractAddress, ByteString.CopyFrom(encryptedMessage));
+            var encodedResponse = _encryptor.DecryptMessage(queryResponse.Data.Span, nonce);
+            return ByteString.CopyFrom(Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(encodedResponse)));
+        }
+        catch(RpcException ex)
+        {
+            if (ex.StatusCode != StatusCode.Unknown || !ex.Status.Detail.StartsWith("encrypted: "))
+            {
+                throw;
+            }
+
+            var errorParts = ex.Status.Detail.Split(":");
+
+            if (errorParts.Length != 3)
+            {
+                throw;
+            }
+
+            var encryptedErrorMessage = errorParts[1].Trim();
+            var errorMessage = _encryptor.DecryptMessage(
+                Convert.FromBase64String(encryptedErrorMessage), nonce);
+
+            throw new RpcException(ex.Status, ex.Trailers, $"{errorParts[2]}: {System.Text.Encoding.UTF8.GetString(errorMessage)}");
+        }
     }
 
     private (byte[] EncryptedMessage, byte[] Nonce) EncryptMessage(string codeHash, ByteString message)
