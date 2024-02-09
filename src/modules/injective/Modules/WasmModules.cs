@@ -9,18 +9,22 @@ using Grpc.Net.Client;
 namespace Cosm.Net.Modules;
 internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.QueryClient>, IWasmAdapater
 {
-    private readonly IOfflineSigner _signer;
     private readonly IChainConfiguration _chain;
+    private readonly IOfflineSigner? _signer;
 
-    public WasmModule(GrpcChannel channel, IOfflineSigner signer, IChainConfiguration chain)
+    public WasmModule(GrpcChannel channel, IChainConfiguration chain, IServiceProvider provider)
     {
         _client = new Cosmwasm.Wasm.V1.Query.QueryClient(channel);
-        _signer = signer;
         _chain = chain;
+        _signer = provider.GetService<IOfflineSigner>();
     }
 
     ITxMessage IWasmAdapater.EncodeContractCall(IContract contract, ByteString encodedRequest, IEnumerable<Coin> funds, string? txSender)
     {
+        if (_signer is null)
+        {
+            throw new InvalidOperationException("Transactions not supported in ReadClient");
+        }
         var msg = new Cosmwasm.Wasm.V1.MsgExecuteContract()
         {
             Contract = contract.ContractAddress,

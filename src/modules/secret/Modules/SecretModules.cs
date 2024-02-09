@@ -7,26 +7,29 @@ using Cosm.Net.Tx.Msg;
 using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Net.Client;
-using System.Reflection.Metadata;
-using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Modules;
 internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Compute.V1Beta1.Query.QueryClient>, IWasmAdapater
 {
-    private readonly IOfflineSigner _signer;
+    private readonly IOfflineSigner? _signer;
     private readonly IChainConfiguration _chain;
     private readonly SecretMessageEncryptor _encryptor;
 
-    public ComputeModule(GrpcChannel channel, IOfflineSigner signer, IChainConfiguration chain, SecretMessageEncryptor encryptor)
+    public ComputeModule(GrpcChannel channel, IChainConfiguration chain, SecretMessageEncryptor encryptor, IServiceProvider provider)
     {
         _client = new global::Secret.Compute.V1Beta1.Query.QueryClient(channel);
-        _signer = signer;
         _chain = chain;
         _encryptor = encryptor;
+        _signer = provider.GetService<IOfflineSigner>();
     }
 
     ITxMessage IWasmAdapater.EncodeContractCall(IContract contract, ByteString encodedRequest, IEnumerable<Coin> funds, string? txSender)
     {
+        if(_signer is null)
+        {
+            throw new InvalidOperationException("Transactions not supported in ReadClient");
+        }
         if(contract.CodeHash is null)
         {
             throw new InvalidOperationException("Missing CodeHash. Secret Network contracts have to be created with a codeHash set!");
