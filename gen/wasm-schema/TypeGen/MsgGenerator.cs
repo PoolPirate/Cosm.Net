@@ -49,7 +49,7 @@ public class MsgGenerator
         var paramTypes = argumentsSchema.Properties
             .Select(prop =>
             {
-                string argName = prop.Key;
+                string argName = NameUtils.ToValidVariableName(prop.Key);
                 var argSchema = prop.Value;
 
                 return new {
@@ -70,7 +70,7 @@ public class MsgGenerator
                     paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
                 .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
                     .AddArgument($"\"{argName}\"")
-                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
+                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
                     .Build());
         }
         foreach(var param in paramTypes.Where(x => x.Type.DefaultValue is not null))
@@ -84,7 +84,7 @@ public class MsgGenerator
                     paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
                 .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
                     .AddArgument($"\"{argName}\"")
-                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName})")
+                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
                     .Build());
         }
 

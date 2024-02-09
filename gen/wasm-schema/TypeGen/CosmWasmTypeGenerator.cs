@@ -10,6 +10,7 @@ public class CosmWasmTypeGenerator
     private readonly EnumerationTypeGenerator _enumerationGenerator;
     private readonly SchemaTypeGenerator _schemaTypeGenerator;
     private readonly JsonObjectTypeGenerator _jsonObjectTypeGenerator;
+    private readonly TupleTypeGenerator _tupleTypeGenerator;
 
     private readonly QueryGenerator _queryGenerator;
     private readonly MsgGenerator _msgGenerator;
@@ -21,11 +22,13 @@ public class CosmWasmTypeGenerator
         _schemaTypeGenerator = new SchemaTypeGenerator();
         _objectTypeGenerator = new ObjectTypeGenerator();
         _jsonObjectTypeGenerator = new JsonObjectTypeGenerator();
+        _tupleTypeGenerator = new TupleTypeGenerator();
 
         _enumerationGenerator.Initialize(_typeAggregator, _objectTypeGenerator);
         _schemaTypeGenerator.Initialize(_enumerationGenerator, _jsonObjectTypeGenerator);
         _objectTypeGenerator.Initialize(_typeAggregator, _schemaTypeGenerator);
-        _jsonObjectTypeGenerator.Initialize(_objectTypeGenerator, _schemaTypeGenerator);
+        _jsonObjectTypeGenerator.Initialize(_objectTypeGenerator, _schemaTypeGenerator, _tupleTypeGenerator);
+        _tupleTypeGenerator.Initialize(_schemaTypeGenerator, _typeAggregator);
 
         _queryGenerator = new QueryGenerator(_schemaTypeGenerator);
         _msgGenerator = new MsgGenerator(_schemaTypeGenerator);

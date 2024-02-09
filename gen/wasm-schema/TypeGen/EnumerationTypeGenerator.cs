@@ -112,13 +112,13 @@ public class EnumerationTypeGenerator
                         case {derivedTypeName}:
                             writer.WriteStartObject();
                             writer.WritePropertyName("{enumValueName}");
-                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::System.Text.Json.JsonSerializerOptions.Default.GetConverter(typeof({derivedTypeName}));
+                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
                             converter{derivedTypeName}.Write(writer, ({derivedTypeName}) (object) value, options);
                             writer.WriteEndObject();
                         """);
                     readCases.Add(
                         $"""
-                        "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(document.RootElement.ToString())!
+                        "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(document.RootElement.ToString(), global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)!
                         """);
                     break;
                 case RustEnumType.ComplexObject:
@@ -128,14 +128,14 @@ public class EnumerationTypeGenerator
                         case {derivedTypeName}:
                             writer.WriteStartObject();
                             writer.WritePropertyName("{enumValueName}");
-                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::System.Text.Json.JsonSerializerOptions.Default.GetConverter(typeof({derivedTypeName}));
+                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
                             converter{derivedTypeName}.Write(writer, ({derivedTypeName}) (object) value, options);
                             writer.WriteEndObject();
                         """);
                     readCases.Add(
                         $"""
                         "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(
-                            document.RootElement.GetProperty("{enumValueName}").ToString())!
+                            document.RootElement.GetProperty("{enumValueName}").ToString(), global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)!
                         """);
                     break;
                 default:

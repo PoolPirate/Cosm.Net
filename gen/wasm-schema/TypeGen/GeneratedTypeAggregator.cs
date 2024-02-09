@@ -2,6 +2,7 @@
 using Cosm.Net.Generators.CosmWasm.Models;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
+
 public class GeneratedTypeAggregator
 {
     private Dictionary<string, int> _typeNameOccurences;
@@ -27,19 +28,28 @@ public class GeneratedTypeAggregator
             return new GeneratedTypeHandle(type.TypeName, null);
         }
 
-        if(_typeNameOccurences.TryGetValue(type.TypeName, out int occurences))
+        if(_typeNameOccurences.TryGetValue(type.TypeName.ToLower().Trim(), out int occurences))
         {
-            _typeNameOccurences[type.TypeName] = occurences + 1;
+            _typeNameOccurences[type.TypeName.ToLower().Trim()] = occurences + 1;
         }
         else
         {
-            _typeNameOccurences.Add(type.TypeName, 1);
+            _typeNameOccurences.Add(type.TypeName.ToLower().Trim(), 1);
         }
 
-        _types.Add(syntaxId, type);
+        string typeName = occurences == 0
+                ? type.TypeName
+                : $"{type.TypeName}{occurences}";
+
+        _types.Add(syntaxId, type switch
+        {
+            ClassBuilder cb => cb.WithName(typeName), 
+            EnumerationBuilder eb => eb.WithName(typeName),
+            _ => type
+        });
 
         return new GeneratedTypeHandle(
-            occurences == 0 ? type.TypeName : $"{type.TypeName}{occurences}",
+            typeName,
             null
         );
     }

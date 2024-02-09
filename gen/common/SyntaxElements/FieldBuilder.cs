@@ -14,6 +14,7 @@ public class FieldBuilder : ISyntaxBuilder
 
     private FieldVisibility _visibility = FieldVisibility.Private;
     private bool _isReadonly = true;
+    private bool _isStatic = false;
 
     public FieldBuilder(string type, string name)
     {
@@ -33,9 +34,15 @@ public class FieldBuilder : ISyntaxBuilder
         return this;
     }
 
+    public FieldBuilder WithIsStatic(bool isStatic = true)
+    {
+        _isStatic = isStatic;
+        return this;
+    }
+
     public string Build()
         => $$"""
-            {{_visibility.ToString().ToLower()}} {{(_isReadonly ? "readonly" : "")}} {{Type}} {{Name}};
+            {{_visibility.ToString().ToLower()}}{{(_isStatic ? " static" : "")}}{{(_isReadonly ? " readonly" : "")}} {{Type}} {{Name}};
             """;
 
     public SyntaxId GetSyntaxId()

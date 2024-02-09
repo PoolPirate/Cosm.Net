@@ -24,6 +24,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+		<PackageReference Include="TupleAsJsonArray" Version="1.0.2" />
 	</ItemGroup>
 
 	<PropertyGroup>

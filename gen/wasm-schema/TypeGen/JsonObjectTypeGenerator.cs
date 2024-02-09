@@ -7,11 +7,13 @@ public class JsonObjectTypeGenerator
 {
     private ObjectTypeGenerator _objectTypeGenerator = null!;
     private SchemaTypeGenerator _schemaTypeGenerator = null!;
-
-    public void Initialize(ObjectTypeGenerator objectTypeGenerator, SchemaTypeGenerator schemaTypeGenerator)
+    private TupleTypeGenerator _tupleTypeGenerator = null!;
+    
+    public void Initialize(ObjectTypeGenerator objectTypeGenerator, SchemaTypeGenerator schemaTypeGenerator, TupleTypeGenerator tupleTypeGenerator)
     {
         _objectTypeGenerator = objectTypeGenerator;
         _schemaTypeGenerator = schemaTypeGenerator;
+        _tupleTypeGenerator = tupleTypeGenerator;
     }
 
     public GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource)
@@ -49,16 +51,12 @@ public class JsonObjectTypeGenerator
         {
             return _schemaTypeGenerator.GetOrGenerateSchemaType(schema.Item, definitionsSource).ToArray();
         }
-        if(schema.Items.Any(x => !x.HasReference))
-        {
-            throw new NotSupportedException("Unsupported schema, JsonObjectType Array, multiple item types, at least one without Reference");
-        }
 
-        var baseReference = schema.Items.First().Reference!;
+        var baseReference = schema.Items.FirstOrDefault(x => x.Reference is not null)?.Reference;
 
-        if(schema.Items.Any(x => x.Reference != baseReference))
+        if(baseReference is null || schema.Items.Any(x => !x.HasReference) || schema.Items.Any(x => x.Reference != baseReference))
         {
-            throw new NotSupportedException("Unsupported schema, JsonObjectType Array, multiple entries of different types");
+            return _tupleTypeGenerator.GenerateTupleType(schema, definitionsSource);
         }
         //
         return _schemaTypeGenerator
