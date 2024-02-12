@@ -1,9 +1,11 @@
 ﻿using Cosm.Net.Adapters;
+using Cosm.Net.Encoding;
 using Cosm.Net.Models;
 using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Cosm.Net.Tx.Msg;
+using Cosmos.Tx.V1Beta1;
 using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Net.Client;
@@ -39,9 +41,11 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
 
         var msg = new global::Secret.Compute.V1Beta1.MsgExecuteContract()
         {
-            Contract = ByteString.CopyFromUtf8(contract.ContractAddress),
+            Contract = ByteString.CopyFrom(Bech32.DecodeAddress(contract.ContractAddress)),
             Msg = ByteString.CopyFrom(encryptedMessage),
-            Sender = ByteString.CopyFromUtf8(txSender ?? _signer.GetAddress(_chain.Bech32Prefix)),
+            Sender = ByteString.CopyFrom(Bech32.DecodeAddress(txSender ?? _signer.GetAddress(_chain.Bech32Prefix))),
+            CallbackCodeHash = "",
+            CallbackSig = ByteString.Empty
         };
         msg.SentFunds.AddRange(funds.Select(x => new Cosmos.Base.V1Beta1.Coin()
         {
