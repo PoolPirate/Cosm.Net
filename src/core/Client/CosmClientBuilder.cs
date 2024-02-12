@@ -357,7 +357,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         }
         if(!_services.Any(x => x.ServiceType == typeof(ITxScheduler)))
         {
-            throw new InvalidOperationException($"No {nameof(ITxPublisher)} set. Make sure to call {nameof(WithTxScheduler)} before building the client.");
+            throw new InvalidOperationException($"No {nameof(ITxScheduler)} set. Make sure to call {nameof(WithTxScheduler)} before building the client.");
         }
         if(!_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
         {

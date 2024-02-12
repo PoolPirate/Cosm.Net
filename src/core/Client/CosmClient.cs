@@ -93,19 +93,22 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         return scheduler.SimulateTxAsync(tx);
     }
 
-    public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee)
+    public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee, 
+        DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
         var scheduler = _provider.GetRequiredService<ITxScheduler>();
-        return await scheduler.PublishTxAsync(tx, gasFee);
+        return await scheduler.PublishTxAsync(tx, gasFee, deadline, cancellationToken);
     }
-    public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted)
+    public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted,
+        DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
         var fee = await _gasFeeProvider!.GetFeeForGasAsync(gasWanted);
-        return await PublishTxAsync(tx, fee);
+        return await PublishTxAsync(tx, fee, deadline, cancellationToken);
     }
-    public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000)
+    public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000, 
+        DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
         var simulation = await SimulateAsync(tx);
@@ -113,7 +116,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         ulong gasWanted = (ulong) Math.Ceiling((simulation.GasUsed * gasMultiplier) + gasOffset);
         var fee = await _gasFeeProvider!.GetFeeForGasAsync(gasWanted);
 
-        return await PublishTxAsync(tx, fee);
+        return await PublishTxAsync(tx, fee, deadline, cancellationToken);
     }
 
     public TModule Module<TModule>() where TModule : IModule

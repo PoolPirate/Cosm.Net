@@ -5,8 +5,9 @@ using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using System.Threading.Channels;
 
-using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee,
-    System.Threading.Tasks.TaskCompletionSource<string>? CompletionSource);
+using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee, 
+    System.DateTime? Deadline, System.Threading.CancellationToken CancellationToken,
+    System.Threading.Tasks.TaskCompletionSource<string> CompletionSource);
 
 namespace Cosm.Net.Services;
 public class SequentialTxScheduler : ITxScheduler
@@ -15,14 +16,16 @@ public class SequentialTxScheduler : ITxScheduler
     private readonly ITxEncoder _txEncoder;
     private readonly IOfflineSigner _signer;
     private readonly IAuthModuleAdapter _authAdapter;
-    private readonly ITxPublisher _txPublisher;
     private readonly IChainConfiguration _chainConfiguration;
+    private readonly ITxModuleAdapter _txModuleAdapater;
+    private readonly IGasFeeProvider _gasFeeProvider;
+    private readonly ITxPublisher _txPublisher;
 
     public ulong AccountNumber { get; private set; }
     public ulong CurrentSequence { get; private set; }
 
     public SequentialTxScheduler(ITxEncoder txEncoder, IOfflineSigner signer, IAuthModuleAdapter authAdapter,
-        ITxPublisher txPublisher, IChainConfiguration chainConfiguration)
+        IChainConfiguration chainConfiguration, ITxModuleAdapter txModuleAdapater, IGasFeeProvider gasFeeProvider, ITxPublisher txPublisher)
     {
         _txChannel = Channel.CreateUnbounded<QueueEntry>(new UnboundedChannelOptions()
         {
@@ -34,8 +37,10 @@ public class SequentialTxScheduler : ITxScheduler
         _txEncoder = txEncoder;
         _signer = signer;
         _authAdapter = authAdapter;
-        _txPublisher = txPublisher;
         _chainConfiguration = chainConfiguration;
+        _txModuleAdapater = txModuleAdapater;
+        _gasFeeProvider = gasFeeProvider;
+        _txPublisher = txPublisher;
 
         _ = Task.Run(BackgroundTxProcessor);
     }
@@ -49,13 +54,16 @@ public class SequentialTxScheduler : ITxScheduler
         CurrentSequence = accountData.Sequence;
     }
 
-    public Task<TxSimulation> SimulateTxAsync(ICosmTx tx)
-        => _txPublisher.SimulateTxAsync(tx, CurrentSequence);
+    public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, CancellationToken cancellationToken)
+    {
+        var encodedTx = _txEncoder.EncodeTx(tx, CurrentSequence, _gasFeeProvider.BaseGasFeeDenom);
+        return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
+    }
 
-    public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee)
+    public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee, DateTime? deadline, CancellationToken cancellationToken)
     {
         var source = new TaskCompletionSource<string>();
-        await _txChannel.Writer.WriteAsync(new QueueEntry(tx, gasFee, source));
+        await _txChannel.Writer.WriteAsync(new QueueEntry(tx, gasFee, deadline, cancellationToken, source));
         return await source.Task;
     }
 
@@ -77,6 +85,12 @@ public class SequentialTxScheduler : ITxScheduler
 
     private async Task ProcessTxAsync(QueueEntry entry)
     {
+        if(entry.CancellationToken.IsCancellationRequested)
+        {
+            entry.CompletionSource.SetCanceled(entry.CancellationToken);
+            return;
+        } 
+
         byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, entry.GasFee, AccountNumber, CurrentSequence);
         byte[] signature = _signer.SignMessage(signDoc);
 
@@ -84,13 +98,19 @@ public class SequentialTxScheduler : ITxScheduler
 
         try
         {
-            string txHash = await _txPublisher.PublishTxAsync(signedTx);
+            var txSubmission = await _txPublisher.PublishTxAsync(signedTx, entry.Deadline, entry.CancellationToken);
+
+            if (txSubmission.Code != 0)
+            {
+                throw new TxPublishException(txSubmission.Code, txSubmission.RawLog);
+            }
+
             CurrentSequence++;
-            entry.CompletionSource?.SetResult(txHash);
+            entry.CompletionSource.SetResult(txSubmission.TxHash);
         }
         catch(TxPublishException ex)
         {
-            entry.CompletionSource?.SetException(ex);
+            entry.CompletionSource.SetException(ex);
             return;
         }
         catch
