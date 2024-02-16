@@ -1,5 +1,5 @@
 ﻿namespace Cosm.Net.Tx;
-public class ChainInfo
+internal class ChainInfo
 {
     public string Bech32Prefix { get; }
 

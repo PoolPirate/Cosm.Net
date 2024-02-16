@@ -19,22 +19,22 @@ public sealed class Secp256k1Wallet : IOfflineSigner
     private readonly byte[] _uncompressedPublicKey;
     private readonly byte[] _addressBytes;
 
-    public Secp256k1Wallet(Span<byte> privateKey)
+    public Secp256k1Wallet(ReadOnlySpan<byte> privateKey)
     {
-        if(privateKey.Length != Secp256k1.PRIVKEY_LENGTH)
+        PrivateKey = privateKey.ToArray(); //Prevent user from changing private key after ctor
+        PublicKey = new byte[Secp256k1.SERIALIZED_COMPRESSED_PUBKEY_LENGTH];
+
+        if(PrivateKey.Length != Secp256k1.PRIVKEY_LENGTH)
         {
             throw new ArgumentException("Unexpected private key length", nameof(privateKey));
         }
-        if(!Secp256k1.SecretKeyVerify(privateKey))
+        if(!Secp256k1.SecretKeyVerify(PrivateKey))
         {
             throw new ArgumentException("Private key verification failed", nameof(privateKey));
         }
 
-        PrivateKey = privateKey.ToArray(); //Prevent user from changing private key after ctor
-        PublicKey = new byte[Secp256k1.SERIALIZED_COMPRESSED_PUBKEY_LENGTH];
-
         _uncompressedPublicKey = new byte[Secp256k1.PUBKEY_LENGTH];
-        if(!Secp256k1.PublicKeyCreate(_uncompressedPublicKey, privateKey) ||
+        if(!Secp256k1.PublicKeyCreate(_uncompressedPublicKey, PrivateKey) ||
            !Secp256k1.PublicKeySerialize(PublicKey, _uncompressedPublicKey, Flags.SECP256K1_EC_COMPRESSED))
         {
             throw new ArgumentException("Failed to derive public key from private key", nameof(privateKey));
@@ -64,11 +64,11 @@ public sealed class Secp256k1Wallet : IOfflineSigner
         return key;
     }
 
-    public void SignMessage(ReadOnlySpan<byte> message, Span<byte> signatureOutput)
+    public bool SignMessage(ReadOnlySpan<byte> message, Span<byte> signatureOutput)
     {
         if(signatureOutput.Length != Secp256k1.SERIALIZED_SIGNATURE_SIZE)
         {
-            throw new ArgumentException($"Unexpected signatureOutput length. Expected {Secp256k1.SIGNATURE_LENGTH}, got {signatureOutput.Length}", nameof(signatureOutput));
+            return false;
         }
 
         Span<byte> MessageHashBuffer = stackalloc byte[32];
@@ -89,7 +89,12 @@ public sealed class Secp256k1Wallet : IOfflineSigner
     public byte[] SignMessage(ReadOnlySpan<byte> message)
     {
         byte[] buffer = new byte[Secp256k1.SERIALIZED_SIGNATURE_SIZE];
-        SignMessage(message, buffer);
+
+        if (!SignMessage(message, buffer))
+        {
+            throw new Exception("Signing failed");
+        }
+
         return buffer;
     }
 
