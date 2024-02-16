@@ -84,6 +84,8 @@ public sealed class Secp256k1Wallet : IOfflineSigner
         {
             throw new Exception("Compacting signature failed");
         }
+
+        return true;
     }
 
     public byte[] SignMessage(ReadOnlySpan<byte> message)
