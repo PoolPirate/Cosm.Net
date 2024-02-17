@@ -8,7 +8,7 @@ public class CosmTxBuilder
 {
     private readonly List<ITxMessage> _messages;
     private string _memo = String.Empty;
-    private ulong _timeoutHeight = 0;
+    private ulong _timeoutHeight;
 
     public CosmTxBuilder()
     {

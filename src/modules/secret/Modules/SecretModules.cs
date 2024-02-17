@@ -55,7 +55,7 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             Denom = x.Denom
         }));
 
-        return new TxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg);
+        return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, context);
     }
     async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData)
     {
