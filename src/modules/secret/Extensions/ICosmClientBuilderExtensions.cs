@@ -11,9 +11,9 @@ public static class ICosmClientBuilderExtensions
     public static CosmClientBuilder InstallSecret(this CosmClientBuilder builder, string bech32Prefix = "secret", byte[]? encryptionSeed = null)
     {
         builder.AsInternal().ServiceCollection.AddSingleton(
-            provider => new SecretMessageEncryptor(provider.GetRequiredService<IRegistrationModule>(), encryptionSeed));
-        builder.AsInternal().ServiceCollection.AddSingleton<IInitializeableService, SecretMessageEncryptor>(
-            provider => provider.GetRequiredService<SecretMessageEncryptor>());
+            provider => new SecretEncryptionProvider(provider.GetRequiredService<IRegistrationModule>(), encryptionSeed));
+        builder.AsInternal().ServiceCollection.AddSingleton<IInitializeableService, SecretEncryptionProvider>(
+            provider => provider.GetRequiredService<SecretEncryptionProvider>());
 
         return builder
                 .AsInternal().UseCosmosTxStructure()

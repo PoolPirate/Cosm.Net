@@ -10,15 +10,16 @@ using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Miscreant;
 
 namespace Cosm.Net.Modules;
 internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Compute.V1Beta1.Query.QueryClient>, IWasmAdapater
 {
     private readonly IOfflineSigner? _signer;
     private readonly IChainConfiguration _chain;
-    private readonly SecretMessageEncryptor _encryptor;
+    private readonly SecretEncryptionProvider _encryptor;
 
-    public ComputeModule(GrpcChannel channel, IChainConfiguration chain, SecretMessageEncryptor encryptor, IServiceProvider provider)
+    public ComputeModule(GrpcChannel channel, IChainConfiguration chain, SecretEncryptionProvider encryptor, IServiceProvider provider)
     {
         _client = new global::Secret.Compute.V1Beta1.Query.QueryClient(channel);
         _chain = chain;
@@ -37,12 +38,13 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             throw new InvalidOperationException("Missing CodeHash. Secret Network contracts have to be created with a codeHash set!");
         }
 
-        var (encryptedMessage, _) = EncryptMessage(contract.CodeHash, encodedRequest);
+        var (encryptedMessage, context, decryptor) = EncryptMessage(contract.CodeHash, encodedRequest);
+        decryptor.Dispose();
 
         var msg = new global::Secret.Compute.V1Beta1.MsgExecuteContract()
         {
             Contract = ByteString.CopyFrom(Bech32.DecodeAddress(contract.ContractAddress)),
-            Msg = ByteString.CopyFrom(encryptedMessage),
+            Msg = encryptedMessage,
             Sender = ByteString.CopyFrom(Bech32.DecodeAddress(txSender ?? _signer.GetAddress(_chain.Bech32Prefix))),
             CallbackCodeHash = "",
             CallbackSig = ByteString.Empty
@@ -62,12 +64,12 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             throw new InvalidOperationException("Missing CodeHash. Secret Network contracts have to be created with a codeHash set!");
         }
 
-        var (encryptedMessage, nonce) = EncryptMessage(contract.CodeHash, queryData);
+        var (encryptedMessage, _, decryptor) = EncryptMessage(contract.CodeHash, queryData);
 
         try
         {
-            var queryResponse = await QuerySecretContractAsync(contract.ContractAddress, ByteString.CopyFrom(encryptedMessage));
-            var encodedResponse = _encryptor.DecryptMessage(queryResponse.Data.Span, nonce);
+            var queryResponse = await QuerySecretContractAsync(contract.ContractAddress, encryptedMessage);
+            var encodedResponse = decryptor.DecryptMessage(queryResponse.Data.Span);
             return ByteString.CopyFrom(Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(encodedResponse)));
         }
         catch(RpcException ex)
@@ -85,23 +87,27 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             }
 
             var encryptedErrorMessage = errorParts[1].Trim();
-            var errorMessage = _encryptor.DecryptMessage(
-                Convert.FromBase64String(encryptedErrorMessage), nonce);
+            var errorMessage = decryptor.DecryptMessage(
+                Convert.FromBase64String(encryptedErrorMessage));
 
             throw new RpcException(ex.Status, ex.Trailers, $"{errorParts[2]}: {System.Text.Encoding.UTF8.GetString(errorMessage)}");
         }
+        finally
+        {
+            decryptor.Dispose();
+        }
     }
 
-    private (byte[] EncryptedMessage, byte[] Nonce) EncryptMessage(string codeHash, ByteString message)
+    private (ByteString Message, SecretEncryptionContext Context, SecretMessageDecryptor Decryptor) EncryptMessage(string codeHash, ByteString message)
     {
-        var codeHashBytes = System.Text.Encoding.UTF8.GetBytes(codeHash);
-        Span<byte> buffer = stackalloc byte[codeHashBytes.Length + message.Length];
+        int codeHashBytes = System.Text.Encoding.UTF8.GetByteCount(codeHash);
+        Span<byte> buffer = stackalloc byte[codeHashBytes + message.Length];
 
-        codeHashBytes.CopyTo(buffer);
-        message.Span.CopyTo(buffer[codeHashBytes.Length..]);
+        System.Text.Encoding.UTF8.GetBytes(codeHash, buffer[..codeHashBytes]);
+        message.Span.CopyTo(buffer[codeHashBytes..]);
 
-        var encryptedMessage = _encryptor.EncryptMessage(buffer, out var nonce);
-        return (encryptedMessage, nonce);
+        var encryptedMessage = _encryptor.EncryptMessage(buffer, out var context, out var decryptor);
+        return (ByteString.CopyFrom(encryptedMessage), context, decryptor);
     }
 }
 internal partial class EmergencyButtonModule : IModule<EmergencyButtonModule, global::Secret.Emergencybutton.V1Beta1.Query.QueryClient> { }
