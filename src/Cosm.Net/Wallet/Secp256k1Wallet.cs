@@ -10,8 +10,8 @@ namespace Cosm.Net.Wallet;
 
 public sealed class Secp256k1Wallet : IOfflineSigner
 {
-    private static readonly Secp256k1 Secp256k1 = new Secp256k1();
-    private static readonly WalletOptions DefaultWalletOptions = new WalletOptions();
+    private static readonly Secp256k1 _secp256k1 = new Secp256k1();
+    private static readonly WalletOptions _defaultWalletOptions = new WalletOptions();
 
     public byte[] PrivateKey { get; }
     public byte[] PublicKey { get; }
@@ -28,14 +28,14 @@ public sealed class Secp256k1Wallet : IOfflineSigner
         {
             throw new ArgumentException("Unexpected private key length", nameof(privateKey));
         }
-        if(!Secp256k1.SecretKeyVerify(PrivateKey))
+        if(!_secp256k1.SecretKeyVerify(PrivateKey))
         {
             throw new ArgumentException("Private key verification failed", nameof(privateKey));
         }
 
         _uncompressedPublicKey = new byte[Secp256k1.PUBKEY_LENGTH];
-        if(!Secp256k1.PublicKeyCreate(_uncompressedPublicKey, PrivateKey) ||
-           !Secp256k1.PublicKeySerialize(PublicKey, _uncompressedPublicKey, Flags.SECP256K1_EC_COMPRESSED))
+        if(!_secp256k1.PublicKeyCreate(_uncompressedPublicKey, PrivateKey) ||
+           !_secp256k1.PublicKeySerialize(PublicKey, _uncompressedPublicKey, Flags.SECP256K1_EC_COMPRESSED))
         {
             throw new ArgumentException("Failed to derive public key from private key", nameof(privateKey));
         }
@@ -50,7 +50,7 @@ public sealed class Secp256k1Wallet : IOfflineSigner
 
     public Secp256k1Wallet(string mnemonic, string passphrase = "", WalletOptions? options = null)
         : this(DerivePrivateKeyFromMnemonic(mnemonic, passphrase, 
-            options?.CoinType ?? DefaultWalletOptions.CoinType, options?.AccountIndex ?? DefaultWalletOptions.AccountIndex))
+            options?.CoinType ?? _defaultWalletOptions.CoinType, options?.AccountIndex ?? _defaultWalletOptions.AccountIndex))
     {
     }
 
@@ -76,15 +76,15 @@ public sealed class Secp256k1Wallet : IOfflineSigner
 
         _ = SHA256.HashData(message, MessageHashBuffer);
 
-        if(!Secp256k1.Sign(UnserializedSignatureBuffer, MessageHashBuffer, PrivateKey))
+        if(!_secp256k1.Sign(UnserializedSignatureBuffer, MessageHashBuffer, PrivateKey))
         {
             throw new Exception("Signing failed");
         }
-        if(!Secp256k1.SignatureSerializeCompact(signatureOutput, UnserializedSignatureBuffer))
+        if(!_secp256k1.SignatureSerializeCompact(signatureOutput, UnserializedSignatureBuffer))
         {
             throw new Exception("Compacting signature failed");
         }
-
+        //
         return true;
     }
 
@@ -96,7 +96,7 @@ public sealed class Secp256k1Wallet : IOfflineSigner
         {
             throw new Exception("Signing failed");
         }
-
+        //
         return buffer;
     }
 
