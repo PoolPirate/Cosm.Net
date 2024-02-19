@@ -19,3 +19,6 @@
 [submodule "src/modules/noble/lib/noble"]
 	path = src/modules/noble/lib/noble
 	url = https://github.com/noble-assets/noble.git
+[submodule "src/modules/stride/lib/stride"]
+	path = src/modules/stride/lib/stride
+	url = https://github.com/Stride-Labs/stride.git

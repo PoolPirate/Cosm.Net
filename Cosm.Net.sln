@@ -48,7 +48,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Injective", "src\m
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Secret", "src\modules\secret\Cosm.Net.Secret.csproj", "{EB3CF770-6E0B-48A9-8416-86BD486AEF9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Noble", "src\modules\noble\Cosm.Net.Noble.csproj", "{EF1CA638-ABF4-48D2-BD3C-1603DC940E4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Noble", "src\modules\noble\Cosm.Net.Noble.csproj", "{EF1CA638-ABF4-48D2-BD3C-1603DC940E4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Stride", "src\modules\stride\Cosm.Net.Stride.csproj", "{0947DD33-82E9-45D7-A5C1-8E75781CF2D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +110,10 @@ Global
 		{EF1CA638-ABF4-48D2-BD3C-1603DC940E4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF1CA638-ABF4-48D2-BD3C-1603DC940E4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF1CA638-ABF4-48D2-BD3C-1603DC940E4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0947DD33-82E9-45D7-A5C1-8E75781CF2D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0947DD33-82E9-45D7-A5C1-8E75781CF2D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0947DD33-82E9-45D7-A5C1-8E75781CF2D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0947DD33-82E9-45D7-A5C1-8E75781CF2D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +133,7 @@ Global
 		{D6310898-E5A9-4094-9365-6223EF6B13EC} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{EB3CF770-6E0B-48A9-8416-86BD486AEF9A} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{EF1CA638-ABF4-48D2-BD3C-1603DC940E4C} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{0947DD33-82E9-45D7-A5C1-8E75781CF2D3} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
