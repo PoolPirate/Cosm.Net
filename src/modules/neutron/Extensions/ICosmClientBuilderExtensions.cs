@@ -6,11 +6,12 @@ using System.Reflection;
 namespace Cosm.Net.Extensions;
 public static class ICosmClientBuilderExtensions
 {
-    public static CosmClientBuilder InstallNoble(this CosmClientBuilder builder, string bech32Prefix = "noble")
+    public static CosmClientBuilder InstallNeutron(this CosmClientBuilder builder, string bech32Prefix = "neutron")
         => builder
             .AsInternal().UseCosmosTxStructure()
             .AsInternal().WithChainInfo(bech32Prefix)
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
+            .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()
             .AsInternal().RegisterModule<ITendermintModuleAdapter, TendermintModule>()
             .AsInternal().RegisterModule<ITxModuleAdapter, TxModule>();
