@@ -22,3 +22,6 @@
 [submodule "src/modules/stride/lib/stride"]
 	path = src/modules/stride/lib/stride
 	url = https://github.com/Stride-Labs/stride.git
+[submodule "src/modules/neutron/lib/neutron"]
+	path = src/modules/neutron/lib/neutron
+	url = https://github.com/neutron-org/neutron.git
