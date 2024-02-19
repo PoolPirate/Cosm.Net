@@ -109,6 +109,8 @@ async function main(configPath: string) {
       protoChain.protoDir
     );
   }
+
+  console.info("Proto sync completed");
 }
 
 export type RepoVersion = {
@@ -271,7 +273,6 @@ function collectProtoDirs(
   protoDirs.forEach((protoDir) => {
     const protoInDir = path.join(sourcePath, protoDir.in);
     const protoOutDir = path.join(targetPath, protoDir.out);
-    console.log(`Copying proto source dir ${protoInDir} into ${protoOutDir}`);
 
     if (!existsSync(protoInDir)) {
       console.error(`Could not find proto dir at ${protoInDir}`);

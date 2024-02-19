@@ -71,6 +71,7 @@ async function main(configPath) {
         }
         collectProtoDirs(node_path_1.default.join(protoChain.repoDir, repo.dirName), repo.protoDirs, protoChain.protoDir);
     }
+    console.info("Proto sync completed");
 }
 function parseVersion(repo, godModRepo) {
     const actualRepoName = godModRepo.split(" ")[0].trim();
@@ -171,7 +172,6 @@ function collectProtoDirs(sourcePath, protoDirs, targetPath) {
     protoDirs.forEach((protoDir) => {
         const protoInDir = node_path_1.default.join(sourcePath, protoDir.in);
         const protoOutDir = node_path_1.default.join(targetPath, protoDir.out);
-        console.log(`Copying proto source dir ${protoInDir} into ${protoOutDir}`);
         if (!(0, node_fs_1.existsSync)(protoInDir)) {
             console.error(`Could not find proto dir at ${protoInDir}`);
             process.exit(1);
