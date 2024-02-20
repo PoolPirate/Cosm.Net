@@ -25,3 +25,9 @@
 [submodule "src/modules/neutron/lib/neutron"]
 	path = src/modules/neutron/lib/neutron
 	url = https://github.com/neutron-org/neutron.git
+[submodule "src/modules/axelar/lib/axelar-core"]
+	path = src/modules/axelar/lib/axelar-core
+	url = https://github.com/axelarnetwork/axelar-core
+[submodule "src/modules/terra/lib/core"]
+	path = src/modules/terra/lib/core
+	url = https://github.com/terra-money/core

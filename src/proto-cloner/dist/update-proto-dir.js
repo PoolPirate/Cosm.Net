@@ -56,7 +56,8 @@ async function main(configPath) {
             await checkoutVersion(protoChain, repo, "latest");
         }
         else {
-            const replacementLine = lines.find((x) => x.startsWith(`${repo.name}`) && x.includes("=>"));
+            const replacementLine = lines.find((x) => (x.startsWith(`${repo.name}`) && x.includes("=>")) ||
+                x.includes(`${repo.name} =>`));
             if (replacementLine != null) {
                 console.warn(`Found replacement for repo ${repo.name} in go.mod: ${replacementLine}`);
                 const replacement = replacementLine.split("=>")[1].trim();

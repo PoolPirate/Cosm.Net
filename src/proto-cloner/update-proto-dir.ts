@@ -85,7 +85,9 @@ async function main(configPath: string) {
       await checkoutVersion(protoChain, repo, "latest");
     } else {
       const replacementLine = lines.find(
-        (x) => x.startsWith(`${repo.name}`) && x.includes("=>")
+        (x) =>
+          (x.startsWith(`${repo.name}`) && x.includes("=>")) ||
+          x.includes(`${repo.name} =>`)
       );
 
       if (replacementLine != null) {
