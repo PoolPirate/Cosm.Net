@@ -34,3 +34,4 @@
 [submodule "src/modules/dydx/lib/v4-chain"]
 	path = src/modules/dydx/lib/v4-chain
 	url = https://github.com/dydxprotocol/v4-chain.git
+	branch = release/protocol/v3.x
