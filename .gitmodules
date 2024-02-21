@@ -31,3 +31,6 @@
 [submodule "src/modules/terra/lib/core"]
 	path = src/modules/terra/lib/core
 	url = https://github.com/terra-money/core
+[submodule "src/modules/dydx/lib/v4-chain"]
+	path = src/modules/dydx/lib/v4-chain
+	url = https://github.com/dydxprotocol/v4-chain.git

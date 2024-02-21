@@ -22,7 +22,7 @@ async function main(configPath) {
     validateProtoChain(protoChain);
     console.log(`Clearing proto directory at ${protoChain.protoDir}`);
     clearDirectory(protoChain.protoDir);
-    const goModFile = node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoName, "go.mod");
+    const goModFile = node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoName, protoChain.goModPath ?? ".", "go.mod");
     if (!(0, node_fs_1.existsSync)(goModFile)) {
         console.error("go.mod not found in the chain repository");
         return;
@@ -37,11 +37,14 @@ async function main(configPath) {
     const lines = modFile.split("\n").map((x) => x.trim());
     for (let i = 0; i < protoChain.protoDependencies.length; i++) {
         const repo = protoChain.protoDependencies[i];
-        const baseLine = lines.find((x) => x.startsWith(repo.name));
-        if (baseLine == null && !repo.isExternal) {
+        const baseLines = lines.filter((x) => x.startsWith(repo.name));
+        if (baseLines.length == 0 && !repo.isExternal) {
             console.error(`Failed to find dependency ${repo.name} in go.mod file`);
             process.exit(1);
         }
+        const baseLine = baseLines.length == 1
+            ? baseLines[0]
+            : baseLines.sort((x) => -x.length)[0];
         if (repo.forceExternal && !repo.isExternal) {
             console.error(`Dependency ${repo.name} marked as forceExternal but is not marked as external`);
         }

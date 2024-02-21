@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 export type Repo = {
   name: string;
   isExternal: boolean;
-  forceExternal: boolean | null;
-  externalVersion: string | null;
+  forceExternal: boolean | undefined;
+  externalVersion: string | undefined;
   dirName: string;
   protoDirs: ProtoDir[];
 };
@@ -17,6 +17,7 @@ export type ProtoChain = {
   repoDir: string;
   protoDir: string;
   chainRepoName: string;
+  goModPath: string | undefined;
 
   protoDependencies: Repo[];
 };

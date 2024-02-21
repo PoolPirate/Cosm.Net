@@ -37,6 +37,7 @@ async function main(configPath: string) {
   const goModFile = path.join(
     protoChain.repoDir,
     protoChain.chainRepoName,
+    protoChain.goModPath ?? ".",
     "go.mod"
   );
   if (!existsSync(goModFile)) {
@@ -60,12 +61,17 @@ async function main(configPath: string) {
 
   for (let i = 0; i < protoChain.protoDependencies.length; i++) {
     const repo = protoChain.protoDependencies[i]!;
-    const baseLine = lines.find((x) => x.startsWith(repo.name));
+    const baseLines = lines.filter((x) => x.startsWith(repo.name));
 
-    if (baseLine == null && !repo.isExternal) {
+    if (baseLines.length == 0 && !repo.isExternal) {
       console.error(`Failed to find dependency ${repo.name} in go.mod file`);
       process.exit(1);
     }
+
+    const baseLine =
+      baseLines.length == 1
+        ? baseLines[0]
+        : baseLines.sort((x) => -x.length)[0];
 
     if (repo.forceExternal && !repo.isExternal) {
       console.error(

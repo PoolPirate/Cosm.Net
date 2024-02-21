@@ -54,9 +54,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Stride", "src\modu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Neutron", "src\modules\neutron\Cosm.Net.Neutron.csproj", "{8454713D-4982-451D-A81A-D1A28EB7026C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Axelar", "src\modules\axelar\Cosm.Net.Axelar.csproj", "{2AF998A5-81AF-4078-874A-4E7F8C5AD248}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Axelar", "src\modules\axelar\Cosm.Net.Axelar.csproj", "{2AF998A5-81AF-4078-874A-4E7F8C5AD248}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Terra", "src\modules\terra\Cosm.Net.Terra.csproj", "{F986A39E-CB05-44CF-AC52-03FA624DB0CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Terra", "src\modules\terra\Cosm.Net.Terra.csproj", "{F986A39E-CB05-44CF-AC52-03FA624DB0CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.DyDx", "src\modules\dydx\Cosm.Net.DyDx.csproj", "{6F4F79D6-0A86-49A8-B9C1-90AEB840B44E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,6 +134,10 @@ Global
 		{F986A39E-CB05-44CF-AC52-03FA624DB0CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F986A39E-CB05-44CF-AC52-03FA624DB0CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F986A39E-CB05-44CF-AC52-03FA624DB0CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4F79D6-0A86-49A8-B9C1-90AEB840B44E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4F79D6-0A86-49A8-B9C1-90AEB840B44E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4F79D6-0A86-49A8-B9C1-90AEB840B44E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4F79D6-0A86-49A8-B9C1-90AEB840B44E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,6 +161,7 @@ Global
 		{8454713D-4982-451D-A81A-D1A28EB7026C} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{2AF998A5-81AF-4078-874A-4E7F8C5AD248} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{F986A39E-CB05-44CF-AC52-03FA624DB0CE} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{6F4F79D6-0A86-49A8-B9C1-90AEB840B44E} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
