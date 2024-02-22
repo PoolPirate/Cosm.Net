@@ -42,9 +42,9 @@ public static class QueryModuleProcessor
         }
 
         string constructorSyntax = $$"""
-            public {{moduleType.Name}}(global::Grpc.Net.Client.GrpcChannel channel)
+            public {{moduleType.Name}}(global::Grpc.Core.CallInvoker callInvoker)
             {
-                _client = new {{NameUtils.FullyQualifiedTypeName(queryClientType)}}(channel);
+                _client = new {{NameUtils.FullyQualifiedTypeName(queryClientType)}}(callInvoker);
             }
             """;
 

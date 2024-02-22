@@ -37,7 +37,7 @@ async function main(configPath) {
     const lines = modFile.split("\n").map((x) => x.trim());
     for (let i = 0; i < protoChain.protoDependencies.length; i++) {
         const repo = protoChain.protoDependencies[i];
-        const baseLines = lines.filter((x) => x.startsWith(repo.name));
+        const baseLines = lines.filter((x) => x.startsWith(`${repo.name} `) || x.startsWith(`${repo.name}/`));
         if (baseLines.length == 0 && !repo.isExternal) {
             console.error(`Failed to find dependency ${repo.name} in go.mod file`);
             process.exit(1);

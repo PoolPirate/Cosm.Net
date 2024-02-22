@@ -3,6 +3,7 @@ using Cosm.Net.Client.Internal;
 using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -32,14 +33,22 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     /// </summary>
     /// <param name="channel">The GrpcChannel to use</param>
     /// <returns></returns>
-    public CosmClientBuilder WithChannel(GrpcChannel channel)
+    public CosmClientBuilder WithChannel(GrpcChannel channel) 
+        => WithCallInvoker(channel.CreateCallInvoker());
+
+    /// <summary>
+    /// Configures the underlying CallInvoker the client is using. This is a lower-level alternative to calling WithChannel.
+    /// </summary>
+    /// <param name="callInvoker">The callinvoker to use</param>
+    /// <returns></returns>
+    public CosmClientBuilder WithCallInvoker(CallInvoker callInvoker)
     {
-        if(_services.Any(x => x.ServiceType == typeof(GrpcChannel)))
+        if(_services.Any(x => x.ServiceType == typeof(CallInvoker)))
         {
-            throw new InvalidOperationException($"{nameof(GrpcChannel)} already set.");
+            throw new InvalidOperationException($"{nameof(CallInvoker)} already set.");
         }
 
-        _ = _services.AddSingleton(channel);
+        _ = _services.AddSingleton(callInvoker);
         return this;
     }
 
@@ -420,9 +429,9 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 
     private void AssertValidReadClientServices()
     {
-        if(!_services.Any(x => x.ServiceType == typeof(GrpcChannel)))
+        if(!_services.Any(x => x.ServiceType == typeof(CallInvoker)))
         {
-            throw new InvalidOperationException($"No {nameof(GrpcChannel)} set. Make sure to call {nameof(WithChannel)} before building the client.");
+            throw new InvalidOperationException($"No {nameof(CallInvoker)} set. Make sure to call {nameof(WithChannel)} or {nameof(WithCallInvoker)} before building the client.");
         }
         if(_chainInfo is null)
         {

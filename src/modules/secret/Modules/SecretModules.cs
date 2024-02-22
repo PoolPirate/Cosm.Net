@@ -19,9 +19,9 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
     private readonly IChainConfiguration _chain;
     private readonly SecretEncryptionProvider _encryptor;
 
-    public ComputeModule(GrpcChannel channel, IChainConfiguration chain, SecretEncryptionProvider encryptor, IServiceProvider provider)
+    public ComputeModule(CallInvoker callInvoker, IChainConfiguration chain, SecretEncryptionProvider encryptor, IServiceProvider provider)
     {
-        _client = new global::Secret.Compute.V1Beta1.Query.QueryClient(channel);
+        _client = new global::Secret.Compute.V1Beta1.Query.QueryClient(callInvoker);
         _chain = chain;
         _encryptor = encryptor;
         _signer = provider.GetService<IOfflineSigner>();

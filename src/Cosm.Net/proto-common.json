@@ -15,6 +15,17 @@
       ]
     },
     {
+      "name": "github.com/cometbft/cometbft",
+      "isExternal": false,
+      "dirName": "cometbft",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
       "name": "github.com/regen-network/protobuf",
       "isExternal": true,
       "dirName": "regen-protobuf",

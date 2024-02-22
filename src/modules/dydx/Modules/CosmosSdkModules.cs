@@ -17,7 +17,7 @@ internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Quer
 }
 internal partial class AuthzModule : IModule<AuthzModule, Cosmos.Authz.V1Beta1.Query.QueryClient> { }
 internal partial class BankModule : IModule<BankModule, Cosmos.Bank.V1Beta1.Query.QueryClient> { }
-internal partial class CircuitModule : IModule<CircuitModule, Cosmos.Circuit.V1.Query.QueryClient> { }
+//internal partial class CircuitModule : IModule<CircuitModule, Cosmos.Circuit.V1.Query.QueryClient> { }
 internal partial class ConsensusModule : IModule<ConsensusModule, Cosmos.Consensus.V1.Query.QueryClient> { }
 internal partial class DistributionModule : IModule<DistributionModule, Cosmos.Staking.V1Beta1.Query.QueryClient> { }
 internal partial class EvidenceModule : IModule<EvidenceModule, Cosmos.Evidence.V1Beta1.Query.QueryClient> { }
