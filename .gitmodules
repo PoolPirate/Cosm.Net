@@ -38,3 +38,6 @@
 [submodule "src/modules/andromeda/lib/andromedad"]
 	path = src/modules/andromeda/lib/andromedad
 	url = https://github.com/andromedaprotocol/andromedad
+[submodule "src/modules/composable/lib/composable-cosmos"]
+	path = src/modules/composable/lib/composable-cosmos
+	url = https://github.com/ComposableFi/composable-cosmos
