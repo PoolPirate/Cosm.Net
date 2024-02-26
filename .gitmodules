@@ -35,3 +35,6 @@
 	path = src/modules/dydx/lib/v4-chain
 	url = https://github.com/dydxprotocol/v4-chain.git
 	branch = release/protocol/v3.x
+[submodule "src/modules/andromeda/lib/andromedad"]
+	path = src/modules/andromeda/lib/andromedad
+	url = https://github.com/andromedaprotocol/andromedad
