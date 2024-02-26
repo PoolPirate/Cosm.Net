@@ -62,7 +62,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.DyDx", "src\module
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Andromeda", "src\modules\andromeda\Cosm.Net.Andromeda.csproj", "{040E7CE6-8E24-49AC-8CD9-36AD7CE86E7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "composable", "src\modules\composable\composable.csproj", "{FD371C6B-74F8-4BAA-9AE0-8BDB634DB606}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Composable", "src\modules\composable\Cosm.Net.Composable.csproj", "{FD371C6B-74F8-4BAA-9AE0-8BDB634DB606}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
