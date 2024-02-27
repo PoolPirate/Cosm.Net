@@ -45,7 +45,7 @@ public class CosmWasmGenerator : ISourceGenerator
             var schemaFile = context.AdditionalFiles
                 .Where(x => x.Path.EndsWith(schemaPath))
                 .FirstOrDefault();
-            string? schemaText = schemaFile.GetText()?.ToString();
+            string? schemaText = schemaFile?.GetText()?.ToString();
 
             if(schemaFile is null || schemaText is null)
             {
@@ -58,7 +58,8 @@ public class CosmWasmGenerator : ISourceGenerator
 
             try
             {
-                contractSchema = JsonSerializer.Deserialize<ContractAPISchema>(schemaText)!;
+                contractSchema = JsonSerializer.Deserialize<ContractAPISchema>(schemaText)
+                    ?? throw new NotSupportedException("Parsing schema file to ContractAPISchema failed");
             }
             catch(Exception ex)
             {

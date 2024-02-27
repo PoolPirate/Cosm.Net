@@ -34,8 +34,8 @@ public class EnumerationTypeGenerator
                 throw new NotSupportedException("Enumeration must only contain one value per entry");
             }
 
-            string enumerationValue = enumerationSchema.Enumeration.Single()!.ToString()
-                    ?? throw new NotSupportedException();
+            string enumerationValue = enumerationSchema.Enumeration.Single().ToString()
+                ?? throw new NotSupportedException("Enumeration Values cannot be null");
 
             enumerationBuilder.AddValue(
                     NameUtils.ToValidPropertyName(enumerationValue),
@@ -80,8 +80,12 @@ public class EnumerationTypeGenerator
         {
             var enumType = DetectRustEnumType(enumerationSchema);
             var enumValueName = enumType == RustEnumType.String
-                ? enumerationSchema.Enumeration.Single()!.ToString()!
-                : enumerationSchema.ActualProperties.Single()!.Key;
+                ? enumerationSchema.Enumeration.Count != 1
+                    ? throw new NotSupportedException("EnumerationType must only contain one value per entry")
+                    : enumerationSchema.Enumeration.Single().ToString()
+                : enumerationSchema.ActualProperties.Count != 1
+                    ? throw new NotSupportedException("EnumerationType must have only one ActualProperty per entry")
+                    : enumerationSchema.ActualProperties.Single().Key;
             string derivedTypeName = $"{NameUtils.ToValidClassName(enumValueName)}{typeName}";
 
             var derivedTypeBuilder = new ClassBuilder(derivedTypeName)

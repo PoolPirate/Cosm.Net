@@ -17,35 +17,77 @@ public class ContractAPISchema
 
     [JsonPropertyName("instantiate")]
     [JsonRequired]
-    public JsonObject Instantiate { get; set; } = null!;
+    public JsonObject? Instantiate { get; set; } = null!;
     [JsonPropertyName("execute")]
     [JsonRequired]
-    public JsonObject Execute { get; set; } = null!;
+    public JsonObject? Execute { get; set; } = null!;
     [JsonPropertyName("query")]
     [JsonRequired]
-    public JsonObject Query { get; set; } = null!;
+    public JsonObject? Query { get; set; } = null!;
     [JsonPropertyName("migrate")]
     [JsonRequired]
-    public JsonObject Migrate { get; set; } = null!;
+    public JsonObject? Migrate { get; set; } = null!;
     [JsonPropertyName("responses")]
     [JsonRequired]
-    public JsonObject Responses { get; set; } = null!;
+    public JsonObject? Responses { get; set; } = null!;
 
     public async Task<IReadOnlyDictionary<string, JsonSchema>> GetResponseSchemasAsync()
     {
         var responseSchemas = new Dictionary<string, JsonSchema>();
 
-        foreach(var responseNode in Responses)
+        foreach(var responseNode in Responses ?? throw new InvalidOperationException("Schema is missing responses property"))
         {
-            responseSchemas.Add(responseNode.Key, await JsonSchema.FromJsonAsync(responseNode.Value!.ToJsonString()));
+            var responseKey = responseNode.Key;
+
+            if (responseNode.Value is null)
+            {
+                throw new InvalidOperationException($"Response {responseKey} does not contain a schema");
+            }
+
+            try
+            {
+                responseSchemas.Add(responseKey, await JsonSchema.FromJsonAsync(responseNode.Value.ToJsonString()));
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"ResponseSchema {responseKey} could not be parsed", ex);
+            }
         }
 
         return responseSchemas;
     }
 
     public async Task<JsonSchema> GetQuerySchemaAsync()
-        => await JsonSchema.FromJsonAsync(Query.ToJsonString());
+    {
+        if (Query is null)
+        {
+            throw new InvalidOperationException("Schema is missing query property");
+        }
+
+        try
+        {
+            return await JsonSchema.FromJsonAsync(Query.ToJsonString());
+        }
+        catch(Exception)
+        {
+            throw new InvalidOperationException("query schema could not be parsed to JsonSchema");
+        }
+    }
 
     public async Task<JsonSchema> GetExecuteSchemaAsync()
-        => await JsonSchema.FromJsonAsync(Execute.ToJsonString());
+    {
+        if(Execute is null)
+        {
+            throw new InvalidOperationException("Schema is missing execute property");
+        }
+
+        try
+        {
+            return await JsonSchema.FromJsonAsync(Execute.ToJsonString());
+        }
+        catch(Exception)
+        {
+            throw new InvalidOperationException("execute schema could not be parsed to JsonSchema");
+        }
+    }
 }
