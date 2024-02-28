@@ -41,3 +41,9 @@
 [submodule "src/modules/composable/lib/composable-cosmos"]
 	path = src/modules/composable/lib/composable-cosmos
 	url = https://github.com/ComposableFi/composable-cosmos
+[submodule "src/modules/kava/lib/kava"]
+	path = src/modules/kava/lib/kava
+	url = https://github.com/Kava-Labs/kava
+[submodule "src/modules/mars/lib/hub"]
+	path = src/modules/mars/lib/hub
+	url = https://github.com/mars-protocol/hub.git
