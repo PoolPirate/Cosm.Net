@@ -47,6 +47,10 @@ public class JsonObjectTypeGenerator
         {
             throw new NotSupportedException("Unsupported schema, JsonObjectType Array, no Item type(s) set");
         }
+        if(schema.Default is not null)
+        {
+            throw new NotSupportedException("Array types don't support a default value");
+        }
         if(schema.Item is not null)
         {
             return _schemaTypeGenerator.GetOrGenerateSchemaType(schema.Item, definitionsSource).ToArray();

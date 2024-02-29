@@ -31,6 +31,7 @@ public class GeneratedTypeHandle
     public GeneratedTypeHandle ToArray()
     {
         Name = $"{Name}[]";
+        DefaultValue = null;
         return this;
     }
 }

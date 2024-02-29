@@ -28,7 +28,7 @@ public class CosmWasmTypeGenerator
         _schemaTypeGenerator.Initialize(_enumerationGenerator, _jsonObjectTypeGenerator);
         _objectTypeGenerator.Initialize(_typeAggregator, _schemaTypeGenerator);
         _jsonObjectTypeGenerator.Initialize(_objectTypeGenerator, _schemaTypeGenerator, _tupleTypeGenerator);
-        _tupleTypeGenerator.Initialize(_schemaTypeGenerator, _typeAggregator);
+        _tupleTypeGenerator.Initialize(_schemaTypeGenerator);
 
         _queryGenerator = new QueryGenerator(_schemaTypeGenerator);
         _msgGenerator = new MsgGenerator(_schemaTypeGenerator);
