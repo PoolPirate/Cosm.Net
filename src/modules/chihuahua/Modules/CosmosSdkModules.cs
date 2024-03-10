@@ -4,24 +4,15 @@ using Google.Protobuf;
 using Grpc.Core;
 
 namespace Cosm.Net.Modules;
-//internal partial class AccountModule : IModule<AccountModule, global::Cosmos.Accounts.V1.Query.QueryClient> {}
+//internal partial class AccountModule : IModule<AccountModule, global::Cosmos.Accounts.V1.Query.QueryClient> { }
 internal partial class AuthModule : IModule<AuthModule, global::Cosmos.Auth.V1Beta1.Query.QueryClient>, IAuthModuleAdapter
 {
     async Task<AccountData> IAuthModuleAdapter.GetAccountAsync(string address, Metadata? headers,
         DateTime? deadline, CancellationToken cancellationToken)
     {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
-
-        if(accountData.Account.TypeUrl == $"/{(global::Injective.Types.V1Beta1.EthAccount.Descriptor.FullName)}")
-        {
-            var account = global::Injective.Types.V1Beta1.EthAccount.Parser.ParseFrom(accountData.Account.Value);
-            return new AccountData(account.BaseAccount.AccountNumber, account.BaseAccount.Sequence);
-        }
-        else
-        {
-            var account = global::Cosmos.Auth.V1Beta1.BaseAccount.Parser.ParseFrom(accountData.Account.Value);
-            return new AccountData(account.AccountNumber, account.Sequence);
-        }
+        var account = Cosmos.Auth.V1Beta1.BaseAccount.Parser.ParseFrom(accountData.Account.Value);
+        return new AccountData(account.AccountNumber, account.Sequence);
     }
 }
 internal partial class AuthzModule : IModule<AuthzModule, global::Cosmos.Authz.V1Beta1.Query.QueryClient> { }

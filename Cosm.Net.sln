@@ -66,7 +66,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Composable", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Kava", "src\modules\kava\Cosm.Net.Kava.csproj", "{21A044F3-B5AA-466B-9E61-D85ECCF119A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Mars", "src\modules\mars\Cosm.Net.Mars.csproj", "{A9BD9E52-4808-4B9A-A339-C06319CE9D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Mars", "src\modules\mars\Cosm.Net.Mars.csproj", "{A9BD9E52-4808-4B9A-A339-C06319CE9D00}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Juno", "src\modules\juno\Cosm.Net.Juno.csproj", "{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Chihuahua", "src\modules\chihuahua\Cosm.Net.Chihuahua.csproj", "{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,6 +166,14 @@ Global
 		{A9BD9E52-4808-4B9A-A339-C06319CE9D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9BD9E52-4808-4B9A-A339-C06319CE9D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9BD9E52-4808-4B9A-A339-C06319CE9D00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +202,8 @@ Global
 		{FD371C6B-74F8-4BAA-9AE0-8BDB634DB606} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{21A044F3-B5AA-466B-9E61-D85ECCF119A7} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{A9BD9E52-4808-4B9A-A339-C06319CE9D00} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}

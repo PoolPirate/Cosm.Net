@@ -1,0 +1,84 @@
+﻿{
+  "repoDir": "lib",
+  "protoDir": "proto",
+  "chainRepoName": "juno",
+  "protoDependencies": [
+    {
+      "name": "github.com/CosmWasm/wasmd",
+      "isExternal": false,
+      "dirName": "wasmd",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/cosmos-proto",
+      "isExternal": false,
+      "dirName": "cosmos-proto",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/cosmos-sdk",
+      "isExternal": false,
+      "dirName": "cosmos-sdk",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/ibc-go",
+      "isExternal": false,
+      "dirName": "ibc-go",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/ics23",
+      "isExternal": false,
+      "dirName": "ics23",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/regen-network/protobuf",
+      "isExternal": true,
+      "dirName": "regen-protobuf",
+      "protoDirs": [
+        {
+          "in": "gogoproto",
+          "out": "gogoproto"
+        }
+      ]
+    },
+    {
+      "name": "github.com/googleapis/googleapis",
+      "isExternal": true,
+      "dirName": "googleapis",
+      "protoDirs": [
+        {
+          "in": "google",
+          "out": "google"
+        }
+      ]
+    }
+  ]
+}
