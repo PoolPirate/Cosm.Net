@@ -47,3 +47,9 @@
 [submodule "src/modules/mars/lib/hub"]
 	path = src/modules/mars/lib/hub
 	url = https://github.com/mars-protocol/hub.git
+[submodule "src/modules/juno/lib/juno"]
+	path = src/modules/juno/lib/juno
+	url = https://github.com/CosmosContracts/juno.git
+[submodule "src/modules/chihuahua/lib/chihuahua"]
+	path = src/modules/chihuahua/lib/chihuahua
+	url = https://github.com/ChihuahuaChain/chihuahua.git
