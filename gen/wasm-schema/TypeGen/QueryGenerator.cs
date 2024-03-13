@@ -79,7 +79,7 @@ public class QueryGenerator
                     paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
                 .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
                     .AddArgument($"\"{argName}\"")
-                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
+                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
                     .Build());
         }
         foreach(var param in paramTypes.Where(x => x.Type.DefaultValue is not null))
@@ -93,7 +93,7 @@ public class QueryGenerator
                     paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
                 .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
                     .AddArgument($"\"{argName}\"")
-                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode((object?) {argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
+                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
                     .Build());
         }
 
@@ -101,6 +101,14 @@ public class QueryGenerator
             .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
             .AddStatement("var encodedResponse = await _wasm.SmartContractStateAsync(this, global::Google.Protobuf.ByteString.CopyFrom(encodedRequest))")
             .AddStatement("var jsonResponse = global::System.Text.Encoding.UTF8.GetString(encodedResponse.Span)")
-            .AddStatement($"return global::System.Text.Json.JsonSerializer.Deserialize<{responseType.Name}>(jsonResponse, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions) ?? throw new global::System.Text.Json.JsonException(\"Parsing contract response failed\")");
+            .AddStatement($"var decodedResponse = global::System.Text.Json.JsonSerializer.Deserialize<{responseType.Name}>(jsonResponse, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
+            .AddStatement(
+            """
+            if (decodedResponse == default) 
+            {
+                throw new global::System.Text.Json.JsonException("Parsing contract response failed");
+            }
+            return decodedResponse
+            """);
     }
 }

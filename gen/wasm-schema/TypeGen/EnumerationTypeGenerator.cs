@@ -126,7 +126,8 @@ public class EnumerationTypeGenerator
                         """);
                     break;
                 case RustEnumType.ComplexObject:
-                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema.ActualProperties.Single().Value, definitionsSource);
+                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, 
+                        SchemaTypeGenerator.GetInnerSchema(enumerationSchema.ActualProperties.Single().Value), definitionsSource);
                     writeCases.Add(
                         $"""
                         case {derivedTypeName}:
@@ -188,7 +189,8 @@ public class EnumerationTypeGenerator
             throw new NotSupportedException("Unsupported Rust Enum with more than 1 property");
         }
         //
-        return schema.ActualProperties.Single().Value.Type == JsonObjectType.Object
+        var enumProperty = SchemaTypeGenerator.GetInnerSchema(schema.ActualProperties.Single().Value);
+        return enumProperty.Type == JsonObjectType.Object
             ? RustEnumType.ComplexObject
             : RustEnumType.PrimitiveObject;
     }

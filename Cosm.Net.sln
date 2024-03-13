@@ -70,7 +70,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Mars", "src\module
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Juno", "src\modules\juno\Cosm.Net.Juno.csproj", "{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Chihuahua", "src\modules\chihuahua\Cosm.Net.Chihuahua.csproj", "{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Chihuahua", "src\modules\chihuahua\Cosm.Net.Chihuahua.csproj", "{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Orai", "src\modules\orai\Cosm.Net.Orai.csproj", "{6E63B6E9-1CF7-4127-94CA-C54F7DF157C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Dymension", "src\modules\dymension\Cosm.Net.Dymension.csproj", "{3680002F-CCD1-4F39-83AB-57696F8B015F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,6 +178,14 @@ Global
 		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E63B6E9-1CF7-4127-94CA-C54F7DF157C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E63B6E9-1CF7-4127-94CA-C54F7DF157C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E63B6E9-1CF7-4127-94CA-C54F7DF157C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E63B6E9-1CF7-4127-94CA-C54F7DF157C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3680002F-CCD1-4F39-83AB-57696F8B015F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3680002F-CCD1-4F39-83AB-57696F8B015F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3680002F-CCD1-4F39-83AB-57696F8B015F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3680002F-CCD1-4F39-83AB-57696F8B015F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,6 +216,8 @@ Global
 		{A9BD9E52-4808-4B9A-A339-C06319CE9D00} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{CD3B9633-BB89-4F2E-8489-930E1F5D6AC1} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{8D0CF92E-C0E2-4BD4-B33C-82E0176AFA10} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{6E63B6E9-1CF7-4127-94CA-C54F7DF157C9} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{3680002F-CCD1-4F39-83AB-57696F8B015F} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}

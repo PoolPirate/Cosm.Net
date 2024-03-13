@@ -53,3 +53,9 @@
 [submodule "src/modules/chihuahua/lib/chihuahua"]
 	path = src/modules/chihuahua/lib/chihuahua
 	url = https://github.com/ChihuahuaChain/chihuahua.git
+[submodule "src/modules/orai/lib/orai"]
+	path = src/modules/orai/lib/orai
+	url = https://github.com/oraichain/orai.git
+[submodule "src/modules/dymension/lib/dymension"]
+	path = src/modules/dymension/lib/dymension
+	url = https://github.com/dymensionxyz/dymension.git

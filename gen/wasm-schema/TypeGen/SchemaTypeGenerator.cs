@@ -44,7 +44,7 @@ public class SchemaTypeGenerator
     /// Skip schema layers that don't affect generated code
     /// </summary>
     /// <returns></returns>
-    private static JsonSchema GetInnerSchema(JsonSchema schema)
+    public static JsonSchema GetInnerSchema(JsonSchema schema)
     {
         while(TryGetNextInnerSchema(schema, out schema))
         {
