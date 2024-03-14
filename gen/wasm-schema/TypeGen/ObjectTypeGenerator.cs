@@ -70,7 +70,7 @@ public class ObjectTypeGenerator
         string definitionName = definitionsSource.Definitions
             .FirstOrDefault(x => x.Value == schema).Key;
 
-        string typeName = schema.Title ?? definitionName
+        string typeName = definitionName ?? schema.Title 
             ?? (schema.RequiredProperties.Count == 1 && schema.Properties.Count == 1 //Nested message
                 ? $"{NameUtils.ToValidClassName(schema.RequiredProperties.Single())}" +
                     (schema.ParentSchema is not null && schema.ParentSchema.Description is not null && schema.ParentSchema.Description.Contains("returns")
@@ -80,6 +80,6 @@ public class ObjectTypeGenerator
             ?? (schema is JsonSchemaProperty p ? NameUtils.ToValidClassName(p.Name) : null)
             ?? "Request";
 
-        return typeName;
+        return NameUtils.ToValidClassName(typeName);
     }
 }

@@ -15,13 +15,13 @@ public class TupleTypeGenerator
         _schemaTypeGenerator = schemaTypeGenerator;
     }
 
-    public GeneratedTypeHandle GenerateTupleType(JsonSchema arraySchema, JsonSchema definitionSource)
+    public GeneratedTypeHandle GenerateTupleType(JsonSchema arraySchema, JsonSchema definitionsSource)
     {
         var tupleBuilder = new TupleBuilder();
 
         foreach(var itemSchema in arraySchema.Items)
         {
-            var itemType = _schemaTypeGenerator.GetOrGenerateSchemaType(itemSchema, definitionSource);
+            var itemType = _schemaTypeGenerator.GetOrGenerateSchemaType(itemSchema, definitionsSource);
             tupleBuilder.AddElement(itemType.Name);
         }
 

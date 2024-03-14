@@ -17,7 +17,7 @@ public class QueryGenerator
     {
         if(querySchema.Properties.Count != 1)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException("Top level query schema must have only one property");
         }
 
         //ToDo: Consider skipping layers till there's more than 1 property
@@ -27,7 +27,7 @@ public class QueryGenerator
 
         if(!responseSchemas.TryGetValue(queryName, out var responseSchema))
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException($"No response schema for query {queryName} found in schema");
         }
 
         var responseType = _schemaTypeGenerator.GetOrGenerateSchemaType(responseSchema, responseSchema);

@@ -17,7 +17,7 @@ public class MsgGenerator
     {
         if(querySchema.Properties.Count != 1)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException("Top level msg schema must have only one property");
         }
 
         //ToDo: Consider skipping layers till there's more than 1 property

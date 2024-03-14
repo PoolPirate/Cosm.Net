@@ -200,10 +200,10 @@ public class EnumerationTypeGenerator
         string definitionName = definitionsSource.Definitions
                     .FirstOrDefault(x => x.Value == schema).Key;
 
-        string typeName = schema.Title 
-            ?? definitionName
+        string typeName = definitionName
+            ?? schema.Title
             ?? throw new NotSupportedException("No suitable name for enumeration type found");
 
-        return typeName;
+        return NameUtils.ToValidClassName(typeName);
     }
 }
