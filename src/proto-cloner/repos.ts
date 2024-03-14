@@ -16,6 +16,7 @@ export type ProtoDir = {
 export type ProtoChain = {
   repoDir: string;
   protoDir: string;
+  hasNoProtos: boolean | undefined;
   chainRepoName: string;
   goModPath: string | undefined;
 

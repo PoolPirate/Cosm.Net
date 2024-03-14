@@ -27,12 +27,14 @@ async function main(configPath) {
         console.error("go.mod not found in the chain repository");
         return;
     }
-    collectProtoDirs(node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoName), [
-        {
-            in: "proto",
-            out: ".",
-        },
-    ], protoChain.protoDir);
+    if (!protoChain.hasNoProtos) {
+        collectProtoDirs(node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoName), [
+            {
+                in: "proto",
+                out: ".",
+            },
+        ], protoChain.protoDir);
+    }
     const modFile = (0, node_fs_1.readFileSync)(goModFile, "utf8");
     const lines = modFile.split("\n").map((x) => x.trim());
     for (let i = 0; i < protoChain.protoDependencies.length; i++) {

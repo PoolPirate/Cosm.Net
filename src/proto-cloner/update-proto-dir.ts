@@ -45,16 +45,18 @@ async function main(configPath: string) {
     return;
   }
 
-  collectProtoDirs(
-    path.join(protoChain.repoDir, protoChain.chainRepoName),
-    [
-      {
-        in: "proto",
-        out: ".",
-      },
-    ],
-    protoChain.protoDir
-  );
+  if (!protoChain.hasNoProtos) {
+    collectProtoDirs(
+      path.join(protoChain.repoDir, protoChain.chainRepoName),
+      [
+        {
+          in: "proto",
+          out: ".",
+        },
+      ],
+      protoChain.protoDir
+    );
+  }
 
   const modFile = readFileSync(goModFile, "utf8");
   const lines = modFile.split("\n").map((x) => x.trim());
