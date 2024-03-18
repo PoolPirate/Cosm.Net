@@ -27,7 +27,7 @@ public class MsgGenerator
 
         var function = new FunctionBuilder($"{NameUtils.ToValidFunctionName(msgName)}")
                 .WithVisibility(FunctionVisibility.Public)
-                .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.ITxMessage")
+                .WithReturnTypeRaw($"global::Cosm.Net.Tx.Msg.IWasmTxMessage")
                 .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
                     .ToVariableAssignment("innerJsonRequest"))
                 .AddStatement(new ConstructorCallBuilder("global::System.Text.Json.Nodes.JsonObject")
@@ -92,10 +92,9 @@ public class MsgGenerator
             .AddArgument("global::System.Collections.Generic.IEnumerable<global::Cosm.Net.Models.Coin>?", "funds", true, "null")
             .AddArgument("global::System.String?", "txSender", true, "null")
             .AddStatement("funds = funds ?? global::System.Array.Empty<global::Cosm.Net.Models.Coin>()")
-            .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
             .AddStatement("return " + new MethodCallBuilder("_wasm", "EncodeContractCall")
                 .AddArgument("this")
-                .AddArgument("global::Google.Protobuf.ByteString.CopyFrom(encodedRequest)")
+                .AddArgument("jsonRequest")
                 .AddArgument("funds")
                 .AddArgument("txSender")
                 .Build());

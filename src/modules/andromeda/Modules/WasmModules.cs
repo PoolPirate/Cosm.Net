@@ -7,6 +7,8 @@ using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Cosm.Net.Modules;
 internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.QueryClient>, IWasmAdapater
@@ -21,16 +23,18 @@ internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.Q
         _signer = provider.GetService<IOfflineSigner>();
     }
 
-    ITxMessage IWasmAdapater.EncodeContractCall(IContract contract, ByteString encodedRequest, IEnumerable<Coin> funds, string? txSender)
+    IWasmTxMessage IWasmAdapater.EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
     {
         if(_signer is null)
         {
             throw new InvalidOperationException("Transactions not supported in ReadClient");
         }
+
+        var requestJson = requestBody.ToJsonString();
         var msg = new Cosmwasm.Wasm.V1.MsgExecuteContract()
         {
             Contract = contract.ContractAddress,
-            Msg = encodedRequest,
+            Msg = ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)),
             Sender = txSender ?? _signer.GetAddress(_chain.Bech32Prefix),
         };
 
@@ -43,7 +47,7 @@ internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.Q
             });
         }
 
-        return new TxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg);
+        return new WasmTxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg, requestJson);
     }
 
     async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData)

@@ -11,6 +11,7 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Miscreant;
+using System.Text.Json.Nodes;
 
 namespace Cosm.Net.Modules;
 internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Compute.V1Beta1.Query.QueryClient>, IWasmAdapater
@@ -27,7 +28,7 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
         _signer = provider.GetService<IOfflineSigner>();
     }
 
-    ITxMessage IWasmAdapater.EncodeContractCall(IContract contract, ByteString encodedRequest, IEnumerable<Coin> funds, string? txSender)
+    IWasmTxMessage IWasmAdapater.EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
     {
         if(_signer is null)
         {
@@ -38,7 +39,9 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             throw new InvalidOperationException("Missing CodeHash. Secret Network contracts have to be created with a codeHash set!");
         }
 
-        var (encryptedMessage, context, decryptor) = EncryptMessage(contract.CodeHash, encodedRequest);
+        var requestJson = requestBody.ToJsonString();
+        var (encryptedMessage, context, decryptor) = EncryptMessage(
+            contract.CodeHash, ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)));
         decryptor.Dispose();
 
         var msg = new global::Secret.Compute.V1Beta1.MsgExecuteContract()
@@ -55,7 +58,7 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             Denom = x.Denom
         }));
 
-        return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, context);
+        return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, requestJson, context);
     }
     async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData)
     {
