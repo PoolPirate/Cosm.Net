@@ -62,3 +62,6 @@
 [submodule "src/modules/persistence/lib/persistenceCore"]
 	path = src/modules/persistence/lib/persistenceCore
 	url = https://github.com/persistenceOne/persistenceCore
+[submodule "src/modules/migaloo/lib/migaloo-chain"]
+	path = src/modules/migaloo/lib/migaloo-chain
+	url = https://github.com/White-Whale-Defi-Platform/migaloo-chain.git
