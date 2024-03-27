@@ -114,11 +114,8 @@ public class EnumerationTypeGenerator
                     writeCases.Add(
                         $"""
                         case {derivedTypeName}:
-                            writer.WriteStartObject();
-                            writer.WritePropertyName("{enumValueName}");
                             var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
                             converter{derivedTypeName}.Write(writer, ({derivedTypeName}) (object) value, options);
-                            writer.WriteEndObject();
                         """);
                     readCases.Add(
                         $"""
