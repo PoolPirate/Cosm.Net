@@ -19,11 +19,7 @@ public class GeneratedTypeHandle
         }
 
         Name = $"{Name}?";
-
-        if(DefaultValue is null)
-        {
-            DefaultValue = "null";
-        }
+        DefaultValue ??= "null";
 
         return this;
     }

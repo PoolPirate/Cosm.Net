@@ -20,6 +20,7 @@ public class JsonObjectTypeGenerator
         => schema.Type switch
         {
             JsonObjectType.Array => GenerateArrayType(schema, definitionsSource),
+            JsonObjectType.Array | JsonObjectType.Null => GenerateArrayType(schema, definitionsSource).ToNullable(),
             JsonObjectType.Object => GenerateObjectType(schema, definitionsSource),
             JsonObjectType.Boolean => GenerateParsableType<bool>(schema),
             JsonObjectType.Boolean | JsonObjectType.Null => GenerateParsableType<bool>(schema).ToNullable(),
