@@ -1,5 +1,6 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Encoding;
+using Cosm.Net.Json;
 using Cosm.Net.Models;
 using Cosm.Net.Services;
 using Cosm.Net.Signer;
@@ -39,7 +40,7 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             throw new InvalidOperationException("Missing CodeHash. Secret Network contracts have to be created with a codeHash set!");
         }
 
-        var requestJson = requestBody.ToJsonString();
+        var requestJson = requestBody.ToJsonString(CosmWasmJsonUtils.SerializerOptions);
         var (encryptedMessage, context, decryptor) = EncryptMessage(
             contract.CodeHash, ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)));
         decryptor.Dispose();

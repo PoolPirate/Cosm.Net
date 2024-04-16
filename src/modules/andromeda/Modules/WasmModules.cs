@@ -1,13 +1,12 @@
 ﻿using Cosm.Net.Adapters;
+using Cosm.Net.Json;
 using Cosm.Net.Models;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Cosm.Net.Tx.Msg;
 using Google.Protobuf;
 using Grpc.Core;
-using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Cosm.Net.Modules;
@@ -30,7 +29,7 @@ internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.Q
             throw new InvalidOperationException("Transactions not supported in ReadClient");
         }
 
-        var requestJson = requestBody.ToJsonString();
+        var requestJson = requestBody.ToJsonString(CosmWasmJsonUtils.SerializerOptions);
         var msg = new Cosmwasm.Wasm.V1.MsgExecuteContract()
         {
             Contract = contract.ContractAddress,

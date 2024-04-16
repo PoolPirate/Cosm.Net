@@ -8,14 +8,11 @@ public static class CosmWasmJsonUtils
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         Converters =
         {
-            new TupleConverterFactory()
+            new TupleConverterFactory(),
+            new ByteArrayConverter()
         }
     };
-
-    public static void Test()
-    {
-
-    }
 }
