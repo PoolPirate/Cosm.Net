@@ -62,3 +62,6 @@
 [submodule "src/modules/gaia/lib/gaia"]
 	path = src/modules/gaia/lib/gaia
 	url = https://github.com/cosmos/gaia.git
+[submodule "src/modules/kujira/lib/core"]
+	path = src/modules/kujira/lib/core
+	url = https://github.com/Team-Kujira/core.git
