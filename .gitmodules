@@ -65,3 +65,6 @@
 [submodule "src/modules/kujira/lib/core"]
 	path = src/modules/kujira/lib/core
 	url = https://github.com/Team-Kujira/core.git
+[submodule "src/modules/archway/lib/archway"]
+	path = src/modules/archway/lib/archway
+	url = https://github.com/archway-network/archway
