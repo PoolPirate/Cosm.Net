@@ -13,7 +13,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.1.1.403+noble.v4.0.3</Version>
+		<Version>1.1.1.411+noble.v4.1.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -46,6 +46,8 @@
 
 		<Protobuf Include="./proto/tariff/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tokenfactory/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/globalfee/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/noble/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>
