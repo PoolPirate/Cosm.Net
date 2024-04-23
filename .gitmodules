@@ -68,3 +68,6 @@
 [submodule "src/modules/archway/lib/archway"]
 	path = src/modules/archway/lib/archway
 	url = https://github.com/archway-network/archway
+[submodule "src/modules/akash/lib/node"]
+	path = src/modules/akash/lib/node
+	url = https://github.com/akash-network/node
