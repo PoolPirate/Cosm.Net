@@ -71,3 +71,6 @@
 [submodule "src/modules/akash/lib/node"]
 	path = src/modules/akash/lib/node
 	url = https://github.com/akash-network/node
+[submodule "src/modules/jackal/lib/canine-chain"]
+	path = src/modules/jackal/lib/canine-chain
+	url = https://github.com/JackalLabs/canine-chain.git
