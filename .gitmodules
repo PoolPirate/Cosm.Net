@@ -74,3 +74,6 @@
 [submodule "src/modules/jackal/lib/canine-chain"]
 	path = src/modules/jackal/lib/canine-chain
 	url = https://github.com/JackalLabs/canine-chain.git
+[submodule "src/modules/nolus/lib/nolus-core"]
+	path = src/modules/nolus/lib/nolus-core
+	url = https://github.com/nolus-protocol/nolus-core.git
