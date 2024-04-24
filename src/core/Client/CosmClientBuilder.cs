@@ -16,11 +16,9 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     private readonly List<Type> _moduleTypes = [];
     private ChainInfo? _chainInfo = null;
 
-    /// <summary>
-    /// Accesses the internal ServiceCollection containing modules and their dependencies.
-    /// </summary>
     IServiceCollection IInternalCosmClientBuilder.ServiceCollection
         => _services;
+
     /// <summary>
     /// Converts to internal client builder for accessing unsupported APIs and performing advanced configuration.
     /// </summary>
@@ -52,11 +50,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    /// <summary>
-    /// REQUIRED. Configures the chain that this client is connected to.
-    /// </summary>
-    /// <param name="bech32Prefix">The address prefix to use for address encoding.</param>
-    /// <returns></returns>
     CosmClientBuilder IInternalCosmClientBuilder.WithChainInfo(string bech32Prefix)
     {
         if(_chainInfo is not null)
@@ -68,12 +61,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    /// <summary>
-    /// Registers an on-chain module type supported by the configured chain.
-    /// </summary>
-    /// <typeparam name="TIModule">Public interface of the module</typeparam>
-    /// <typeparam name="TModule">Internal implementation of the module</typeparam>
-    /// <returns></returns>
     CosmClientBuilder IInternalCosmClientBuilder.RegisterModule<TIModule, TModule>()
     {
         if(!_services.Any(x => x.ServiceType == typeof(TModule)))
@@ -85,11 +72,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    /// <summary>
-    /// Registers all on-chain module types found in a given assembly.
-    /// </summary>
-    /// <param name="assembly">The assembly to look for module types in</param>
-    /// <returns></returns>
     CosmClientBuilder IInternalCosmClientBuilder.RegisterModulesFromAssembly(Assembly assembly)
     {
         var types = assembly.GetTypes();
@@ -119,11 +101,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
                 .SingleOrDefault();
     }
 
-    /// <summary>
-    /// Checks if a given module type has already been registered in this client.
-    /// </summary>
-    /// <typeparam name="TIModule">Public interface of the module</typeparam>
-    /// <returns></returns>
     bool IInternalCosmClientBuilder.HasModule<TIModule>()
        => _services.Any(x => x.ServiceType == typeof(TIModule));
 
@@ -222,13 +199,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    /// <summary>
-    /// ONLY TXCLIENT. Configures a transaction encoder.  <br/>
-    /// The transaction encoder is responsible for converting the chain agnostic Cosm.Net types to chain specific transaction and SignDocument binary representations.
-    /// </summary>
-    /// <typeparam name="TTxEncoder">The type of TxEncoder to use</typeparam>
-    /// <param name="overrideExisting">If this should override an existing TxEncoder</param>
-    /// <returns></returns>
     CosmClientBuilder IInternalCosmClientBuilder.WithTxEncoder<TTxEncoder>(bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(ITxEncoder)))
@@ -247,15 +217,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 
         return this;
     }
-    /// <summary>
-    /// ONLY TXCLIENT. Configures a transaction encoder with a configuration instance. <br/>
-    /// The transaction encoder is responsible for converting the chain agnostic Cosm.Net types to chain specific transaction and SignDocument binary representations.
-    /// </summary>
-    /// <typeparam name="TTxEncoder">The type of TxEncoder to use</typeparam>
-    /// <typeparam name="TConfiguration">The type of configuration required by the TxEncoder</typeparam>
-    /// <param name="configuration">An instance of the confgigured Configuration type</param>
-    /// <param name="overrideExisting">If this should override an existing TxEncoder</param>
-    /// <returns></returns>
+
     CosmClientBuilder IInternalCosmClientBuilder.WithTxEncoder<TTxEncoder, TConfiguration>(TConfiguration configuration, bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
@@ -289,14 +251,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    /// <summary>
-    /// ONLY TXCLIENT. Configures a transaction publisher. <br/>
-    /// The transaction publisher is responsible for processing signed transactions and publishing them to the connected blockchain.
-    /// Custom implementations can for example send transactions to multiple nodes or handle chain specific error codes.
-    /// </summary>
-    /// <typeparam name="TTxPublisher">The type of TxPublisher to use</typeparam>
-    /// <param name="overrideExisting">If this should override an existing TxPublisher</param>
-    /// <returns></returns>
     CosmClientBuilder IInternalCosmClientBuilder.WithTxPublisher<TTxPublisher>(bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(ITxPublisher)))
@@ -315,16 +269,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 
         return this;
     }
-    /// <summary>
-    /// ONLY TXCLIENT. Configures a transaction publisher with a configuration instance. <br/>
-    /// The transaction publisher is responsible for processing signed transactions and publishing them to the connected blockchain.
-    /// Custom implementations can for example send transactions to multiple nodes or handle chain specific error codes.
-    /// </summary>
-    /// <typeparam name="TTxPublisher">The type of TxPublisher to use</typeparam>
-    /// <typeparam name="TConfiguration">The type of configuration required by the TxPublisher</typeparam>
-    /// <param name="configuration">An instance of the confgigured Configuration type</param>
-    /// <param name="overrideExisting">If this should override an existing TxPublisher</param>
-    /// <returns></returns>
+
     CosmClientBuilder IInternalCosmClientBuilder.WithTxPublisher<TTxPublisher, TConfiguration>(TConfiguration configuration, bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
@@ -358,15 +303,6 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    /// <summary>
-    /// ONLY TXCLIENT. Configures a gas fee provider. <br/>
-    /// The gas fee provider is responsible for figuring out a gas fee to be used for a given gasWanted value. 
-    /// </summary>
-    /// <typeparam name="TGasFeeProvider">The type of GasFeeProvider to use</typeparam>
-    /// <typeparam name="TConfiguration">The type of configuration required by the GasFeeProvider</typeparam>
-    /// <param name="configuration">An instance of the confgigured Configuration type</param>
-    /// <param name="overrideExisting">If this should override an existing GasFeeProvider</param>
-    /// <returns></returns>
     CosmClientBuilder IInternalCosmClientBuilder.WithGasFeeProvider<TGasFeeProvider>(bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
@@ -385,15 +321,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 
         return this;
     }
-    /// <summary>
-    /// ONLY TXCLIENT. Configures a gas fee provider with a configuration instance. <br/>
-    /// The gas fee provider is responsible for figuring out a gas fee to be used for a given gasWanted value. 
-    /// </summary>
-    /// <typeparam name="TGasFeeProvider">The type of GasFeeProvider to use</typeparam>
-    /// <typeparam name="TConfiguration">The type of configuration required by the GasFeeProvider</typeparam>
-    /// <param name="configuration">An instance of the confgigured Configuration type</param>
-    /// <param name="overrideExisting">If this should override an existing GasFeeProvider</param>
-    /// <returns></returns>
+
     CosmClientBuilder IInternalCosmClientBuilder.WithGasFeeProvider<TGasFeeProvider, TConfiguration>(TConfiguration configuration, bool overrideExisting)
     {
         if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
@@ -422,6 +350,57 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         else
         {
             _ = _services.AddSingleton<IGasFeeProvider, TGasFeeProvider>();
+        }
+
+        return this;
+    }
+
+    CosmClientBuilder IInternalCosmClientBuilder.WithTxConfirmer<TTxConfirmer>(bool overrideExisting)
+    {
+        if(_services.Any(x => x.ServiceType == typeof(ITxConfirmer)))
+        {
+            if(!overrideExisting)
+            {
+                throw new InvalidOperationException("ITxConfirmer already registered");
+            }
+
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxConfirmer), typeof(TTxConfirmer), ServiceLifetime.Singleton));
+        }
+        else
+        {
+            _ = _services.AddSingleton<ITxConfirmer, TTxConfirmer>();
+        }
+
+        return this;
+    }
+    CosmClientBuilder IInternalCosmClientBuilder.WithTxConfirmer<TTxConfirmer, TConfiguration>(TConfiguration configuration, bool overrideExisting)
+    {
+        if(_services.Any(x => x.ServiceType == typeof(TConfiguration)))
+        {
+            if(!overrideExisting)
+            {
+                throw new InvalidOperationException("Configuration type has already been registered");
+            }
+
+            _ = _services.Replace(new ServiceDescriptor(typeof(TConfiguration), configuration));
+        }
+        else
+        {
+            _ = _services.AddSingleton(configuration);
+        }
+
+        if(_services.Any(x => x.ServiceType == typeof(ITxConfirmer)))
+        {
+            if(!overrideExisting)
+            {
+                throw new InvalidOperationException($"{nameof(ITxConfirmer)} already registered");
+            }
+
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxConfirmer), typeof(TTxConfirmer), ServiceLifetime.Singleton));
+        }
+        else
+        {
+            _ = _services.AddSingleton<ITxConfirmer, TTxConfirmer>();
         }
 
         return this;
@@ -482,6 +461,10 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         if(!_services.Any(x => x.ServiceType == typeof(IGasFeeProvider)))
         {
             throw new InvalidOperationException($"No {nameof(IGasFeeProvider)} set. Make sure to call configure a gas fee before building the client.");
+        }
+        if(!_services.Any(x => x.ServiceType == typeof(ITxConfirmer)))
+        {
+            throw new InvalidOperationException($"No {nameof(ITxConfirmer)} set. Make sure to install it before building the client.");
         }
         if(!_services.Any(x => x.ServiceType == typeof(ITxEncoder)))
         {

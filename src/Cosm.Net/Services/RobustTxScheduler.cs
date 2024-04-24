@@ -10,7 +10,7 @@ using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee,
     System.DateTime? Deadline, System.Threading.CancellationToken CancellationToken,
     System.Threading.Tasks.TaskCompletionSource<string> CompletionSource);
 
-namespace CosmosArbitrage.Worker.Utils;
+namespace Cosm.Net.Services;
 
 public class RobustTxScheduler : ITxScheduler
 {

@@ -47,6 +47,17 @@ public interface ICosmTxClient : ICosmClient
         DateTime? deadline = default, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Waits for a given txHash to be confirmed on-chain.
+    /// </summary>
+    /// <param name="txHash">Transaction hash to wait for.</param>
+    /// <param name="timeout">The timeout after which to stop waiting.</param>
+    /// <param name="throwOnRevert">If the call should throw an exception when the tx is confirmed but reverted on-chain.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A TxExecution object for the confirmed tx.</returns>
+    public Task<TxExecution> WaitForTxConfirmationAsync(string txHash, TimeSpan? timeout = null, bool throwOnRevert = true,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Converts to internal client for accessing unsupported APIs.
     /// </summary>
     /// <returns></returns>

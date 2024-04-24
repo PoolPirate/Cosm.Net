@@ -16,7 +16,8 @@ public static class CosmTxClientBuilderExtensions
     public static CosmClientBuilder UseCosmosTxStructure(this IInternalCosmClientBuilder builder)
         => builder
             .WithTxEncoder<CosmosTxEncoder>()
-            .AsInternal().WithTxPublisher<TxModulePublisher>();
+            .AsInternal().WithTxPublisher<TxModulePublisher>()
+            .AsInternal().WithTxConfirmer<PollingTxConfirmer>();
 
     public static CosmClientBuilder AddWasmd(this CosmClientBuilder builder, Action<IWasmConfiguration>? wasmConfigAction = null)
     {

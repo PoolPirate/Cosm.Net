@@ -62,9 +62,28 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
             response.GasInfo.GasUsed,
             response.Result.Events
                 .Select(x => new TxEvent(
-                    x.Type, x.Attributes.Select(y => new TxEventAttribute(y.Key.ToStringUtf8(), y.Value.ToStringUtf8())).ToArray()))
+                    null, x.Type, x.Attributes.Select(y => new TxEventAttribute(y.Key.ToStringUtf8(), y.Value.ToStringUtf8())).ToArray()))
                 .ToArray()
         );
+    }
+
+    async Task<TxExecution> ITxModuleAdapter.GetTxByHashAsync(string txHash,
+        Metadata? headers, DateTime? deadline, CancellationToken cancellationToken)
+    {
+        var tx = await GetTxAsync(txHash, headers, deadline, cancellationToken);
+        var events = tx.TxResponse.Logs.Count < 2
+            ? tx.TxResponse.Events.Select(e =>
+            {
+                var msgIndexRaw = e.Attributes.LastOrDefault(x => x.Key.ToStringUtf8() == "msg_index")?.Value;
+                return new TxEvent(msgIndexRaw is null ? null : int.Parse(msgIndexRaw.ToStringUtf8()), e.Type,
+                    e.Attributes.Select(a => new TxEventAttribute(a.Key.ToStringUtf8(), a.Value.ToStringUtf8())).ToList().AsReadOnly());
+            })
+            : tx.TxResponse.Logs.SelectMany(
+                x => x.Events.Select(
+                    e => new TxEvent((int) x.MsgIndex, e.Type, e.Attributes.Select(
+                        a => new TxEventAttribute(a.Key, a.Value)).ToList().AsReadOnly())));
+
+        return new TxExecution(tx.TxResponse.Code == 0, txHash, tx.TxResponse.Height, tx.Tx.Body.Memo, events.ToArray());
     }
 }
 internal partial class UpgradeModule : IModule<UpgradeModule, Cosmos.Upgrade.V1Beta1.Query.QueryClient> { }

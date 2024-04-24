@@ -1,6 +1,8 @@
 ﻿using Cosm.Net.Client.Internal;
+using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Tx;
+using Grpc.Core;
 
 namespace Cosm.Net.Client;
 public interface ICosmClient
@@ -28,4 +30,15 @@ public interface ICosmClient
     /// </summary>
     /// <returns></returns>
     public IInternalCosmClient AsInternal();
+
+    /// <summary>
+    /// Searches for the given txHash on the chain and converts it to a common representation.
+    /// </summary>
+    /// <param name="txHash">The tx hash to search for</param>
+    /// <param name="headers">Additional requests headers for the GRPC Call.</param>
+    /// <param name="deadline">Deadline for the GRPC Call. Call will be aborted after the given time.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>TxExecution if tx is found, null otherwise</returns>
+    public Task<TxExecution?> GetTxByHashAsync(string txHash,
+        Metadata? headers = default, DateTime? deadline = default, CancellationToken cancellationToken = default);
 }

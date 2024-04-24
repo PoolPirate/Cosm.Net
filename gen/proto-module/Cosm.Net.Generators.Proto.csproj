@@ -14,17 +14,17 @@
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  <RootNamespace>Cosm.Net.Generators.Proto</RootNamespace>
 	  <IncludeBuildOutput>false</IncludeBuildOutput>
-	  <Version>1.1.1</Version>
+	  <Version>1.2.0</Version>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net.Generators.Common" Version="1.1.1" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="Cosm.Net.Generators.Common" Version="1.2.0" PrivateAssets="all" GeneratePathProperty="true" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Cosm.Net.Core" Version="1.1.1" />
+		<PackageReference Include="Cosm.Net.Core" Version="1.2.0" />
 	</ItemGroup>
 
 	<PropertyGroup>

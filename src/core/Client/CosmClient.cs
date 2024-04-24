@@ -7,6 +7,7 @@ using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Org.BouncyCastle.X509;
 
 namespace Cosm.Net.Client;
 internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
@@ -19,6 +20,8 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
     private readonly bool _isTxClient;
     private readonly IGasFeeProvider? _gasFeeProvider;
+    private readonly ITxConfirmer? _txConfirmer;
+    private readonly ITxScheduler? _txScheduler; 
 
     public IChainConfiguration Chain => _chainConfig;
     IServiceProvider IInternalCosmClient.ServiceProvider => _provider;
@@ -34,6 +37,8 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         if(_isTxClient)
         {
             _gasFeeProvider = _provider.GetRequiredService<IGasFeeProvider>();
+            _txConfirmer = _provider.GetRequiredService<ITxConfirmer>();
+            _txScheduler = _provider.GetRequiredService<ITxScheduler>();
         }
     }
 
@@ -59,11 +64,10 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
     private async Task InitializeTxClientAync()
     {
-        var txScheduler = _provider.GetRequiredService<ITxScheduler>();
-
         try
         {
-            await txScheduler.InitializeAsync();
+            await _txScheduler!.InitializeAsync();
+            _txConfirmer!.Initialize(_chainConfig);
         }
         catch(RpcException e)
             when(e.StatusCode == StatusCode.NotFound && e.Status.Detail.StartsWith("account") && e.Status.Detail.EndsWith("not found"))
@@ -89,16 +93,14 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     public Task<TxSimulation> SimulateAsync(ICosmTx tx)
     {
         AssertReady(true);
-        var scheduler = _provider.GetRequiredService<ITxScheduler>();
-        return scheduler.SimulateTxAsync(tx);
+        return _txScheduler!.SimulateTxAsync(tx);
     }
 
     public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee, 
         DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
-        var scheduler = _provider.GetRequiredService<ITxScheduler>();
-        return await scheduler.PublishTxAsync(tx, gasFee, deadline, cancellationToken);
+        return await _txScheduler!.PublishTxAsync(tx, gasFee, deadline, cancellationToken);
     }
     public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted,
         DateTime? deadline = default, CancellationToken cancellationToken = default)
@@ -117,6 +119,15 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         var fee = await _gasFeeProvider!.GetFeeForGasAsync(gasWanted);
 
         return await PublishTxAsync(tx, fee, deadline, cancellationToken);
+    }
+
+    public Task<TxExecution?> GetTxByHashAsync(string txHash, Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
+        => Module<ITxModuleAdapter>().GetTxByHashAsync(txHash, headers, deadline, cancellationToken);
+
+    public Task<TxExecution> WaitForTxConfirmationAsync(string txHash, TimeSpan? timeout = null, bool throwOnRevert = true, CancellationToken cancellationToken = default)
+    {
+        AssertReady(true);
+        return _txConfirmer!.WaitForTxConfirmationAsync(txHash, timeout, throwOnRevert, cancellationToken);
     }
 
     public TModule Module<TModule>() where TModule : IModule
