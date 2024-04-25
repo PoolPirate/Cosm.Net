@@ -20,10 +20,11 @@ public class QueryGenerator
             throw new NotSupportedException("Top level query schema must have only one property");
         }
 
-        //ToDo: Consider skipping layers till there's more than 1 property
+        var propSchema = querySchema.Properties.Single().Value;
+        string msgName = propSchema.Name;
+        var argumentsSchema = SchemaTypeGenerator.GetInnerSchema(propSchema);
 
-        var argumentsSchema = querySchema.Properties.Single().Value;
-        string queryName = argumentsSchema.Name;
+        string queryName = propSchema.Name;
 
         if(!responseSchemas.TryGetValue(queryName, out var responseSchema))
         {

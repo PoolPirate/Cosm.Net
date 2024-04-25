@@ -20,10 +20,10 @@ public class MsgGenerator
             throw new NotSupportedException("Top level msg schema must have only one property");
         }
 
-        //ToDo: Consider skipping layers till there's more than 1 property
+        var propSchema = querySchema.Properties.Single().Value;
+        string msgName = propSchema.Name;
 
-        var argumentsSchema = querySchema.Properties.Single().Value;
-        string msgName = argumentsSchema.Name;
+        var argumentsSchema = SchemaTypeGenerator.GetInnerSchema(propSchema);
 
         var function = new FunctionBuilder($"{NameUtils.ToValidFunctionName(msgName)}")
                 .WithVisibility(FunctionVisibility.Public)
