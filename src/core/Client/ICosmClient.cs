@@ -16,7 +16,7 @@ public interface ICosmClient
     /// Initializes the client. Must be called before using any other methods.
     /// </summary>
     /// <returns></returns>
-    public Task InitializeAsync();
+    public Task InitializeAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates an instance of an on-chain module binding.

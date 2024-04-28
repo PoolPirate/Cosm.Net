@@ -8,7 +8,7 @@ public interface ITxScheduler
     public Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee, 
         DateTime? deadline = default, CancellationToken cancellationToken = default);
 
-    public Task InitializeAsync();
+    public Task InitializeAsync(CancellationToken cancellationToken = default);
 }
 
 public interface ITxScheduler<TConfiguration> : ITxScheduler;

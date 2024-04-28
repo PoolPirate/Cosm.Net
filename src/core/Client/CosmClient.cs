@@ -42,7 +42,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         }
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         var tendermintAdapter = _provider.GetRequiredService<ITendermintModuleAdapter>();
 
@@ -51,22 +51,22 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
         if(_isTxClient)
         {
-            await InitializeTxClientAync();
+            await InitializeTxClientAync(cancellationToken);
         }
 
         var initializeables = _provider.GetServices<IInitializeableService>();
 
         await Task.WhenAll(initializeables.Select(
-            async initializeable => await initializeable.InitializeAsync()));
+            async initializeable => await initializeable.InitializeAsync(cancellationToken)));
 
         _isInitialized = true;
     }
 
-    private async Task InitializeTxClientAync()
+    private async Task InitializeTxClientAync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await _txScheduler!.InitializeAsync();
+            await _txScheduler!.InitializeAsync(cancellationToken);
             _txConfirmer!.Initialize(_chainConfig);
         }
         catch(RpcException e)
@@ -121,8 +121,18 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         return await PublishTxAsync(tx, fee, deadline, cancellationToken);
     }
 
-    public Task<TxExecution?> GetTxByHashAsync(string txHash, Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
-        => Module<ITxModuleAdapter>().GetTxByHashAsync(txHash, headers, deadline, cancellationToken);
+    public async Task<TxExecution?> GetTxByHashAsync(string txHash, Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
+    {
+        AssertReady(false);
+        try
+        {
+            return await Module<ITxModuleAdapter>().GetTxByHashAsync(txHash, headers, deadline, cancellationToken);
+        }
+        catch(RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+        {
+            return null;
+        }
+    }
 
     public Task<TxExecution> WaitForTxConfirmationAsync(string txHash, TimeSpan? timeout = null, bool throwOnRevert = true, CancellationToken cancellationToken = default)
     {

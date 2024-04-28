@@ -45,11 +45,11 @@ public class SecretEncryptionProvider : IInitializeableService
         _encryptionPubKey = keyPair.PublicKey;
     }
 
-    async ValueTask IInitializeableService.InitializeAsync()
+    async ValueTask IInitializeableService.InitializeAsync(CancellationToken cancellationToken)
     {
         if (_registrationModule is not null)
         {
-            var txKey = await _registrationModule.TxKeyAsync();
+            var txKey = await _registrationModule.TxKeyAsync(cancellationToken: cancellationToken);
             _consensusIoPubKey = txKey.Key_.ToByteArray();
         }
     }

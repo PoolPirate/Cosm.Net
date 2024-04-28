@@ -49,10 +49,11 @@ public class RobustTxScheduler : ITxScheduler
     public ulong AccountNumber { get; private set; }
     public ulong CurrentSequence { get; private set; }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         var accountData = await _authAdapter.GetAccountAsync(
-            _signer.GetAddress(_chainConfiguration.Bech32Prefix));
+            _signer.GetAddress(_chainConfiguration.Bech32Prefix),
+            cancellationToken: cancellationToken);
 
         AccountNumber = accountData.AccountNumber;
         CurrentSequence = accountData.Sequence;
