@@ -36,6 +36,7 @@ internal partial class TendermintModule : IModule<TendermintModule, Cosmos.Base.
         return nodeInfo.DefaultNodeInfo.Network;
     }
 }
+internal partial class NodeModule : IModule<NodeModule, Cosmos.Base.Node.V1Beta1.Service.ServiceClient> { }
 internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.ServiceClient>, ITxModuleAdapter
 {
     async Task<TxSubmission> ITxModuleAdapter.BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers,
