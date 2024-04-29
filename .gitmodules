@@ -77,3 +77,6 @@
 [submodule "src/modules/nolus/lib/nolus-core"]
 	path = src/modules/nolus/lib/nolus-core
 	url = https://github.com/nolus-protocol/nolus-core.git
+[submodule "src/modules/comdex/lib/comdex"]
+	path = src/modules/comdex/lib/comdex
+	url = https://github.com/comdex-official/comdex.git
