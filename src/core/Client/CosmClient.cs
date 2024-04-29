@@ -46,7 +46,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     {
         var tendermintAdapter = _provider.GetRequiredService<ITendermintModuleAdapter>();
 
-        string chainId = await tendermintAdapter.GetChainId();
+        string chainId = await tendermintAdapter.GetChainId(cancellationToken: cancellationToken);
         _chainConfig.Initialize(chainId);
 
         if(_isTxClient)
