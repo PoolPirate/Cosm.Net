@@ -49,9 +49,9 @@ internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.Q
         return new WasmTxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg, requestJson);
     }
 
-    async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData)
+    async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
     {
-        var response = await SmartContractStateAsync(contract.ContractAddress, queryData, default, default, default);
+        var response = await SmartContractStateAsync(contract.ContractAddress, queryData, cancellationToken: cancellationToken);
         return response.Data;
     }
 }

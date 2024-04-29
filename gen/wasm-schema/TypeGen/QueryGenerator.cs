@@ -97,10 +97,11 @@ public class QueryGenerator
                     .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
                     .Build());
         }
-
+        
         return function
+            .AddArgument("global::System.Threading.CancellationToken", "cancellationToken", true, "default")
             .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")
-            .AddStatement("var encodedResponse = await _wasm.SmartContractStateAsync(this, global::Google.Protobuf.ByteString.CopyFrom(encodedRequest))")
+            .AddStatement("var encodedResponse = await _wasm.SmartContractStateAsync(this, global::Google.Protobuf.ByteString.CopyFrom(encodedRequest), cancellationToken)")
             .AddStatement("var jsonResponse = global::System.Text.Encoding.UTF8.GetString(encodedResponse.Span)")
             .AddStatement($"var decodedResponse = global::System.Text.Json.JsonSerializer.Deserialize<{responseType.Name}>(jsonResponse, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
             .AddStatement(

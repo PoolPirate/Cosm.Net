@@ -61,7 +61,7 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
 
         return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, requestJson, context);
     }
-    async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData)
+    async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
     {
         if(contract.CodeHash is null)
         {

@@ -12,17 +12,17 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.2.0.301+neutron.v3.0.1</Version>
+		<Version>1.2.1.301+neutron.v3.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net" Version="1.2.0" />
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.2.0" PrivateAssets="all" />
-		<PackageReference Include="Grpc.Tools" Version="2.59.0">
+		<PackageReference Include="Cosm.Net" Version="1.2.1" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.2.1" PrivateAssets="all" />
+		<PackageReference Include="Grpc.Tools" Version="2.62.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+		<PackageReference Include="Google.Api.Gax.Grpc" Version="4.8.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
