@@ -92,6 +92,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Nolus", "src\modul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Comdex", "src\modules\comdex\Cosm.Net.Comdex.csproj", "{FACB4173-95D2-4DD9-BD2E-A1D2DEDFE279}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Agoric", "src\modules\agoric\Cosm.Net.Agoric.csproj", "{4F968315-52BD-4AF6-B7B4-338B52227C7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -234,6 +236,10 @@ Global
 		{FACB4173-95D2-4DD9-BD2E-A1D2DEDFE279}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FACB4173-95D2-4DD9-BD2E-A1D2DEDFE279}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FACB4173-95D2-4DD9-BD2E-A1D2DEDFE279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F968315-52BD-4AF6-B7B4-338B52227C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F968315-52BD-4AF6-B7B4-338B52227C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F968315-52BD-4AF6-B7B4-338B52227C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F968315-52BD-4AF6-B7B4-338B52227C7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -274,6 +280,7 @@ Global
 		{C8A7C275-E2C1-448B-8D2B-6E9B438B9FFF} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{D561120F-C787-4F7A-82BE-D4356F80D68B} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{FACB4173-95D2-4DD9-BD2E-A1D2DEDFE279} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{4F968315-52BD-4AF6-B7B4-338B52227C7E} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
