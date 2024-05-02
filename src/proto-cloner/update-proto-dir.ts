@@ -59,7 +59,10 @@ async function main(configPath: string) {
   }
 
   const modFile = readFileSync(goModFile, "utf8");
-  const lines = modFile.split("\n").map((x) => x.trim());
+  const lines = modFile
+    .split("\n")
+    .map((x) => x.trim())
+    .filter((x) => !x.startsWith("//"));
 
   for (let i = 0; i < protoChain.protoDependencies.length; i++) {
     const repo = protoChain.protoDependencies[i]!;

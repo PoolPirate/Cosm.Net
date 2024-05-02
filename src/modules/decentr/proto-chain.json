@@ -1,0 +1,86 @@
+﻿{
+  "repoDir": "lib",
+  "protoDir": "proto",
+  "chainRepoName": "decentr",
+  "protoDependencies": [
+    {
+      "name": "github.com/regen-network/cosmos-proto",
+      "isExternal": false,
+      "dirName": "cosmos-proto",
+      "protoDirs": [
+        {
+          "in": ".",
+          "out": "cosmos_proto"
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/ibc-go",
+      "isExternal": false,
+      "dirName": "ibc-go",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/cosmos-sdk",
+      "isExternal": false,
+      "dirName": "cosmos-sdk",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/tendermint/tendermint",
+      "isExternal": false,
+      "dirName": "tendermint",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/confio/ics23",
+      "isExternal": true,
+      "forceExternal": true,
+      "externalVersion": "go/v0.9.1",
+      "dirName": "ics23",
+      "protoDirs": [
+        {
+          "in": ".",
+          "out": "confio"
+        }
+      ]
+    },
+    {
+      "name": "github.com/regen-network/protobuf",
+      "isExternal": true,
+      "dirName": "regen-protobuf",
+      "protoDirs": [
+        {
+          "in": "gogoproto",
+          "out": "gogoproto"
+        }
+      ]
+    },
+    {
+      "name": "github.com/googleapis/googleapis",
+      "isExternal": true,
+      "dirName": "googleapis",
+      "protoDirs": [
+        {
+          "in": "google",
+          "out": "google"
+        }
+      ]
+    }
+  ]
+}

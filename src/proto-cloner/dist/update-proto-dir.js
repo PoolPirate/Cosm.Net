@@ -36,7 +36,10 @@ async function main(configPath) {
         ], protoChain.protoDir);
     }
     const modFile = (0, node_fs_1.readFileSync)(goModFile, "utf8");
-    const lines = modFile.split("\n").map((x) => x.trim());
+    const lines = modFile
+        .split("\n")
+        .map((x) => x.trim())
+        .filter((x) => !x.startsWith("//"));
     for (let i = 0; i < protoChain.protoDependencies.length; i++) {
         const repo = protoChain.protoDependencies[i];
         const baseLines = lines.filter((x) => x.startsWith(`${repo.name} `) || x.startsWith(`${repo.name}/`));

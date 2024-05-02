@@ -86,3 +86,6 @@
 [submodule "src/modules/planq/lib/planq"]
 	path = src/modules/planq/lib/planq
 	url = https://github.com/planq-network/planq.git
+[submodule "src/modules/decentr/lib/decentr"]
+	path = src/modules/decentr/lib/decentr
+	url = https://github.com/Decentr-net/decentr.git
