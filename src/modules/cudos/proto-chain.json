@@ -4,20 +4,20 @@
   "chainRepoName": "cudos-node",
   "protoDependencies": [
     {
-      "name": "github.com/CosmWasm/wasmd",
+      "name": "github.com/regen-network/cosmos-proto",
       "isExternal": false,
-      "dirName": "wasmd",
+      "dirName": "cosmos-proto",
       "protoDirs": [
         {
-          "in": "proto",
-          "out": "."
+          "in": ".",
+          "out": "cosmos_proto"
         }
       ]
     },
     {
-      "name": "github.com/cosmos/cosmos-proto",
+      "name": "github.com/CosmWasm/wasmd",
       "isExternal": false,
-      "dirName": "cosmos-proto",
+      "dirName": "wasmd",
       "protoDirs": [
         {
           "in": "proto",
@@ -49,7 +49,9 @@
     },
     {
       "name": "github.com/confio/ics23",
-      "isExternal": false,
+      "isExternal": true,
+      "forceExternal": true,
+      "externalVersion": "go/v0.9.1",
       "dirName": "ics23",
       "protoDirs": [
         {
