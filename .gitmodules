@@ -83,3 +83,6 @@
 [submodule "src/modules/cudos/lib/cudos-node"]
 	path = src/modules/cudos/lib/cudos-node
 	url = https://github.com/cudoventures/cudos-node.git
+[submodule "src/modules/planq/lib/planq"]
+	path = src/modules/planq/lib/planq
+	url = https://github.com/planq-network/planq.git
