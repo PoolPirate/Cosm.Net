@@ -80,3 +80,6 @@
 [submodule "src/modules/comdex/lib/comdex"]
 	path = src/modules/comdex/lib/comdex
 	url = https://github.com/comdex-official/comdex.git
+[submodule "src/modules/cudos/lib/cudos-node"]
+	path = src/modules/cudos/lib/cudos-node
+	url = https://github.com/cudoventures/cudos-node.git
