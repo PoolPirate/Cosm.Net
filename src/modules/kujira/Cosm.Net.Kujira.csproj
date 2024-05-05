@@ -13,7 +13,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.2.2.93+kujira.v0.9.3-1</Version>
+		<Version>1.2.2.102+kujira.v1.0.2</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

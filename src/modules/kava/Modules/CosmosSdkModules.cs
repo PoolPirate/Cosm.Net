@@ -63,7 +63,7 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
             response.GasInfo.GasUsed,
             response.Result.Events
                 .Select(x => new TxEvent(
-                    null, x.Type, x.Attributes.Select(y => new TxEventAttribute(y.Key.ToStringUtf8(), y.Value.ToStringUtf8())).ToArray()))
+                    null, x.Type, x.Attributes.Select(y => new TxEventAttribute(y.Key, y.Value)).ToArray()))
                 .ToArray()
         );
     }
@@ -75,9 +75,9 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
         var events = tx.TxResponse.Logs.Count < 2
             ? tx.TxResponse.Events.Select(e =>
             {
-                var msgIndexRaw = e.Attributes.LastOrDefault(x => x.Key.ToStringUtf8() == "msg_index")?.Value;
-                return new TxEvent(msgIndexRaw is null ? null : int.Parse(msgIndexRaw.ToStringUtf8()), e.Type,
-                    e.Attributes.Select(a => new TxEventAttribute(a.Key.ToStringUtf8(), a.Value.ToStringUtf8())).ToList().AsReadOnly());
+                var msgIndexRaw = e.Attributes.LastOrDefault(x => x.Key == "msg_index")?.Value;
+                return new TxEvent(msgIndexRaw is null ? null : int.Parse(msgIndexRaw), e.Type,
+                    e.Attributes.Select(a => new TxEventAttribute(a.Key, a.Value)).ToList().AsReadOnly());
             })
             : tx.TxResponse.Logs.SelectMany(
                 x => x.Events.Select(
