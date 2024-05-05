@@ -89,3 +89,6 @@
 [submodule "src/modules/decentr/lib/decentr"]
 	path = src/modules/decentr/lib/decentr
 	url = https://github.com/Decentr-net/decentr.git
+[submodule "src/modules/gravity-bridge/lib/Gravity-Bridge"]
+	path = src/modules/gravity-bridge/lib/Gravity-Bridge
+	url = https://github.com/Gravity-Bridge/Gravity-Bridge.git

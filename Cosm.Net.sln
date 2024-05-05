@@ -96,9 +96,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Agoric", "src\modu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Cudos", "src\modules\cudos\Cosm.Net.Cudos.csproj", "{40763E6C-475B-472E-989E-DDF1EF4642F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Planq", "src\modules\planq\Cosm.Net.Planq.csproj", "{CB51B6EE-8BA5-4839-9A8A-401172E42E92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Planq", "src\modules\planq\Cosm.Net.Planq.csproj", "{CB51B6EE-8BA5-4839-9A8A-401172E42E92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Decentr", "src\modules\decentr\Cosm.Net.Decentr.csproj", "{491832FB-1039-46BA-B70A-74122E49693C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Decentr", "src\modules\decentr\Cosm.Net.Decentr.csproj", "{491832FB-1039-46BA-B70A-74122E49693C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.GravityBridge", "src\modules\gravity-bridge\Cosm.Net.GravityBridge.csproj", "{6D9209E9-560C-4DC0-A577-894D32A0C983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -258,6 +260,10 @@ Global
 		{491832FB-1039-46BA-B70A-74122E49693C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{491832FB-1039-46BA-B70A-74122E49693C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{491832FB-1039-46BA-B70A-74122E49693C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9209E9-560C-4DC0-A577-894D32A0C983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9209E9-560C-4DC0-A577-894D32A0C983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9209E9-560C-4DC0-A577-894D32A0C983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9209E9-560C-4DC0-A577-894D32A0C983}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -302,6 +308,7 @@ Global
 		{40763E6C-475B-472E-989E-DDF1EF4642F0} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{CB51B6EE-8BA5-4839-9A8A-401172E42E92} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{491832FB-1039-46BA-B70A-74122E49693C} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{6D9209E9-560C-4DC0-A577-894D32A0C983} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
