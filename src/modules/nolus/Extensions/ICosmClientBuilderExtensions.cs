@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Client;
 using Cosm.Net.Modules;
+using Cosm.Net.Services;
 using System.Reflection;
 
 namespace Cosm.Net.Extensions;
@@ -10,6 +11,7 @@ public static class ICosmClientBuilderExtensions
         => builder
             .AsInternal().UseCosmosTxStructure()
             .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().WithTxEncoder<NolusTxEncoder>(true)
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()
