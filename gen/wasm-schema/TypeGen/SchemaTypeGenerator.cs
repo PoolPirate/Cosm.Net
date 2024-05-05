@@ -13,27 +13,27 @@ public class SchemaTypeGenerator
         _jsonObjectTypeGenerator = jsonObjectTypeGenerator;
     }
 
-    public GeneratedTypeHandle GetOrGenerateSchemaType(JsonSchema schema, JsonSchema definitionSource)
+    public GeneratedTypeHandle GetOrGenerateSchemaType(JsonSchema schema, JsonSchema definitionSource, string? nameOverride = null)
     {
         definitionSource ??= schema;
         schema = GetInnerSchema(schema);
 
         if(IsBasicEnumerationType(schema))
         {
-            return _enumerationGenerator.GenerateEnumerationType(schema, definitionSource);
+            return _enumerationGenerator.GenerateEnumerationType(schema, definitionSource, nameOverride);
         }
         if(IsDataEnumerationType(schema))
         {
-            return _enumerationGenerator.GenerateAbstractSelectorType(schema, definitionSource);
+            return _enumerationGenerator.GenerateAbstractSelectorType(schema, definitionSource, nameOverride);
         }
         if(IsNullableInnerTyper(schema))
         {
-            var innerType = GetOrGenerateSchemaType(schema.AnyOf.Single(x => x.Type != JsonObjectType.Null), definitionSource);
+            var innerType = GetOrGenerateSchemaType(schema.AnyOf.Single(x => x.Type != JsonObjectType.Null), definitionSource, nameOverride);
             return innerType.ToNullable();
         }
         if(IsJsonObjectType(schema))
         {
-            return _jsonObjectTypeGenerator.GenerateJsonObjectType(schema, definitionSource);
+            return _jsonObjectTypeGenerator.GenerateJsonObjectType(schema, definitionSource, nameOverride);
         }
 
         //

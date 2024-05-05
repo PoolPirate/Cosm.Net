@@ -31,7 +31,7 @@ public class QueryGenerator
             throw new NotSupportedException($"No response schema for query {queryName} found in schema");
         }
 
-        var responseType = _schemaTypeGenerator.GetOrGenerateSchemaType(responseSchema, responseSchema);
+        var responseType = _schemaTypeGenerator.GetOrGenerateSchemaType(responseSchema, responseSchema, queryName);
 
         var function = new FunctionBuilder($"{NameUtils.ToValidFunctionName(queryName)}Async")
                 .WithVisibility(FunctionVisibility.Public)

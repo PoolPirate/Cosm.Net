@@ -15,7 +15,7 @@ public class ObjectTypeGenerator
         _schemaTypeGenerator = schemaTypeGenerator;
     }
 
-    public GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
+    public GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride = null)
     {
         if(schema.ActualProperties.Count == 0)
         {
@@ -26,7 +26,7 @@ public class ObjectTypeGenerator
             throw new NotSupportedException("Default not supported for object types");
         }
 
-        string typeName = GenerateTypeName(schema, definitionsSource);
+        string typeName = GenerateTypeName(schema, definitionsSource, nameOverride);
         var classBuilder = new ClassBuilder(typeName);
 
         return _typeAggregator.GenerateTypeHandle(
@@ -65,12 +65,15 @@ public class ObjectTypeGenerator
         return classBuilder;
     }
 
-    private static string GenerateTypeName(JsonSchema schema, JsonSchema definitionsSource)
+    private static string GenerateTypeName(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride = null)
     {
         string definitionName = definitionsSource.Definitions
             .FirstOrDefault(x => x.Value == schema).Key;
 
-        string typeName = definitionName ?? schema.Title 
+        string typeName = definitionName 
+            ?? (schema.Title.IndexOf(' ') != -1
+                ? null
+                : schema.Title)
             ?? (schema.RequiredProperties.Count == 1 && schema.Properties.Count == 1 //Nested message
                 ? $"{NameUtils.ToValidClassName(schema.RequiredProperties.Single())}" +
                     (schema.ParentSchema is not null && schema.ParentSchema.Description is not null && schema.ParentSchema.Description.Contains("returns")
@@ -78,6 +81,7 @@ public class ObjectTypeGenerator
                         : "Msg")
                 : null)
             ?? (schema is JsonSchemaProperty p ? NameUtils.ToValidClassName(p.Name) : null)
+            ?? nameOverride
             ?? "Request";
 
         return NameUtils.ToValidClassName(typeName);

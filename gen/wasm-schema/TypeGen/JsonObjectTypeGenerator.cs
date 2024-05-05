@@ -16,12 +16,12 @@ public class JsonObjectTypeGenerator
         _tupleTypeGenerator = tupleTypeGenerator;
     }
 
-    public GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource)
+    public GeneratedTypeHandle GenerateJsonObjectType(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride = null)
         => schema.Type switch
         {
             JsonObjectType.Array => GenerateArrayType(schema, definitionsSource),
             JsonObjectType.Array | JsonObjectType.Null => GenerateArrayType(schema, definitionsSource).ToNullable(),
-            JsonObjectType.Object => GenerateObjectType(schema, definitionsSource),
+            JsonObjectType.Object => GenerateObjectType(schema, definitionsSource, nameOverride),
             JsonObjectType.Boolean => GenerateParsableType<bool>(schema),
             JsonObjectType.Boolean | JsonObjectType.Null => GenerateParsableType<bool>(schema).ToNullable(),
             JsonObjectType.Integer => GenerateIntegerType(schema),
@@ -33,13 +33,13 @@ public class JsonObjectTypeGenerator
             _ => throw new NotSupportedException($"Unsupported JsonObjectType {schema.Type}"),
         };
 
-    private GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource)
+    private GeneratedTypeHandle GenerateObjectType(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride = null)
         => schema.Properties.Count == 0
             ? new GeneratedTypeHandle(
                 "object",
                 "new object()"
             )
-            : _objectTypeGenerator.GenerateObjectType(schema, definitionsSource);
+            : _objectTypeGenerator.GenerateObjectType(schema, definitionsSource, nameOverride);
 
     private GeneratedTypeHandle GenerateArrayType(JsonSchema schema, JsonSchema definitionsSource)
     {

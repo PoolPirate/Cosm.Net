@@ -15,9 +15,9 @@ public class EnumerationTypeGenerator
         _objectTypeGenerator = objectTypeGenerator;
     }
 
-    public GeneratedTypeHandle GenerateEnumerationType(JsonSchema schema, JsonSchema definitionsSource)
+    public GeneratedTypeHandle GenerateEnumerationType(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride = null)
     {
-        string typeName = GenerateTypeName(schema, definitionsSource);
+        string typeName = GenerateTypeName(schema, definitionsSource, nameOverride);
 
         var enumerationBuilder = new EnumerationBuilder(typeName)
             .WithJsonConverter($"global::Cosm.Net.Json.SnakeCaseJsonStringEnumConverter<{typeName}>");
@@ -52,9 +52,9 @@ public class EnumerationTypeGenerator
         ComplexObject
     }
 
-    public GeneratedTypeHandle GenerateAbstractSelectorType(JsonSchema schema, JsonSchema definitionsSource)
+    public GeneratedTypeHandle GenerateAbstractSelectorType(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride)
     {
-        string typeName = GenerateTypeName(schema, definitionsSource);
+        string typeName = GenerateTypeName(schema, definitionsSource, nameOverride);
 
         var baseClassBuilder = new ClassBuilder(typeName)
             .WithIsAbstract()
@@ -192,13 +192,23 @@ public class EnumerationTypeGenerator
             : RustEnumType.PrimitiveObject;
     }
 
-    private static string GenerateTypeName(JsonSchema schema, JsonSchema definitionsSource)
+    private static string GenerateTypeName(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride = null)
     {
         string definitionName = definitionsSource.Definitions
-                    .FirstOrDefault(x => x.Value == schema).Key;
+            .FirstOrDefault(x => x.Value == schema).Key;
 
         string typeName = definitionName
-            ?? schema.Title
+            ?? (schema.Title.IndexOf(' ') != -1
+                ? null
+                : schema.Title)
+            ?? (schema.RequiredProperties.Count == 1 && schema.Properties.Count == 1 //Nested message
+                ? $"{NameUtils.ToValidClassName(schema.RequiredProperties.Single())}" +
+                    (schema.ParentSchema is not null && schema.ParentSchema.Description is not null && schema.ParentSchema.Description.Contains("returns")
+                        ? "Query"
+                        : "Msg")
+                : null)
+            ?? (schema is JsonSchemaProperty p ? NameUtils.ToValidClassName(p.Name) : null)
+            ?? nameOverride
             ?? throw new NotSupportedException("No suitable name for enumeration type found");
 
         return NameUtils.ToValidClassName(typeName);
