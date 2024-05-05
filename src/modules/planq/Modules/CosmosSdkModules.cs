@@ -11,8 +11,8 @@ internal partial class AuthModule : IModule<AuthModule, global::Cosmos.Auth.V1Be
         DateTime? deadline, CancellationToken cancellationToken)
     {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
-        var account = Cosmos.Auth.V1Beta1.BaseAccount.Parser.ParseFrom(accountData.Account.Value);
-        return new AccountData(account.AccountNumber, account.Sequence);
+        var account = Ethermint.Types.V1.EthAccount.Parser.ParseFrom(accountData.Account.Value);
+        return new AccountData(account.BaseAccount.AccountNumber, account.BaseAccount.Sequence);
     }
 }
 internal partial class AuthzModule : IModule<AuthzModule, global::Cosmos.Authz.V1Beta1.Query.QueryClient> { }

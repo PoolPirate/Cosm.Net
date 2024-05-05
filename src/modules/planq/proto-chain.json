@@ -37,6 +37,17 @@
       ]
     },
     {
+      "name": "github.com/evmos/ethermint",
+      "isExternal": false,
+      "dirName": "ethermint",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
       "name": "github.com/confio/ics23",
       "isExternal": true,
       "forceExternal": true,
