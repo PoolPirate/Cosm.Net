@@ -92,3 +92,6 @@
 [submodule "src/modules/gravity-bridge/lib/Gravity-Bridge"]
 	path = src/modules/gravity-bridge/lib/Gravity-Bridge
 	url = https://github.com/Gravity-Bridge/Gravity-Bridge.git
+[submodule "src/modules/stargaze/lib/stargaze"]
+	path = src/modules/stargaze/lib/stargaze
+	url = https://github.com/public-awesome/stargaze.git
