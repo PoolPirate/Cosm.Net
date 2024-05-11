@@ -95,3 +95,6 @@
 [submodule "src/modules/stargaze/lib/stargaze"]
 	path = src/modules/stargaze/lib/stargaze
 	url = https://github.com/public-awesome/stargaze.git
+[submodule "src/modules/omniflix/lib/omniflixhub"]
+	path = src/modules/omniflix/lib/omniflixhub
+	url = https://github.com/OmniFlix/omniflixhub.git
