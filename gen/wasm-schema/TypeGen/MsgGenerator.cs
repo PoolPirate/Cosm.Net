@@ -82,10 +82,15 @@ public class MsgGenerator
             function
                 .AddArgument(paramType.Name, argName,
                     paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
-                .AddStatement(new MethodCallBuilder("innerJsonRequest", "Add")
-                    .AddArgument($"\"{argName}\"")
-                    .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
-                    .Build());
+                .AddStatement(
+                $$"""
+                if ({{argName}} != {{paramType.DefaultValue}}) {{{
+                    new MethodCallBuilder("innerJsonRequest", "Add")
+                        .AddArgument($"\"{argName}\"")
+                        .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName}, global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)")
+                        .Build()}};
+                }
+                """, false);
         }
 
         return function
