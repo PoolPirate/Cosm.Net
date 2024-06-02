@@ -12,7 +12,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.2.2.410+dydx.v4.1.0</Version>
+		<Version>1.2.2.414+dydx.v4.1.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -42,6 +42,7 @@
 		<Protobuf Include="./proto/cosmwasm/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/ibc/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/dydxprotocol/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 
 	</ItemGroup>
 
