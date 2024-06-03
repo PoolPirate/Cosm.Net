@@ -191,10 +191,10 @@ public static class QueryModuleProcessor
 
     private static IEnumerable<IMethodSymbol> GetQueryClientQueryMethods(ITypeSymbol queryClientType)
         => queryClientType.GetMembers()
-            .Where(x => x.Name.EndsWith("Async"))
             .Where(x => x is IMethodSymbol)
+            .Cast<IMethodSymbol>()
             .Where(x => !x.IsObsolete())
-            .Cast<IMethodSymbol>();
+            .Where(x => x.ReturnType.Name == "AsyncUnaryCall" || x.ReturnType.Name == "AsyncServerStreamingCall");
 
     private static ITypeSymbol GetQueryMethodRequestType(IMethodSymbol methodType)
         => methodType.Parameters[0].Type;
