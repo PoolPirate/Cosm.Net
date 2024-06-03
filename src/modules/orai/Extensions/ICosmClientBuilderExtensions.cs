@@ -9,7 +9,7 @@ public static class ICosmClientBuilderExtensions
     public static CosmClientBuilder InstallOrai(this CosmClientBuilder builder, string bech32Prefix = "orai")
         => builder
             .AsInternal().UseCosmosTxStructure()
-            .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(50))
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()

@@ -9,7 +9,7 @@ public static class ICosmClientBuilderExtensions
     public static CosmClientBuilder InstallSei(this CosmClientBuilder builder, string bech32Prefix = "sei")
         => builder
             .AsInternal().UseCosmosTxStructure()
-            .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(60))
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()

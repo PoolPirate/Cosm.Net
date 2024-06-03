@@ -9,7 +9,7 @@ public static class ICosmClientBuilderExtensions
     public static CosmClientBuilder InstallTerra(this CosmClientBuilder builder, string bech32Prefix = "terra")
         => builder
             .AsInternal().UseCosmosTxStructure()
-            .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(40))
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()

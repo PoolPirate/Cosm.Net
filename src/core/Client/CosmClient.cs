@@ -137,7 +137,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     public Task<TxExecution> WaitForTxConfirmationAsync(string txHash, TimeSpan? timeout = null, bool throwOnRevert = true, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
-        return _txConfirmer!.WaitForTxConfirmationAsync(txHash, timeout, throwOnRevert, cancellationToken);
+        return _txConfirmer!.WaitForTxConfirmationAsync(txHash, timeout ?? _chainConfig.TransactionTimeout, throwOnRevert, cancellationToken);
     }
 
     public TModule Module<TModule>() where TModule : IModule

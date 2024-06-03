@@ -16,7 +16,7 @@ public interface IInternalCosmClientBuilder
     /// </summary>
     /// <param name="bech32Prefix">The address prefix to use for address encoding.</param>
     /// <returns></returns>
-    public CosmClientBuilder WithChainInfo(string bech32Prefix);
+    public CosmClientBuilder WithChainInfo(string bech32Prefix, TimeSpan transactionTimeout);
 
     /// <summary>
     /// Registers an on-chain module type supported by the configured chain.

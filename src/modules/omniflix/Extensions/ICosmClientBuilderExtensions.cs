@@ -10,7 +10,7 @@ public static class ICosmClientBuilderExtensions
     public static CosmClientBuilder InstallOmniflix(this CosmClientBuilder builder, string bech32Prefix = "omniflix")
         => builder
             .AsInternal().UseCosmosTxStructure()
-            .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(50))
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()

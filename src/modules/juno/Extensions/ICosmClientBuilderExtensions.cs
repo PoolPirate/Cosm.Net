@@ -9,7 +9,7 @@ public static class ICosmClientBuilderExtensions
     public static CosmClientBuilder InstallJuno(this CosmClientBuilder builder, string bech32Prefix = "juno")
         => builder
             .AsInternal().UseCosmosTxStructure()
-            .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(30))
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()

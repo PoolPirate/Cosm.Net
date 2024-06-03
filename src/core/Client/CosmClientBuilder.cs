@@ -50,14 +50,14 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
-    CosmClientBuilder IInternalCosmClientBuilder.WithChainInfo(string bech32Prefix)
+    CosmClientBuilder IInternalCosmClientBuilder.WithChainInfo(string bech32Prefix, TimeSpan transactionTimeout)
     {
         if(_chainInfo is not null)
         {
             throw new InvalidOperationException($"{nameof(ChainInfo)} already set.");
         }
 
-        _chainInfo = new ChainInfo(bech32Prefix);
+        _chainInfo = new ChainInfo(bech32Prefix, transactionTimeout);
         return this;
     }
 
@@ -439,7 +439,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     {
         AssertValidReadClientServices();
 
-        var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix);
+        var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix, _chainInfo!.TransactionTimeout);
         _ = _services.AddSingleton<IChainConfiguration>(chainConfig);
 
         var provider = _services.BuildServiceProvider();
@@ -484,7 +484,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     {
         AssertValidTxClientServices();
 
-        var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix);
+        var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix, _chainInfo!.TransactionTimeout);
         _ = _services.AddSingleton<IChainConfiguration>(chainConfig);
 
         var provider = _services.BuildServiceProvider();

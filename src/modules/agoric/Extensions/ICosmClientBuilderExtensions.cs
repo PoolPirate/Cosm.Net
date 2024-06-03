@@ -9,7 +9,7 @@ public static class ICosmClientBuilderExtensions
     public static CosmClientBuilder InstallAgoric(this CosmClientBuilder builder, string bech32Prefix = "agoric")
         => builder
             .AsInternal().UseCosmosTxStructure()
-            .AsInternal().WithChainInfo(bech32Prefix)
+            .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(120))
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()
             .AsInternal().RegisterModule<ITendermintModuleAdapter, TendermintModule>()
