@@ -138,8 +138,9 @@ public static class QueryModuleProcessor
         foreach(var property in msgProps)
         {
             string paramName = NameUtils.ToValidVariableName(property.Name);
+            var namedType = (INamedTypeSymbol) property.Type;
 
-            if(NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) property.Type) == _cosmosCoinTypeName)
+            if(NameUtils.FullyQualifiedTypeName(namedType) == _cosmosCoinTypeName)
             {
                 _ = functionBuilder.AddArgument($"global::Cosm.Net.Models.Coin", paramName);
                 _ = msgObjectBuilder.AddInitializer(property,
@@ -150,6 +151,10 @@ public static class QueryModuleProcessor
                     }
                     """);
             }
+            else if (namedType.Name == "RepeatedField" && NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) namedType.TypeArguments[0]) == _cosmosCoinTypeName)
+            {
+                _ = functionBuilder.AddArgument($"global::System.Collections.Generic.IEnumerable<global::Cosm.Net.Models.Coin>", paramName);
+            }
             else
             {
                 _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
@@ -159,6 +164,25 @@ public static class QueryModuleProcessor
 
         string msgVarName = "__msg";
         _ = functionBuilder.AddStatement(msgObjectBuilder.ToVariableAssignment(msgVarName));
+
+        foreach(var property in msgProps)
+        {
+            string paramName = NameUtils.ToValidVariableName(property.Name);
+            var namedType = (INamedTypeSymbol) property.Type;
+
+            if(namedType.Name == "RepeatedField" && NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) namedType.TypeArguments[0]) == _cosmosCoinTypeName)
+            {
+                _ = functionBuilder.AddStatement(
+                    $$"""
+                    {{msgVarName}}.{{property.Name}}.AddRange(
+                        {{paramName}}.Select(x => new {{_cosmosCoinTypeName}}() {
+                            Denom = x.Denom,
+                            Amount = x.Amount.ToString()
+                        }))
+                    """);
+            }
+        }
+
         _ = txObjectBuilder.AddArgument(msgVarName);
         _ = functionBuilder.AddStatement($"return {txObjectBuilder.ToInlineCall()}");
 
