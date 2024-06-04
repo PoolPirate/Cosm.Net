@@ -22,10 +22,9 @@ public class PollingTxConfirmer : ITxConfirmer
     }
 
     public async Task<TxExecution> WaitForTxConfirmationAsync(string txHash, 
-        TimeSpan? timeout = null, bool throwOnRevert = true, CancellationToken cancellationToken = default)
+        TimeSpan timeout, bool throwOnRevert = true, CancellationToken cancellationToken = default)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(4));
-        timeout ??= TimeSpan.FromSeconds(120);
         var timeoutTimestamp = DateTimeOffset.UtcNow + timeout;
 
         while(await timer.WaitForNextTickAsync(cancellationToken))
