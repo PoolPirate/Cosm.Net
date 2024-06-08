@@ -1,23 +1,23 @@
 import {
   readFileSync,
   existsSync,
-  rm,
   cpSync,
-  lstatSync,
   readdirSync,
   rmSync,
   mkdirSync,
+  rmdirSync,
+  rm,
 } from "node:fs";
-import { ExecException, exec } from "node:child_process";
+import { exec } from "node:child_process";
 import path from "node:path";
 import { ProtoChain, ProtoDir, Repo, loadProtoChainFromFile } from "./repos";
 
 function validateProtoChain(protoChain: ProtoChain) {
-  if (!existsSync(path.join(protoChain.repoDir, protoChain.chainRepoName))) {
+  if (!existsSync(path.join(protoChain.repoDir, protoChain.chainRepoPath))) {
     console.error(
       `Given chain repo does not exist at ${path.join(
         protoChain.repoDir,
-        protoChain.chainRepoName
+        protoChain.chainRepoPath
       )}`
     );
     return null;
@@ -34,20 +34,39 @@ async function main(configPath: string) {
   console.log(`Clearing proto directory at ${protoChain.protoDir}`);
   clearDirectory(protoChain.protoDir);
 
+  if (protoChain.chainRepoName !== null) {
+    console.log(`Checking out chain repo commit ${protoChain.commitHash}`);
+    const checkoutSuccess = await tryCheckoutCommitHash(
+      `https://${protoChain.chainRepoName}`,
+      path.join(
+        protoChain.repoDir,
+        protoChain.chainRepoName.split("/").at(-1)!
+      ),
+      protoChain.commitHash
+    );
+
+    if (!checkoutSuccess) {
+      process.exit(1);
+    }
+  } else {
+    console.log("Chain repo checkout disabled");
+  }
+
   const goModFile = path.join(
     protoChain.repoDir,
-    protoChain.chainRepoName,
+    protoChain.chainRepoPath,
     protoChain.goModPath ?? ".",
     "go.mod"
   );
+
   if (!existsSync(goModFile)) {
     console.error("go.mod not found in the chain repository");
-    return;
+    process.exit(1);
   }
 
   if (!protoChain.hasNoProtos) {
     collectProtoDirs(
-      path.join(protoChain.repoDir, protoChain.chainRepoName),
+      path.join(protoChain.repoDir, protoChain.chainRepoPath),
       [
         {
           in: "proto",
@@ -267,6 +286,54 @@ async function tryCheckoutVersionLocally(
   }
 
   return false;
+}
+
+async function tryCheckoutCommitHash(
+  repoUrl: string,
+  repoDirectory: string,
+  commitHash: string
+) {
+  if (!existsSync(repoDirectory)) {
+    const cloneCmd = `git clone ${repoUrl} ${repoDirectory}`;
+    console.log(cloneCmd);
+    await execAndWait(cloneCmd);
+  }
+
+  let response = await execAndWait(
+    `cd ${repoDirectory} && git checkout ${commitHash}`
+  );
+
+  if (response.err.includes("not a git repository")) {
+    rmSync(repoDirectory, {
+      force: true,
+      recursive: true,
+      maxRetries: 5,
+    });
+
+    const cloneCmd = `git clone ${repoUrl} ${repoDirectory}`;
+    console.log(cloneCmd);
+    await execAndWait(cloneCmd);
+    response = await execAndWait(
+      `cd ${repoDirectory} && git checkout ${commitHash}`
+    );
+  }
+
+  if (response.err.includes("reference is not a tree")) {
+    const pullCommand = `cd ${repoDirectory} && git pull`;
+    console.log(pullCommand);
+    await execAndWait(pullCommand);
+    response = await execAndWait(
+      `cd ${repoDirectory} && git checkout ${commitHash}`
+    );
+  }
+
+  if (!response.err.includes("HEAD is now at")) {
+    console.log(response.err);
+    console.error(`Checking out ${commitHash} in ${repoDirectory} failed`);
+    return false;
+  }
+
+  return true;
 }
 
 async function execAndWait(command: string) {

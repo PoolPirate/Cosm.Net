@@ -15,9 +15,11 @@ export type ProtoDir = {
 
 export type ProtoChain = {
   repoDir: string;
+  chainRepoName: string | null;
+  chainRepoPath: string;
+  commitHash: string;
   protoDir: string;
   hasNoProtos: boolean | undefined;
-  chainRepoName: string;
   goModPath: string | undefined;
 
   protoDependencies: Repo[];
