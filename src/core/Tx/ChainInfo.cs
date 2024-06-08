@@ -2,7 +2,7 @@
 internal class ChainInfo
 {
     public string Bech32Prefix { get; }
-    public TimeSpan TransactionTimeout { get; }
+    public TimeSpan TransactionTimeout { get; set; }
 
     public ChainInfo(string bech32Prefix, TimeSpan transactionTimeout)
     {

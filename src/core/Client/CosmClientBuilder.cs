@@ -50,6 +50,25 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
+    /// <summary>
+    /// Configures the default transaction timeout duration when waiting for transactions to be confirmed on the network.
+    /// </summary>
+    /// <remarks>
+    /// Must be called after installing a chain package.
+    /// </remarks>
+    /// <param name="defaultTransactionTimeout">The timeout duratino to use</param>
+    /// <returns></returns>
+    public CosmClientBuilder WithDefaultTransactionTimeout(TimeSpan defaultTransactionTimeout)
+    {
+        if (_chainInfo is null)
+        {
+            throw new InvalidOperationException($"No {nameof(ChainInfo)} has been set. Install a chain before calling this method.");
+        }
+
+        _chainInfo.TransactionTimeout = defaultTransactionTimeout;
+        return this;
+    }
+
     CosmClientBuilder IInternalCosmClientBuilder.WithChainInfo(string bech32Prefix, TimeSpan transactionTimeout)
     {
         if(_chainInfo is not null)
