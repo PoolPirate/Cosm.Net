@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "comdex",
+  "chainRepoName": "github.com/comdex-official/comdex",
+  "commitHash": "42f2e7393a4dbb739d86dee97a7e7ec3a5769403",
   "protoDir": "proto",
-  "chainRepoName": "comdex",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "composable-cosmos",
+  "chainRepoName": "github.com/ComposableFi/composable-cosmos",
+  "commitHash": "4000540d47cb1f4eea41072bc5eac84465211a69",
   "protoDir": "proto",
-  "chainRepoName": "composable-cosmos",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

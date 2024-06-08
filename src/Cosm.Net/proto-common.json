@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "cosmos-sdk",
+  "chainRepoName": "github.com/cosmos/cosmos-sdk",
+  "commitHash": "62212dfc04b3790f3cc052cdc2fb757b32ca97d0",
   "protoDir": "proto",
-  "chainRepoName": "cosmos-sdk",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",

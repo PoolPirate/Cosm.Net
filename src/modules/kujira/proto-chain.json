@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "core",
+  "chainRepoName": "github.com/Team-Kujira/core",
+  "commitHash": "21462c1fe170d19ff606ad8dd1ecf7d22009abd6",
   "protoDir": "proto",
-  "chainRepoName": "core",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

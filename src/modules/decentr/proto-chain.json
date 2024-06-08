@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "decentr",
+  "chainRepoName": "github.com/Decentr-net/decentr",
+  "commitHash": "2db736296c1089f3fbdf7328e7309e9fc7be1f13",
   "protoDir": "proto",
-  "chainRepoName": "decentr",
   "protoDependencies": [
     {
       "name": "github.com/regen-network/cosmos-proto",

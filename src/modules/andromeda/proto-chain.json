@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "andromedad",
+  "chainRepoName": "github.com/andromedaprotocol/andromedad",
+  "commitHash": "56677646ff34011a4f34006ccc4bf0727384ea79",
   "protoDir": "proto",
-  "chainRepoName": "andromedad",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

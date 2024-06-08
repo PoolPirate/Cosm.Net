@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "planq",
+  "chainRepoName": "github.com/planq-network/planq",
+  "commitHash": "2d01f1a1959f8b52dd91dd022449b57f826cb746",
   "protoDir": "proto",
-  "chainRepoName": "planq",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",

@@ -1,7 +1,8 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoName": null,
+  "chainRepoPath": "agoric-sdk/golang/cosmos",
   "protoDir": "proto",
-  "chainRepoName": "agoric-sdk/golang/cosmos",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",

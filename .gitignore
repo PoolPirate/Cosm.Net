@@ -5,6 +5,7 @@
 
 scripts/
 **/proto/
+**/modules/**/lib/
 
 # User-specific files
 *.rsuser

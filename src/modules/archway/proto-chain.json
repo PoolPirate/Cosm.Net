@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "archway",
+  "chainRepoName": "github.com/archway-network/archway",
+  "commitHash": "4dee653fafcb51f5d7519c38024c8f2145323be9",
   "protoDir": "proto",
-  "chainRepoName": "archway",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

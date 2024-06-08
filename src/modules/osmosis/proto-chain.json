@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "osmosis",
+  "chainRepoName": "github.com/osmosis-labs/osmosis",
+  "commitHash": "15566f1f2945a16af9243dd376ee58a0d691b66a",
   "protoDir": "proto",
-  "chainRepoName": "osmosis",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

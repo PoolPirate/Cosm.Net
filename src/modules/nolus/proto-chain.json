@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "nolus-core",
+  "chainRepoName": "github.com/nolus-protocol/nolus-core",
+  "commitHash": "70d96b4a6efa529215a1e2a3a89a795edbdba556",
   "protoDir": "proto",
-  "chainRepoName": "nolus-core",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

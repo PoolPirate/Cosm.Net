@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "kava",
+  "chainRepoName": "github.com/Kava-Labs/kava",
+  "commitHash": "667e532aaafaab216d874ff670fb299d9b951375",
   "protoDir": "proto",
-  "chainRepoName": "kava",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",

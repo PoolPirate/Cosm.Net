@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "axelar-core",
+  "chainRepoName": "github.com/axelarnetwork/axelar-core",
+  "commitHash": "a4736492d3d5ac705ec1a154c5167323abdc66a7",
   "protoDir": "proto",
-  "chainRepoName": "axelar-core",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "noble",
+  "chainRepoName": "github.com/noble-assets/noble",
+  "commitHash": "eea66f417f52eba93a5ebba491dc085b1046e180",
   "protoDir": "proto",
-  "chainRepoName": "noble",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",

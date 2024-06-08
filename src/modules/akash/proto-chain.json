@@ -1,8 +1,10 @@
 ﻿{
   "repoDir": "lib",
-  "hasNoProtos": true,
+  "chainRepoPath": "node",
+  "chainRepoName": "github.com/akash-network/node",
+  "commitHash": "4f77ed732a42cad97eacba7310e0b87dfbf4d3c0",
   "protoDir": "proto",
-  "chainRepoName": "node",
+  "hasNoProtos": true,
   "protoDependencies": [
     {
       "name": "github.com/akash-network/akash-api",

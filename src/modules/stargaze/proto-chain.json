@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "stargaze",
+  "chainRepoName": "github.com/public-awesome/stargaze",
+  "commitHash": "86894520383e40570e4d344fa8360bf33f37335d",
   "protoDir": "proto",
-  "chainRepoName": "stargaze",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

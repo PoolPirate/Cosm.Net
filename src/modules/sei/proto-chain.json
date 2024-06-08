@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "sei-chain",
+  "chainRepoName": "github.com/sei-protocol/sei-chain",
+  "commitHash": "c92dc5fb3b15e8a62a3fcf8b7c53cfb3ce940119",
   "protoDir": "proto",
-  "chainRepoName": "sei-chain",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

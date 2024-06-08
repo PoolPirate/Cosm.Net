@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "core",
+  "chainRepoName": "github.com/terra-money/core",
+  "commitHash": "d2810c57f92d1d5d0447412948a24376bfc128c7",
   "protoDir": "proto",
-  "chainRepoName": "core",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

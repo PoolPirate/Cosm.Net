@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "orai/orai",
+  "chainRepoName": "github.com/oraichain/orai",
+  "commitHash": "6ec54fc04e9ee53592da742585fad126535bc7c1",
   "protoDir": "proto",
-  "chainRepoName": "orai/orai",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

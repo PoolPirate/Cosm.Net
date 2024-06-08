@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "canine-chain",
+  "chainRepoName": "github.com/JackalLabs/canine-chain",
+  "commitHash": "9fae4023e8e8042620c37630ea8353b173192a57",
   "protoDir": "proto",
-  "chainRepoName": "canine-chain",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

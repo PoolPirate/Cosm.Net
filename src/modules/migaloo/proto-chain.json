@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "migaloo-chain",
+  "chainRepoName": "github.com/White-Whale-Defi-Platform/migaloo-chain",
+  "commitHash": "e23a35d88a03ddc56179252bc6513bbc7d028fd9",
   "protoDir": "proto",
-  "chainRepoName": "migaloo-chain",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "hub",
+  "chainRepoName": "github.com/mars-protocol/hub",
+  "commitHash": "ffbe9c28a6070abbbc7cf4be2f80d6a728715d62",
   "protoDir": "proto",
-  "chainRepoName": "hub",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

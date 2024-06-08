@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "dymension",
+  "chainRepoName": "github.com/dymensionxyz/dymension",
+  "commitHash": "b0e997d6b921666b7c4da4e121a87a2652ed0d2a",
   "protoDir": "proto",
-  "chainRepoName": "dymension",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",

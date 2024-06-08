@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "cudos-node",
+  "chainRepoName": "github.com/cudoventures/cudos-node",
+  "commitHash": "77e48478b17069f14b333296998cf572a1c96b76",
   "protoDir": "proto",
-  "chainRepoName": "cudos-node",
   "protoDependencies": [
     {
       "name": "github.com/regen-network/cosmos-proto",

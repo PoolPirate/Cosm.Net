@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "chihuahua",
+  "chainRepoName": "github.com/ChihuahuaChain/chihuahua",
+  "commitHash": "2022cdb82b605a12c8ada3acde5b32b9e9306a8c",
   "protoDir": "proto",
-  "chainRepoName": "chihuahua",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

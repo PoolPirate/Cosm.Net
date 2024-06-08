@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "omniflixhub",
+  "chainRepoName": "github.com/OmniFlix/omniflixhub",
+  "commitHash": "5c34921deef25edb7e8fdaaacc7e217d91135a83",
   "protoDir": "proto",
-  "chainRepoName": "omniflixhub",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

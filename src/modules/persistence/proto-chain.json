@@ -1,8 +1,10 @@
 ﻿{
   "repoDir": "lib",
-  "hasNoProtos": true,
+  "chainRepoPath": "persistenceCore",
+  "chainRepoName": "github.com/persistenceOne/persistenceCore",
+  "commitHash": "e3704ab387237012055fb5986a2465d88d97e246",
   "protoDir": "proto",
-  "chainRepoName": "persistenceCore",
+  "hasNoProtos": true,
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "v4-chain",
+  "chainRepoName": "github.com/dydxprotocol/v4-chain",
+  "commitHash": "c092bf0166d1a111dcd9c2e4153334865c8fe553",
   "protoDir": "proto",
-  "chainRepoName": "v4-chain",
   "goModPath": "protocol",
   "protoDependencies": [
     {

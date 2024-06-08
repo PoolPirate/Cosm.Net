@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "stride",
+  "chainRepoName": "github.com/Stride-Labs/stride",
+  "commitHash": "5b8c74bb048b3fdf20c713b3adaecd3b584728cb",
   "protoDir": "proto",
-  "chainRepoName": "stride",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-sdk",

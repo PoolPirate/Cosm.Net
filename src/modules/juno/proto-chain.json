@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "juno",
+  "chainRepoName": "github.com/CosmosContracts/juno",
+  "commitHash": "b0faafbd6df4bb03940d99df13030af7f7bc315b",
   "protoDir": "proto",
-  "chainRepoName": "juno",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

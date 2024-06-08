@@ -1,6 +1,5 @@
 ﻿namespace Cosm.Net.Modules;
 
-internal partial class BridgeModule : IModule<BridgeModule, global::Osmosis.Bridge.V1Beta1.Query.QueryClient> { }
 internal partial class ConcentratedLiquidityModule : IModule<ConcentratedLiquidityModule, global::Osmosis.Concentratedliquidity.V1Beta1.Query.QueryClient> { }
 internal partial class DowntimeDetectorModule : IModule<DowntimeDetectorModule, global::Osmosis.Downtimedetector.V1Beta1.Query.QueryClient> { }
 internal partial class EpochsModule : IModule<EpochsModule, global::Osmosis.Epochs.V1Beta1.Query.QueryClient> { }

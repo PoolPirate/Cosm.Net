@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "injective-core",
+  "chainRepoName": "github.com/OpenDeFiFoundation/injective-core",
+  "commitHash": "e1ab66c240524b05b872f63890fefcd4fced5f7a",
   "protoDir": "proto",
-  "chainRepoName": "injective-core",
   "protoDependencies": [
     {
       "name": "github.com/CosmWasm/wasmd",

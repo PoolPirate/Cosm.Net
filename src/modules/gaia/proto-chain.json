@@ -1,7 +1,9 @@
 ﻿{
   "repoDir": "lib",
+  "chainRepoPath": "gaia",
+  "chainRepoName": "github.com/cosmos/gaia",
+  "commitHash": "17f2ba0b90d1d2884f7b67518ec08dfd37f001a7",
   "protoDir": "proto",
-  "chainRepoName": "gaia",
   "protoDependencies": [
     {
       "name": "github.com/cosmos/cosmos-proto",
