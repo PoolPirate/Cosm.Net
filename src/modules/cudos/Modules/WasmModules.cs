@@ -11,14 +11,14 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Nodes;
 
 namespace Cosm.Net.Modules;
-internal partial class WasmModule : IModule<WasmModule, global::Cosmwasm.Wasm.V1.Query.QueryClient>, IWasmAdapater
+internal partial class WasmModule : IModule<WasmModule,Cosmwasm.Wasm.V1.Query.QueryClient>, IWasmAdapater
 {
     private readonly IChainConfiguration _chain;
     private readonly IOfflineSigner? _signer;
 
     public WasmModule(CallInvoker callInvoker, IChainConfiguration chain, IServiceProvider provider)
     {
-        _client = new global::Cosmwasm.Wasm.V1.Query.QueryClient(callInvoker);
+        _client = newCosmwasm.Wasm.V1.Query.QueryClient(callInvoker);
         _chain = chain;
         _signer = provider.GetService<IOfflineSigner>();
     }

@@ -4,8 +4,8 @@ using Google.Protobuf;
 using Grpc.Core;
 
 namespace Cosm.Net.Modules;
-//internal partial class AccountModule : IModule<AccountModule, global::Cosmos.Accounts.V1.Query.QueryClient> { }
-internal partial class AuthModule : IModule<AuthModule, global::Cosmos.Auth.V1Beta1.Query.QueryClient>, IAuthModuleAdapter
+//internal partial class AccountModule : IModule<AccountModule,Cosmos.Accounts.V1.Query.QueryClient> { }
+internal partial class AuthModule : IModule<AuthModule,Cosmos.Auth.V1Beta1.Query.QueryClient>, IAuthModuleAdapter
 {
     async Task<AccountData> IAuthModuleAdapter.GetAccountAsync(string address, Metadata? headers,
         DateTime? deadline, CancellationToken cancellationToken)
@@ -15,21 +15,21 @@ internal partial class AuthModule : IModule<AuthModule, global::Cosmos.Auth.V1Be
         return new AccountData(account.BaseAccount.AccountNumber, account.BaseAccount.Sequence);
     }
 }
-internal partial class AuthzModule : IModule<AuthzModule, global::Cosmos.Authz.V1Beta1.Query.QueryClient> { }
-internal partial class BankModule : IModule<BankModule, global::Cosmos.Bank.V1Beta1.Query.QueryClient> { }
-//internal partial class CircuitModule : IModule<CircuitModule, global::Cosmos.Circuit.V1.Query.QueryClient> { }
-//internal partial class ConsensusModule : IModule<ConsensusModule, global::Cosmos.Consensus.V1.Query.QueryClient> { }
-internal partial class DistributionModule : IModule<DistributionModule, global::Cosmos.Staking.V1Beta1.Query.QueryClient> { }
-internal partial class EvidenceModule : IModule<EvidenceModule, global::Cosmos.Evidence.V1Beta1.Query.QueryClient> { }
-internal partial class FeeGrantModule : IModule<FeeGrantModule, global::Cosmos.Feegrant.V1Beta1.Query.QueryClient> { }
-internal partial class GovModule : IModule<GovModule, global::Cosmos.Gov.V1Beta1.Query.QueryClient> { }
-internal partial class MintModule : IModule<MintModule, global::Cosmos.Mint.V1Beta1.Query.QueryClient> { }
-internal partial class NftModule : IModule<NftModule, global::Cosmos.Nft.V1Beta1.Query.QueryClient> { }
-internal partial class ParamsModule : IModule<ParamsModule, global::Cosmos.Params.V1Beta1.Query.QueryClient> { }
-//internal partial class ProtocolPoolModule : IModule<ProtocolPoolModule, global::Cosmos.Protocolpool.V1.Query.QueryClient> { }
-internal partial class SlashingModule : IModule<SlashingModule, global::Cosmos.Slashing.V1Beta1.Query.QueryClient> { }
-internal partial class StakingModule : IModule<StakingModule, global::Cosmos.Staking.V1Beta1.Query.QueryClient> { }
-internal partial class TendermintModule : IModule<TendermintModule, global::Cosmos.Base.Tendermint.V1Beta1.Service.ServiceClient>, ITendermintModuleAdapter
+internal partial class AuthzModule : IModule<AuthzModule,Cosmos.Authz.V1Beta1.Query.QueryClient> { }
+internal partial class BankModule : IModule<BankModule,Cosmos.Bank.V1Beta1.Query.QueryClient> { }
+//internal partial class CircuitModule : IModule<CircuitModule,Cosmos.Circuit.V1.Query.QueryClient> { }
+//internal partial class ConsensusModule : IModule<ConsensusModule,Cosmos.Consensus.V1.Query.QueryClient> { }
+internal partial class DistributionModule : IModule<DistributionModule,Cosmos.Staking.V1Beta1.Query.QueryClient> { }
+internal partial class EvidenceModule : IModule<EvidenceModule,Cosmos.Evidence.V1Beta1.Query.QueryClient> { }
+internal partial class FeeGrantModule : IModule<FeeGrantModule,Cosmos.Feegrant.V1Beta1.Query.QueryClient> { }
+internal partial class GovModule : IModule<GovModule,Cosmos.Gov.V1Beta1.Query.QueryClient> { }
+internal partial class MintModule : IModule<MintModule,Cosmos.Mint.V1Beta1.Query.QueryClient> { }
+internal partial class NftModule : IModule<NftModule,Cosmos.Nft.V1Beta1.Query.QueryClient> { }
+internal partial class ParamsModule : IModule<ParamsModule,Cosmos.Params.V1Beta1.Query.QueryClient> { }
+//internal partial class ProtocolPoolModule : IModule<ProtocolPoolModule,Cosmos.Protocolpool.V1.Query.QueryClient> { }
+internal partial class SlashingModule : IModule<SlashingModule,Cosmos.Slashing.V1Beta1.Query.QueryClient> { }
+internal partial class StakingModule : IModule<StakingModule,Cosmos.Staking.V1Beta1.Query.QueryClient> { }
+internal partial class TendermintModule : IModule<TendermintModule,Cosmos.Base.Tendermint.V1Beta1.Service.ServiceClient>, ITendermintModuleAdapter
 {
     async Task<string> ITendermintModuleAdapter.GetChainId(Metadata? headers, DateTime? deadline, CancellationToken cancellationToken)
     {
@@ -37,17 +37,17 @@ internal partial class TendermintModule : IModule<TendermintModule, global::Cosm
         return nodeInfo.DefaultNodeInfo.Network;
     }
 }
-internal partial class NodeModule : IModule<NodeModule, global::Cosmos.Base.Node.V1Beta1.Service.ServiceClient> { }
-internal partial class TxModule : IModule<TxModule, global::Cosmos.Tx.V1Beta1.Service.ServiceClient>, ITxModuleAdapter
+internal partial class NodeModule : IModule<NodeModule,Cosmos.Base.Node.V1Beta1.Service.ServiceClient> { }
+internal partial class TxModule : IModule<TxModule,Cosmos.Tx.V1Beta1.Service.ServiceClient>, ITxModuleAdapter
 {
     async Task<TxSubmission> ITxModuleAdapter.BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers,
         DateTime? deadline, CancellationToken cancellationToken)
     {
         var signMode = mode switch
         {
-            BroadcastMode.Unspecified => global::Cosmos.Tx.V1Beta1.BroadcastMode.Unspecified,
-            BroadcastMode.Sync => global::Cosmos.Tx.V1Beta1.BroadcastMode.Sync,
-            BroadcastMode.Async => global::Cosmos.Tx.V1Beta1.BroadcastMode.Async,
+            BroadcastMode.Unspecified =>Cosmos.Tx.V1Beta1.BroadcastMode.Unspecified,
+            BroadcastMode.Sync =>Cosmos.Tx.V1Beta1.BroadcastMode.Sync,
+            BroadcastMode.Async =>Cosmos.Tx.V1Beta1.BroadcastMode.Async,
             _ => throw new InvalidOperationException("Unsupported BroadcastMode")
         };
 
@@ -87,4 +87,4 @@ internal partial class TxModule : IModule<TxModule, global::Cosmos.Tx.V1Beta1.Se
         return new TxExecution(tx.TxResponse.Code == 0, txHash, tx.TxResponse.Height, tx.Tx.Body.Memo, events.ToArray());
     }
 }
-internal partial class UpgradeModule : IModule<UpgradeModule, global::Cosmos.Upgrade.V1Beta1.Query.QueryClient> { }
+internal partial class UpgradeModule : IModule<UpgradeModule,Cosmos.Upgrade.V1Beta1.Query.QueryClient> { }

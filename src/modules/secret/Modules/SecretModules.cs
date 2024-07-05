@@ -15,7 +15,7 @@ using Miscreant;
 using System.Text.Json.Nodes;
 
 namespace Cosm.Net.Modules;
-internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Compute.V1Beta1.Query.QueryClient>, IWasmAdapater
+internal partial class ComputeModule : IModule<ComputeModule,Secret.Compute.V1Beta1.Query.QueryClient>, IWasmAdapater
 {
     private readonly IOfflineSigner? _signer;
     private readonly IChainConfiguration _chain;
@@ -23,7 +23,7 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
 
     public ComputeModule(CallInvoker callInvoker, IChainConfiguration chain, SecretEncryptionProvider encryptor, IServiceProvider provider)
     {
-        _client = new global::Secret.Compute.V1Beta1.Query.QueryClient(callInvoker);
+        _client = newSecret.Compute.V1Beta1.Query.QueryClient(callInvoker);
         _chain = chain;
         _encryptor = encryptor;
         _signer = provider.GetService<IOfflineSigner>();
@@ -45,7 +45,7 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
             contract.CodeHash, ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)));
         decryptor.Dispose();
 
-        var msg = new global::Secret.Compute.V1Beta1.MsgExecuteContract()
+        var msg = newSecret.Compute.V1Beta1.MsgExecuteContract()
         {
             Contract = ByteString.CopyFrom(Bech32.DecodeAddress(contract.ContractAddress)),
             Msg = encryptedMessage,
@@ -114,6 +114,6 @@ internal partial class ComputeModule : IModule<ComputeModule, global::Secret.Com
         return (ByteString.CopyFrom(encryptedMessage), context, decryptor);
     }
 }
-internal partial class EmergencyButtonModule : IModule<EmergencyButtonModule, global::Secret.Emergencybutton.V1Beta1.Query.QueryClient> { }
-internal partial class InterTxModule : IModule<InterTxModule, global::Secret.Intertx.V1Beta1.Query.QueryClient> { }
-internal partial class RegistrationModule : IModule<RegistrationModule, global::Secret.Registration.V1Beta1.Query.QueryClient> { }
+internal partial class EmergencyButtonModule : IModule<EmergencyButtonModule,Secret.Emergencybutton.V1Beta1.Query.QueryClient> { }
+internal partial class InterTxModule : IModule<InterTxModule,Secret.Intertx.V1Beta1.Query.QueryClient> { }
+internal partial class RegistrationModule : IModule<RegistrationModule,Secret.Registration.V1Beta1.Query.QueryClient> { }
