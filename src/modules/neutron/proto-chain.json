@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "neutron",
   "chainRepoName": "github.com/neutron-org/neutron",
-  "commitHash": "73f419c3c60a3b811b08788519063560e84d97a8",
+  "commitHash": "9d205f0b8eddbbcdc12ace0ddb2e1d4ded0429da",
   "protoDir": "proto",
   "protoDependencies": [
     {
