@@ -13,7 +13,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.2.4.1121+injective.v1.12.1</Version>
+		<Version>1.2.4.1130+injective.v1.13.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
