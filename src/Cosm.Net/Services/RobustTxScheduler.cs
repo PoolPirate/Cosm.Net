@@ -5,6 +5,8 @@ using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Grpc.Core;
+using Google.Protobuf;
+
 using System.Threading.Channels;
 using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee,
     System.DateTime? Deadline, System.Threading.CancellationToken CancellationToken,
@@ -67,7 +69,7 @@ public class RobustTxScheduler : ITxScheduler
         {
             try
             {
-                var encodedTx = _txEncoder.EncodeTx(tx, sequence, _gasFeeProvider.BaseGasFeeDenom);
+                var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), sequence, _gasFeeProvider.BaseGasFeeDenom);
                 return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
             }
             catch(RpcException ex)
@@ -122,10 +124,10 @@ public class RobustTxScheduler : ITxScheduler
         {
             if(generatedWithSequence != CurrentSequence)
             {
-                byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, entry.GasFee, AccountNumber, CurrentSequence);
+                byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasFee, AccountNumber, CurrentSequence);
                 byte[] signature = _signer.SignMessage(signDoc);
 
-                signedTx = new SignedTx(entry.Tx, entry.GasFee, CurrentSequence, signature);
+                signedTx = new SignedTx(entry.Tx, entry.GasFee, CurrentSequence, _signer.PublicKey, signature);
                 generatedWithSequence = CurrentSequence;
             }
 

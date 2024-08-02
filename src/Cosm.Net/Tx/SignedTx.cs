@@ -8,17 +8,19 @@ public class SignedTx : ISignedCosmTx
     public GasFeeAmount GasFee { get; }
     private readonly ICosmTx _tx;
     public ulong Sequence { get; }
+    public ByteString PublicKey { get; }
     public ByteString Signature { get; }
 
     public string Memo => _tx.Memo;
     public ulong TimeoutHeight => _tx.TimeoutHeight;
     public IReadOnlyCollection<ITxMessage> Messages => _tx.Messages;
 
-    public SignedTx(ICosmTx tx, GasFeeAmount gasFee, ulong sequence, ReadOnlySpan<byte> signature)
+    public SignedTx(ICosmTx tx, GasFeeAmount gasFee, ulong sequence, ReadOnlySpan<byte> publicKey, ReadOnlySpan<byte> signature)
     {
         _tx = tx;
         GasFee = gasFee;
         Sequence = sequence;
+        PublicKey = ByteString.CopyFrom(publicKey);
         Signature = ByteString.CopyFrom(signature);
     }
 }

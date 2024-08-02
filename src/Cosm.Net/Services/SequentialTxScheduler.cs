@@ -4,6 +4,7 @@ using Cosm.Net.Models;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using System.Threading.Channels;
+using Google.Protobuf;
 
 using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee, 
     System.DateTime? Deadline, System.Threading.CancellationToken CancellationToken,
@@ -57,7 +58,7 @@ public class SequentialTxScheduler : ITxScheduler
 
     public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, CancellationToken cancellationToken)
     {
-        var encodedTx = _txEncoder.EncodeTx(tx, CurrentSequence, _gasFeeProvider.BaseGasFeeDenom);
+        var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), CurrentSequence, _gasFeeProvider.BaseGasFeeDenom);
         return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
     }
 
@@ -92,10 +93,10 @@ public class SequentialTxScheduler : ITxScheduler
             return;
         } 
 
-        byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, entry.GasFee, AccountNumber, CurrentSequence);
+        byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasFee, AccountNumber, CurrentSequence);
         byte[] signature = _signer.SignMessage(signDoc);
 
-        var signedTx = new SignedTx(entry.Tx, entry.GasFee, CurrentSequence, signature);
+        var signedTx = new SignedTx(entry.Tx, entry.GasFee, CurrentSequence, _signer.PublicKey, signature);
 
         try
         {

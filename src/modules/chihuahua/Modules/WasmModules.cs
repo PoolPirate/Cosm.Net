@@ -18,7 +18,7 @@ internal partial class WasmModule : IModule<WasmModule,Cosmwasm.Wasm.V1.Query.Qu
 
     public WasmModule(CallInvoker callInvoker, IChainConfiguration chain, IServiceProvider provider)
     {
-        _client = newCosmwasm.Wasm.V1.Query.QueryClient(callInvoker);
+        _client = new Cosmwasm.Wasm.V1.Query.QueryClient(callInvoker);
         _chain = chain;
         _signer = provider.GetService<IOfflineSigner>();
     }

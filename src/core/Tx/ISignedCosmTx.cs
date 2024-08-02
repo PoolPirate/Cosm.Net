@@ -18,6 +18,11 @@ public interface ISignedCosmTx : ICosmTx
     public ulong Sequence { get; }
     
     /// <summary>
+    /// The public key that this transaction was signed with.
+    /// </summary>
+    public ByteString PublicKey { get; }
+
+    /// <summary>
     /// The transaction signature.
     /// </summary>
     public ByteString Signature { get; }

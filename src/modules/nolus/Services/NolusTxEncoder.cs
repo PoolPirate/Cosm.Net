@@ -9,29 +9,27 @@ using Cosmos.Tx.V1Beta1;
 namespace Cosm.Net.Services;
 public class NolusTxEncoder : ITxEncoder
 {
-    private readonly IOfflineSigner _signer;
     private readonly IChainConfiguration _chainConfig;
 
-    public NolusTxEncoder(IOfflineSigner signer, IChainConfiguration chainConfig)
+    public NolusTxEncoder(IChainConfiguration chainConfig)
     {
-        _signer = signer;
         _chainConfig = chainConfig;
     }
 
-    public virtual byte[] GetSignSignDoc(ICosmTx tx, GasFeeAmount gasFee, ulong accountNumber, ulong sequence)
+    public virtual byte[] GetSignSignDoc(ICosmTx tx, ByteString publicKey, GasFeeAmount gasFee, ulong accountNumber, ulong sequence)
         => new SignDoc()
         {
             AccountNumber = accountNumber,
-            AuthInfoBytes = MakeAuthInfo(sequence, gasFee.GasWanted, gasFee.FeeDenom, gasFee.FeeAmount).ToByteString(),
+            AuthInfoBytes = MakeAuthInfo(publicKey, sequence, gasFee.GasWanted, gasFee.FeeDenom, gasFee.FeeAmount).ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages).ToByteString(),
             ChainId = _chainConfig.ChainId
         }.ToByteArray();
 
-    public virtual ByteString EncodeTx(ICosmTx tx, ulong sequence, string feeDenom)
+    public virtual ByteString EncodeTx(ICosmTx tx, ByteString publicKey, ulong sequence, string feeDenom)
     {
         var txRaw = new TxRaw()
         {
-            AuthInfoBytes = MakeAuthInfo(sequence, 5000000, feeDenom, 100000)
+            AuthInfoBytes = MakeAuthInfo(publicKey, sequence, 0, feeDenom, 0)
             .ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString()
@@ -44,7 +42,7 @@ public class NolusTxEncoder : ITxEncoder
 
     public virtual ByteString EncodeTx(ISignedCosmTx tx)
     {
-        var authInfoBytes = MakeAuthInfo(tx.Sequence, tx.GasFee.GasWanted, tx.GasFee.FeeDenom, tx.GasFee.FeeAmount)
+        var authInfoBytes = MakeAuthInfo(tx.PublicKey, tx.Sequence, tx.GasFee.GasWanted, tx.GasFee.FeeDenom, tx.GasFee.FeeAmount)
             .ToByteString();
         var bodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString();
@@ -60,7 +58,7 @@ public class NolusTxEncoder : ITxEncoder
         return txRaw.ToByteString();
     }
 
-    private AuthInfo MakeAuthInfo(ulong sequence, ulong gasWanted, string feeDenom, ulong feeAmount)
+    private AuthInfo MakeAuthInfo(ByteString publicKey, ulong sequence, ulong gasWanted, string feeDenom, ulong feeAmount)
     {
         var authInfo = new AuthInfo()
         {
@@ -91,7 +89,7 @@ public class NolusTxEncoder : ITxEncoder
                 TypeUrl = $"/{PubKey.Descriptor.FullName}",
                 Value = new PubKey()
                 {
-                    Key = ByteString.CopyFrom(_signer.PublicKey)
+                    Key = publicKey
                 }.ToByteString(),
             }
         });
