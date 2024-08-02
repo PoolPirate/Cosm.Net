@@ -23,7 +23,7 @@ internal partial class ComputeModule : IModule<ComputeModule,Secret.Compute.V1Be
 
     public ComputeModule(CallInvoker callInvoker, IChainConfiguration chain, SecretEncryptionProvider encryptor, IServiceProvider provider)
     {
-        _client = newSecret.Compute.V1Beta1.Query.QueryClient(callInvoker);
+        _client = new Secret.Compute.V1Beta1.Query.QueryClient(callInvoker);
         _chain = chain;
         _encryptor = encryptor;
         _signer = provider.GetService<IOfflineSigner>();
@@ -45,7 +45,7 @@ internal partial class ComputeModule : IModule<ComputeModule,Secret.Compute.V1Be
             contract.CodeHash, ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)));
         decryptor.Dispose();
 
-        var msg = newSecret.Compute.V1Beta1.MsgExecuteContract()
+        var msg = new Secret.Compute.V1Beta1.MsgExecuteContract()
         {
             Contract = ByteString.CopyFrom(Bech32.DecodeAddress(contract.ContractAddress)),
             Msg = encryptedMessage,
