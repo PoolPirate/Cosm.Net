@@ -158,7 +158,7 @@ function selectValidVersion(repo: Repo, options: string[]): string | null {
   if (replacementOptions.length == 1) {
     return replacementOptions[0]!;
   } else if (replacementOptions.length > 1) {
-    throw `Multiple possible dependency options found for ${repo.name}`;
+    return replacementOptions.sort((a, b) => b.length - a.length)[0]!;
   }
 
   const slashcountedOptions = options.map((option) => {
