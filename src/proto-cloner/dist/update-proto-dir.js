@@ -57,9 +57,7 @@ async function main(configPath) {
             console.error(`Failed to find dependency ${repo.name} in go.mod file`);
             process.exit(1);
         }
-        const baseLine = baseLines.length == 1
-            ? baseLines[0]
-            : baseLines.sort((x) => -x.length)[0];
+        const baseLine = selectValidVersion(repo, baseLines);
         if (repo.forceExternal && !repo.isExternal) {
             console.error(`Dependency ${repo.name} marked as forceExternal but is not marked as external`);
         }
@@ -91,6 +89,29 @@ async function main(configPath) {
         collectProtoDirs(node_path_1.default.join(protoChain.repoDir, repo.dirName), repo.protoDirs, protoChain.protoDir);
     }
     console.info("Proto sync completed");
+}
+function selectValidVersion(repo, options) {
+    if (options.length == 0) {
+        return null;
+    }
+    if (options.length == 1) {
+        return options[0];
+    }
+    const replacementOptions = options.filter((x) => x.includes("=>"));
+    if (replacementOptions.length == 1) {
+        return replacementOptions[0];
+    }
+    else if (replacementOptions.length > 1) {
+        throw `Multiple possible dependency options found for ${repo.name}`;
+    }
+    const slashcountedOptions = options.map((option) => {
+        return {
+            value: option,
+            slashCount: option.match(/\//g)?.length ?? 0,
+        };
+    });
+    return slashcountedOptions.sort((a, b) => a.slashCount - b.slashCount)[0]
+        .value;
 }
 function parseVersion(repo, godModRepo) {
     const actualRepoName = godModRepo.split(" ")[0].trim();
