@@ -207,7 +207,8 @@ async function tryCheckoutCommitHash(repoUrl, repoDirectory, commitHash) {
         await execAndWait(cloneCmd);
     }
     let response = await execAndWait(`cd ${repoDirectory} && git checkout ${commitHash}`);
-    if (response.err.includes("not a git repository")) {
+    if (response.err.includes("not a git repository") ||
+        response.err.includes("unable to read tree")) {
         (0, node_fs_1.rmSync)(repoDirectory, {
             force: true,
             recursive: true,
@@ -225,7 +226,7 @@ async function tryCheckoutCommitHash(repoUrl, repoDirectory, commitHash) {
         response = await execAndWait(`cd ${repoDirectory} && git checkout ${commitHash}`);
     }
     if (!response.err.includes("HEAD is now at")) {
-        console.log(response.err);
+        console.log(`Git output: ${response.err}`);
         console.error(`Checking out ${commitHash} in ${repoDirectory} failed`);
         return false;
     }

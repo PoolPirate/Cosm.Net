@@ -328,7 +328,10 @@ async function tryCheckoutCommitHash(
     `cd ${repoDirectory} && git checkout ${commitHash}`
   );
 
-  if (response.err.includes("not a git repository")) {
+  if (
+    response.err.includes("not a git repository") ||
+    response.err.includes("unable to read tree")
+  ) {
     rmSync(repoDirectory, {
       force: true,
       recursive: true,
@@ -353,7 +356,7 @@ async function tryCheckoutCommitHash(
   }
 
   if (!response.err.includes("HEAD is now at")) {
-    console.log(response.err);
+    console.log(`Git output: ${response.err}`);
     console.error(`Checking out ${commitHash} in ${repoDirectory} failed`);
     return false;
   }
