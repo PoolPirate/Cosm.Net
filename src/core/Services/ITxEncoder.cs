@@ -5,7 +5,7 @@ using Google.Protobuf;
 namespace Cosm.Net.Services;
 public interface ITxEncoder
 {
-    public byte[] GetSignSignDoc(ICosmTx tx, ByteString publicKey, GasFeeAmount gasFee, ulong accountNumber, ulong sequence);
+    public byte[] GetSignSignDoc(ICosmTx tx, ByteString publicKey, ulong gasWanted, IEnumerable<Coin> txFees, ulong accountNumber, ulong sequence);
 
     public ByteString EncodeTx(ICosmTx tx, ByteString publicKey, ulong sequence, string feeDenom);
     public ByteString EncodeTx(ISignedCosmTx tx);

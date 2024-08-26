@@ -1,14 +1,13 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Exceptions;
 using Cosm.Net.Models;
-using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Grpc.Core;
 using Google.Protobuf;
 
 using System.Threading.Channels;
-using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, Cosm.Net.Models.GasFeeAmount GasFee,
+using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, ulong GasWanted, System.Collections.Generic.IEnumerable<Cosm.Net.Models.Coin> TxFees,
     System.DateTime? Deadline, System.Threading.CancellationToken CancellationToken,
     System.Threading.Tasks.TaskCompletionSource<string> CompletionSource);
 
@@ -88,10 +87,10 @@ public class RobustTxScheduler : ITxScheduler
         throw new Exception("Impossible");
     }
 
-    public async Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee, DateTime? deadline, CancellationToken cancellationToken)
+    public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees, DateTime? deadline, CancellationToken cancellationToken)
     {
         var source = new TaskCompletionSource<string>();
-        await _pendingTxChannel.Writer.WriteAsync(new QueueEntry(tx, gasFee, deadline, cancellationToken, source), cancellationToken);
+        await _pendingTxChannel.Writer.WriteAsync(new QueueEntry(tx, gasWanted, txFees, deadline, cancellationToken, source), cancellationToken);
         return await source.Task;
     }
 
@@ -124,10 +123,10 @@ public class RobustTxScheduler : ITxScheduler
         {
             if(generatedWithSequence != CurrentSequence)
             {
-                byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasFee, AccountNumber, CurrentSequence);
+                byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasWanted, entry.TxFees, AccountNumber, CurrentSequence);
                 byte[] signature = _signer.SignMessage(signDoc);
 
-                signedTx = new SignedTx(entry.Tx, entry.GasFee, CurrentSequence, _signer.PublicKey, signature);
+                signedTx = new SignedTx(entry.Tx, entry.GasWanted, entry.TxFees, CurrentSequence, _signer.PublicKey, signature);
                 generatedWithSequence = CurrentSequence;
             }
 

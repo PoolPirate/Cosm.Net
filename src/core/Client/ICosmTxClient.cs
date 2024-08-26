@@ -15,12 +15,13 @@ public interface ICosmTxClient : ICosmClient
     /// <summary>
     /// Publishes a transaction without simulating it. Uses the gas amount passed in from parameters.
     /// </summary>
-    /// <param name="tx">The transaction to publish</param>
-    /// <param name="gasFee">The amount of gas fees to pay</param>
+    /// <param name="tx">The transaction to publish.</param>
+    /// <param name="gasWanted">The amount of gas requested by the transaction.</param>
+    /// <param name="txFees">The coins attached to the transaction for fees.</param>
     /// <param name="deadline">Deadline for the GRPC Call. Call will be aborted after the given time.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>TxHash of the transaction</returns>
-    public Task<string> PublishTxAsync(ICosmTx tx, GasFeeAmount gasFee, 
+    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees, 
         DateTime? deadline = default, CancellationToken cancellationToken = default);
 
     /// <summary>

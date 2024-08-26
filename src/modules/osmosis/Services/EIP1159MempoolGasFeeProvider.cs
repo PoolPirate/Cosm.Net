@@ -50,14 +50,11 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
         return gasPricee18 / GasPriceDenom;
     }
 
-    public async ValueTask<GasFeeAmount> GetFeeForGasAsync(ulong gasWanted)
+    public async ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted)
     {
         if(CurrentBaseGasPrice.HasValue)
         {
-            return new GasFeeAmount(
-                gasWanted,
-                BaseGasFeeDenom,
-                (ulong) Math.Ceiling(gasWanted * (CurrentBaseGasPrice.Value + GasPriceOffset)));
+            return new Coin(BaseGasFeeDenom, (ulong) Math.Ceiling(gasWanted * (CurrentBaseGasPrice.Value + GasPriceOffset)));
         }
 
         lock(_startupLock)
@@ -70,9 +67,6 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
         }
 
         decimal gasPrice = await GetCurrentBaseFeeAsync();
-        return new GasFeeAmount(
-            gasWanted,
-            BaseGasFeeDenom,
-            (ulong) Math.Ceiling(gasWanted * (gasPrice + GasPriceOffset)));
+        return new Coin(BaseGasFeeDenom, (ulong) Math.Ceiling(gasWanted * (gasPrice + GasPriceOffset)));
     }
 }

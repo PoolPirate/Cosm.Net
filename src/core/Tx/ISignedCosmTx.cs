@@ -8,9 +8,14 @@ namespace Cosm.Net.Tx;
 public interface ISignedCosmTx : ICosmTx
 {
     /// <summary>
-    /// The gas fee paid when publishing this transaction.
+    /// The amount of gas requested by the transaction.
     /// </summary>
-    public GasFeeAmount GasFee { get; }
+    public ulong GasWanted { get; }
+
+    /// <summary>
+    /// The coins attached to the transaction for fees.
+    /// </summary>
+    public IReadOnlyList<Coin> TxFees { get; }
 
     /// <summary>
     /// The sequence number of the sender when this transaction was signed.

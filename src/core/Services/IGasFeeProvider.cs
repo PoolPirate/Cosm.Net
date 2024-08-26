@@ -5,7 +5,7 @@ public interface IGasFeeProvider
 {
     public string BaseGasFeeDenom { get; }
 
-    public ValueTask<GasFeeAmount> GetFeeForGasAsync(ulong gasWanted);
+    public ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted);
 }
 
 public interface IGasFeeProvider<TConfiguration> : IGasFeeProvider;

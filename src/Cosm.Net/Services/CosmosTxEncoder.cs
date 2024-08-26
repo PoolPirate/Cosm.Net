@@ -1,5 +1,4 @@
 ﻿using Cosm.Net.Models;
-using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Cosm.Net.Tx.Msg;
 using Cosmos.Crypto.Secp256K1;
@@ -16,11 +15,11 @@ public class CosmosTxEncoder : ITxEncoder
         _chainConfig = chainConfig;
     }
 
-    public virtual byte[] GetSignSignDoc(ICosmTx tx, ByteString publicKey, GasFeeAmount gasFee, ulong accountNumber, ulong sequence)
+    public virtual byte[] GetSignSignDoc(ICosmTx tx, ByteString publicKey, ulong gasWanted, IEnumerable<Coin> txFees, ulong accountNumber, ulong sequence)
         => new SignDoc()
         {
             AccountNumber = accountNumber,
-            AuthInfoBytes = MakeAuthInfo(publicKey, sequence, gasFee.GasWanted, gasFee.FeeDenom, gasFee.FeeAmount).ToByteString(),
+            AuthInfoBytes = MakeAuthInfo(publicKey, sequence, gasWanted, txFees).ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages).ToByteString(),
             ChainId = _chainConfig.ChainId
         }.ToByteArray();
@@ -29,7 +28,7 @@ public class CosmosTxEncoder : ITxEncoder
     {
         var txRaw = new TxRaw()
         {
-            AuthInfoBytes = MakeAuthInfo(publicKey, sequence, 0, feeDenom, 0)
+            AuthInfoBytes = MakeAuthInfo(publicKey, sequence, 0, [new Coin(feeDenom, 0)])
             .ToByteString(),
             BodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString()
@@ -42,7 +41,7 @@ public class CosmosTxEncoder : ITxEncoder
 
     public virtual ByteString EncodeTx(ISignedCosmTx tx)
     {
-        var authInfoBytes = MakeAuthInfo(tx.PublicKey, tx.Sequence, tx.GasFee.GasWanted, tx.GasFee.FeeDenom, tx.GasFee.FeeAmount)
+        var authInfoBytes = MakeAuthInfo(tx.PublicKey, tx.Sequence, tx.GasWanted, tx.TxFees)
             .ToByteString();
         var bodyBytes = MakeTxBody(tx.Memo, tx.TimeoutHeight, tx.Messages)
             .ToByteString();
@@ -58,7 +57,7 @@ public class CosmosTxEncoder : ITxEncoder
         return txRaw.ToByteString();
     }
 
-    private AuthInfo MakeAuthInfo(ByteString publicKey, ulong sequence, ulong gasWanted, string feeDenom, ulong feeAmount)
+    private AuthInfo MakeAuthInfo(ByteString publicKey, ulong sequence, ulong gasWanted, IEnumerable<Coin> txFees)
     {
         var authInfo = new AuthInfo()
         {
@@ -68,11 +67,14 @@ public class CosmosTxEncoder : ITxEncoder
             }
         };
 
-        authInfo.Fee.Amount.Add(new Cosmos.Base.V1Beta1.Coin()
+        foreach(var feeCoin in txFees)
         {
-            Amount = $"{feeAmount}",
-            Denom = feeDenom
-        });
+            authInfo.Fee.Amount.Add(new Cosmos.Base.V1Beta1.Coin()
+            {
+                Amount = $"{feeCoin.Amount}",
+                Denom = feeCoin.Denom
+            });
+        }
 
         authInfo.SignerInfos.Add(new SignerInfo()
         {
