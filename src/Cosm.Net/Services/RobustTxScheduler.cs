@@ -68,7 +68,7 @@ public class RobustTxScheduler : ITxScheduler
         {
             try
             {
-                var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), sequence, _gasFeeProvider.BaseGasFeeDenom);
+                var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), sequence, _gasFeeProvider.GasFeeDenom);
                 return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
             }
             catch(RpcException ex)

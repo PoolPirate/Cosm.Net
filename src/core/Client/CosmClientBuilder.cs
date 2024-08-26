@@ -1,5 +1,6 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Client.Internal;
+using Cosm.Net.Configuration;
 using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
@@ -15,6 +16,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     private readonly ServiceCollection _services = [];
     private readonly List<Type> _moduleTypes = [];
     private ChainInfo? _chainInfo = null;
+    private GasBufferConfiguration _gasBufferConfiguration = new GasBufferConfiguration(1.2, 20000);
 
     IServiceCollection IInternalCosmClientBuilder.ServiceCollection
         => _services;
@@ -66,6 +68,17 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         }
 
         _chainInfo.TransactionTimeout = defaultTransactionTimeout;
+        return this;
+    }
+
+    public CosmClientBuilder WithGasBuffers(double gasMultiplier, ulong gasOffset)
+    {
+        if (gasMultiplier < 1)
+        {
+            throw new ArgumentException("Gas Multiplier must be larger or equal to 1");
+        }
+
+        _gasBufferConfiguration = new GasBufferConfiguration(gasMultiplier, gasOffset);
         return this;
     }
 
@@ -505,6 +518,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 
         var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix, _chainInfo!.TransactionTimeout);
         _ = _services.AddSingleton<IChainConfiguration>(chainConfig);
+        _ = _services.AddSingleton<IGasBufferConfiguration>(_gasBufferConfiguration);
 
         var provider = _services.BuildServiceProvider();
         return new CosmClient(provider, _moduleTypes, chainConfig, true);

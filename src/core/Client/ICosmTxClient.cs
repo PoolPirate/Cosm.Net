@@ -44,7 +44,7 @@ public interface ICosmTxClient : ICosmClient
     /// <param name="deadline">Deadline for the GRPC Call. Call will be aborted after the given time.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>TxHash of the transaction</returns>
-    public Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000,
+    public Task<string> SimulateAndPublishTxAsync(ICosmTx tx, double? gasMultiplier = null, ulong? gasOffset = null,
         DateTime? deadline = default, CancellationToken cancellationToken = default);
 
     /// <summary>

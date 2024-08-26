@@ -58,7 +58,7 @@ public class SequentialTxScheduler : ITxScheduler
 
     public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, CancellationToken cancellationToken)
     {
-        var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), CurrentSequence, _gasFeeProvider.BaseGasFeeDenom);
+        var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), CurrentSequence, _gasFeeProvider.GasFeeDenom);
         return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
     }
 

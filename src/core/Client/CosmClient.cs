@@ -109,15 +109,13 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         var fee = await _gasFeeProvider!.GetFeeForGasAsync(gasWanted);
         return await PublishTxAsync(tx, gasWanted, [fee], deadline, cancellationToken);
     }
-    public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, decimal gasMultiplier = 1.2m, ulong gasOffset = 20000, 
+    public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, double? gasMultiplier = null, ulong? gasOffset = null, 
         DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
         var simulation = await SimulateAsync(tx);
-
-        ulong gasWanted = (ulong) Math.Ceiling((simulation.GasUsed * gasMultiplier) + gasOffset);
-        var fee = await _gasFeeProvider!.GetFeeForGasAsync(gasWanted);
-
+        var gasWanted = _gasFeeProvider!.ApplyGasBuffers(simulation.GasUsed, gasMultiplier, gasOffset);
+        var fee = await _gasFeeProvider.GetFeeForGasAsync(gasWanted);
         return await PublishTxAsync(tx, gasWanted, [fee], deadline, cancellationToken);
     }
 
