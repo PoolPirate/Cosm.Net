@@ -2,9 +2,9 @@
 public class TxSimulation
 {
     public ulong GasUsed { get; }
-    public IReadOnlyCollection<TxEvent> Events { get; }
+    public IReadOnlyList<TxEvent> Events { get; }
 
-    public TxSimulation(ulong gasUsed, IReadOnlyCollection<TxEvent> events)
+    public TxSimulation(ulong gasUsed, IReadOnlyList<TxEvent> events)
     {
         GasUsed = gasUsed;
         Events = events;

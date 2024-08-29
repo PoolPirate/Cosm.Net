@@ -5,7 +5,7 @@ public class CosmTx : ICosmTx
 {
     public string Memo { get; }
     public ulong TimeoutHeight { get; }
-    public IReadOnlyCollection<ITxMessage> Messages { get; }
+    public IReadOnlyList<ITxMessage> Messages { get; }
 
     public CosmTx(string memo, ulong timeoutHeight, IList<ITxMessage> messages)
     {

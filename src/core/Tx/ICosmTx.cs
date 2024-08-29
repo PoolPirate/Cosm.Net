@@ -19,5 +19,5 @@ public interface ICosmTx
     /// <summary>
     /// The messages attached to the transaction.
     /// </summary>
-    public IReadOnlyCollection<ITxMessage> Messages { get; }
+    public IReadOnlyList<ITxMessage> Messages { get; }
 }
