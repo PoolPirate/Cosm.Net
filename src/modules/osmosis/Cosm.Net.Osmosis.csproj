@@ -31,7 +31,6 @@
 
 	<Target Name="CollectProtos" BeforeTargets="BeforeBuild">
 		<Exec Command="node ..\..\proto-cloner\dist\update-proto-dir.js proto-chain.json"></Exec>
-		<RemoveDir Directories="proto\osmosis\cosmwasmpool" />
 	</Target>
 
 	<ItemGroup>
