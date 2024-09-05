@@ -1,0 +1,86 @@
+﻿{
+  "repoDir": "lib",
+  "chainRepoPath": "chain",
+  "chainRepoName": "github.com/bandprotocol/chain",
+  "commitHash": "e6548bbf4793829bb8e711e5ed89ba4afc710ded",
+  "protoDir": "proto",
+  "protoDependencies": [
+    {
+      "name": "github.com/tendermint/tendermint",
+      "isExternal": false,
+      "dirName": "tendermint",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/cosmos-proto",
+      "isExternal": false,
+      "dirName": "cosmos-proto",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/cosmos-sdk",
+      "isExternal": false,
+      "dirName": "cosmos-sdk",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/ibc-go",
+      "isExternal": false,
+      "dirName": "ibc-go",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/confio/ics23",
+      "isExternal": false,
+      "dirName": "ics23",
+      "protoDirs": [
+        {
+          "in": ".",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/regen-network/protobuf",
+      "isExternal": true,
+      "dirName": "regen-protobuf",
+      "protoDirs": [
+        {
+          "in": "gogoproto",
+          "out": "gogoproto"
+        }
+      ]
+    },
+    {
+      "name": "github.com/googleapis/googleapis",
+      "isExternal": true,
+      "dirName": "googleapis",
+      "protoDirs": [
+        {
+          "in": "google",
+          "out": "google"
+        }
+      ]
+    }
+  ]
+}
