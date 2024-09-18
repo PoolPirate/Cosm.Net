@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "canine-chain",
   "chainRepoName": "github.com/JackalLabs/canine-chain",
-  "commitHash": "9fae4023e8e8042620c37630ea8353b173192a57",
+  "commitHash": "40d9585d0f8f7f3931a4a46dfc047b671d330356",
   "protoDir": "proto",
   "protoDependencies": [
     {

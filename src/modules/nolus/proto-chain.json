@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "nolus-core",
   "chainRepoName": "github.com/nolus-protocol/nolus-core",
-  "commitHash": "8816d785803d8953eeeec9522ca64712642ad2e3",
+  "commitHash": "b500853d49aa447fbf5fdf4360954186e8b35578",
   "protoDir": "proto",
   "protoDependencies": [
     {

@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "osmosis",
   "chainRepoName": "github.com/osmosis-labs/osmosis",
-  "commitHash": "aab60b610716fe2660fc09c23dcadaa8af6dcbc8",
+  "commitHash": "dd6442421a5643d8702200d6a46a6178160a8c76",
   "protoDir": "proto",
   "protoDependencies": [
     {

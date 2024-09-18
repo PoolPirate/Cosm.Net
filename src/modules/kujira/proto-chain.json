@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "core",
   "chainRepoName": "github.com/Team-Kujira/core",
-  "commitHash": "21462c1fe170d19ff606ad8dd1ecf7d22009abd6",
+  "commitHash": "690a0dece9372993178deb467e2f0ae49d0733ce",
   "protoDir": "proto",
   "protoDependencies": [
     {

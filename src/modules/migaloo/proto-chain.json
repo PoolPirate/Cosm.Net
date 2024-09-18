@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "migaloo-chain",
   "chainRepoName": "github.com/White-Whale-Defi-Platform/migaloo-chain",
-  "commitHash": "e23a35d88a03ddc56179252bc6513bbc7d028fd9",
+  "commitHash": "da006f543b536d807ce495e10424bd354eea0a5f",
   "protoDir": "proto",
   "protoDependencies": [
     {

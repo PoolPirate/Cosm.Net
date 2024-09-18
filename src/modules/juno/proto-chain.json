@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "juno",
   "chainRepoName": "github.com/CosmosContracts/juno",
-  "commitHash": "b0faafbd6df4bb03940d99df13030af7f7bc315b",
+  "commitHash": "2f119adacca3a1668ff150c225a3f423501e748c",
   "protoDir": "proto",
   "protoDependencies": [
     {

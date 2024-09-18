@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "noble",
   "chainRepoName": "github.com/noble-assets/noble",
-  "commitHash": "eea66f417f52eba93a5ebba491dc085b1046e180",
+  "commitHash": "56f08ad2d6c8baec66617202f0463f66c9b0fdfe",
   "protoDir": "proto",
   "protoDependencies": [
     {
