@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "Gravity-Bridge/module",
   "chainRepoName": "github.com/Gravity-Bridge/Gravity-Bridge",
-  "commitHash": "94c8fe5853ebade54b27a259ce64a3be3b463ba9",
+  "commitHash": "949f3de6eab22ac87d40091d2a24be67b0ac3ead",
   "protoDir": "proto",
   "protoDependencies": [
     {
