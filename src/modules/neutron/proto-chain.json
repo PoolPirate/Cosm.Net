@@ -50,6 +50,39 @@
       ]
     },
     {
+      "name": "github.com/skip-mev/block-sdk",
+      "isExternal": false,
+      "dirName": "block-sdk",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/skip-mev/feemarket",
+      "isExternal": false,
+      "dirName": "feemarket",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/skip-mev/slinky",
+      "isExternal": false,
+      "dirName": "connect",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
       "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
