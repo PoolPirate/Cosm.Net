@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "archway",
   "chainRepoName": "github.com/archway-network/archway",
-  "commitHash": "4dee653fafcb51f5d7519c38024c8f2145323be9",
+  "commitHash": "5eb8a3062e1b457b6732d681f742e54facbf8b18",
   "protoDir": "proto",
   "protoDependencies": [
     {
