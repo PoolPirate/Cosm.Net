@@ -114,7 +114,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.TerraClassic", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Band", "src\modules\band\Cosm.Net.Band.csproj", "{374ADF54-686D-42AC-B876-9DC794211E7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Celestia", "src\modules\celestia\Cosm.Net.Celestia.csproj", "{B143BCD9-E15A-439E-AF64-C9A6B77F0DF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cosm.Net.Celestia", "src\modules\celestia\Cosm.Net.Celestia.csproj", "{B143BCD9-E15A-439E-AF64-C9A6B77F0DF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Osmosis-Indexer", "src\modules\osmosis-indexer\Cosm.Net.Osmosis-Indexer.csproj", "{0C2B668B-4D64-4DA8-AE90-4F7855C0342B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -306,6 +308,10 @@ Global
 		{B143BCD9-E15A-439E-AF64-C9A6B77F0DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B143BCD9-E15A-439E-AF64-C9A6B77F0DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B143BCD9-E15A-439E-AF64-C9A6B77F0DF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C2B668B-4D64-4DA8-AE90-4F7855C0342B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C2B668B-4D64-4DA8-AE90-4F7855C0342B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C2B668B-4D64-4DA8-AE90-4F7855C0342B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C2B668B-4D64-4DA8-AE90-4F7855C0342B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -358,6 +364,7 @@ Global
 		{789A1B3C-A750-4349-903D-7A771482EB25} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{374ADF54-686D-42AC-B876-9DC794211E7A} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{B143BCD9-E15A-439E-AF64-C9A6B77F0DF7} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{0C2B668B-4D64-4DA8-AE90-4F7855C0342B} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
