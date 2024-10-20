@@ -6,7 +6,7 @@ public static class Bech32
     private const int ChecksumByteLength = 6;
 
     // used for polymod
-    private static readonly uint[] Generator = { 0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3 };
+    private static readonly uint[] Generator = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
 
     // charset is the sequence of ascii characters that make up the bech32
     // alphabet.  Each character represents a 5-bit squashed byte.
@@ -18,7 +18,7 @@ public static class Bech32
 
     // icharset is a mapping of 8-bit ascii characters to the charset positions. Both uppercase and lowercase ascii are mapped to the 5-bit position values.
     private static readonly byte[] icharset =
-    {
+    [
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -27,7 +27,7 @@ public static class Bech32
         1, 0, 3, 16, 11, 28, 12, 14, 6, 4, 2, 255, 255, 255, 255, 255,
         255, 29, 255, 24, 13, 25, 9, 8, 23, 255, 18, 22, 31, 27, 19, 255,
         1, 0, 3, 16, 11, 28, 12, 14, 6, 4, 2, 255, 255, 255, 255, 255
-    };
+    ];
 
     // PolyMod takes a byte slice and returns the 32-bit BCH checksum.
     // Note that the input bytes to PolyMod need to be squashed to 5-bits tall
@@ -93,6 +93,54 @@ public static class Bech32
             (prefix.Length * 2) + 1,
             buffer.Length - (prefix.Length * 2) - 1 - ChecksumByteLength),
             dataOutput);
+    }
+
+    public static bool ValidateAddress(ReadOnlySpan<char> address, out ReadOnlySpan<char> prefix, out int length)
+    {
+        length = -1;
+        prefix = null;
+
+        if(IsMixedCase(address))
+        {
+            //Invalid address format, must not be mixed case
+            return false;
+        }
+        int splitIndex = address.LastIndexOf('1');
+
+        if(splitIndex == -1)
+        {
+            //Invalid address format, no prefix delimiter
+            return false;
+        }
+        if(address.Length - splitIndex < ChecksumByteLength + 6)
+        {
+            //Invalid address format, length after prefix too small
+            return false;
+        }
+
+        prefix = address[..splitIndex];
+        var payload = address[(splitIndex + 1)..];
+
+        Span<byte> buffer = stackalloc byte[(prefix.Length * 2) + address.Length - splitIndex];
+        HrpExpand(prefix, buffer); //Uses first (prefix.Length * 2) + 1 of buffer
+
+        if(!TrySquashBase32Bytes(payload, buffer[((prefix.Length * 2) + 1)..]))
+        {
+            prefix = null;
+            return false;
+        }
+        if(!VerifyChecksum(buffer))
+        {
+            prefix = null;
+            return false;
+        }
+        //
+        int inputSize = buffer.Length - (prefix.Length * 2) - 1 - ChecksumByteLength;
+        int outputSize = (inputSize * 5 / 8)
+            + ((inputSize * 5 % 8) != 0 ? 1 : 0);
+
+        length = outputSize;
+        return true;
     }
 
     public static byte[] DecodeAddress(ReadOnlySpan<char> address)
@@ -273,7 +321,7 @@ public static class Bech32
     }
 
     //expands "squashed" 5-bit bytes into full-width (8-bit) bytes
-    public static int ExpandBytes(ReadOnlySpan<byte> input, Span<byte> output)
+    private static int ExpandBytes(ReadOnlySpan<byte> input, Span<byte> output)
     {
         int outputSize = (input.Length * 5 / 8)
             + ((input.Length * 5 % 8) != 0 ? 1 : 0);
