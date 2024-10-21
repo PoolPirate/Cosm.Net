@@ -12,23 +12,8 @@ import { exec } from "node:child_process";
 import path from "node:path";
 import { ProtoChain, ProtoDir, Repo, loadProtoChainFromFile } from "./repos";
 
-function validateProtoChain(protoChain: ProtoChain) {
-  if (!existsSync(path.join(protoChain.repoDir, protoChain.chainRepoPath))) {
-    console.error(
-      `Given chain repo does not exist at ${path.join(
-        protoChain.repoDir,
-        protoChain.chainRepoPath
-      )}`
-    );
-    return null;
-  }
-  if (!existsSync(protoChain.protoDir)) {
-    console.error("Given protoDir does not exist");
-    return null;
-  }
-}
-
 async function main(configPath: string) {
+  console.log("Running proto sync...");
   const protoChain = loadProtoChainFromFile(configPath);
   validateProtoChain(protoChain);
   console.log(`Clearing proto directory at ${protoChain.protoDir}`);
@@ -142,6 +127,22 @@ async function main(configPath: string) {
   }
 
   console.info("Proto sync completed");
+}
+
+function validateProtoChain(protoChain: ProtoChain) {
+  if (!existsSync(path.join(protoChain.repoDir, protoChain.chainRepoPath))) {
+    console.error(
+      `Given chain repo does not exist at ${path.join(
+        protoChain.repoDir,
+        protoChain.chainRepoPath
+      )}`
+    );
+    return null;
+  }
+  if (!existsSync(protoChain.protoDir)) {
+    console.error("Given protoDir does not exist");
+    return null;
+  }
 }
 
 function selectValidVersion(repo: Repo, options: string[]): string | null {

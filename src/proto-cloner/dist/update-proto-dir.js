@@ -7,17 +7,8 @@ const node_fs_1 = require("node:fs");
 const node_child_process_1 = require("node:child_process");
 const node_path_1 = __importDefault(require("node:path"));
 const repos_1 = require("./repos");
-function validateProtoChain(protoChain) {
-    if (!(0, node_fs_1.existsSync)(node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoPath))) {
-        console.error(`Given chain repo does not exist at ${node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoPath)}`);
-        return null;
-    }
-    if (!(0, node_fs_1.existsSync)(protoChain.protoDir)) {
-        console.error("Given protoDir does not exist");
-        return null;
-    }
-}
 async function main(configPath) {
+    console.log("Running proto sync...");
     const protoChain = (0, repos_1.loadProtoChainFromFile)(configPath);
     validateProtoChain(protoChain);
     console.log(`Clearing proto directory at ${protoChain.protoDir}`);
@@ -89,6 +80,16 @@ async function main(configPath) {
         collectProtoDirs(node_path_1.default.join(protoChain.repoDir, repo.dirName), repo.protoDirs, protoChain.protoDir);
     }
     console.info("Proto sync completed");
+}
+function validateProtoChain(protoChain) {
+    if (!(0, node_fs_1.existsSync)(node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoPath))) {
+        console.error(`Given chain repo does not exist at ${node_path_1.default.join(protoChain.repoDir, protoChain.chainRepoPath)}`);
+        return null;
+    }
+    if (!(0, node_fs_1.existsSync)(protoChain.protoDir)) {
+        console.error("Given protoDir does not exist");
+        return null;
+    }
 }
 function selectValidVersion(repo, options) {
     if (options.length == 0) {

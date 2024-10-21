@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { exit } from "node:process";
 
 export type Repo = {
   name: string;
@@ -26,6 +27,11 @@ export type ProtoChain = {
 };
 
 export function loadProtoChainFromFile(path: string) {
-  const content = readFileSync(path, "utf8").trim();
-  return JSON.parse(content) as ProtoChain;
+  try {
+    const content = readFileSync(path, "utf8").trim();
+    return JSON.parse(content) as ProtoChain;
+  } catch (error) {
+    console.error(`Failed reading config at ${path}`);
+    exit(1);
+  }
 }
