@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "osmosis",
   "chainRepoName": "github.com/poolpirate/osmosis",
-  "commitHash": "1e5d7d304fa6dbc798f267ef1794a2bd44169588",
+  "commitHash": "7aac89c2b8d28ec6b90edc494af8c455534c5816",
   "protoDir": "proto",
   "protoDependencies": [
     {

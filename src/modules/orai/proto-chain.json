@@ -1,6 +1,6 @@
 ﻿{
   "repoDir": "lib",
-  "chainRepoPath": "orai/orai",
+  "chainRepoPath": "orai",
   "chainRepoName": "github.com/oraichain/orai",
   "commitHash": "fbc32fd41ec5633edd2336a01209225a6b4c837a",
   "protoDir": "proto",
