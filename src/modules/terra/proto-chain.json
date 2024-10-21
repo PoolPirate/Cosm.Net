@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "core",
   "chainRepoName": "github.com/terra-money/core",
-  "commitHash": "f86a253aaee02e88b28a2e7bfbe8e874c1ad1641",
+  "commitHash": "ec5e2c5ef5c76280868d9b0da22f07149c81858a",
   "protoDir": "proto",
   "protoDependencies": [
     {

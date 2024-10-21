@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "umee",
   "chainRepoName": "github.com/umee-network/umee",
-  "commitHash": "31db8682bc220abf6acccb28257bc692f00fc94b",
+  "commitHash": "2acc4a767cfe60b09c66e1f98989a72fe31a615c",
   "protoDir": "proto",
   "protoDependencies": [
     {

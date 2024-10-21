@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "chihuahua",
   "chainRepoName": "github.com/ChihuahuaChain/chihuahua",
-  "commitHash": "2022cdb82b605a12c8ada3acde5b32b9e9306a8c",
+  "commitHash": "fc42649d573ee6c06225f52162cf325db3b3b7db",
   "protoDir": "proto",
   "protoDependencies": [
     {

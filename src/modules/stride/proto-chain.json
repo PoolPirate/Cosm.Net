@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "stride",
   "chainRepoName": "github.com/Stride-Labs/stride",
-  "commitHash": "5b8c74bb048b3fdf20c713b3adaecd3b584728cb",
+  "commitHash": "4cfda614e8fb9664ce72861d32824d72430d4436",
   "protoDir": "proto",
   "protoDependencies": [
     {

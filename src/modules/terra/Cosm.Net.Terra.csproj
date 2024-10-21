@@ -12,7 +12,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.3.2.2116+terra.v2.11.6</Version>
+		<Version>1.3.2.2124+terra.v2.12.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
