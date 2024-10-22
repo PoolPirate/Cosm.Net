@@ -12,7 +12,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.3.2.2601-protopatch1+osmosis-indexer.v26.0.1</Version>
+		<Version>1.3.2.2601-protopatch2+osmosis-indexer.v26.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -32,8 +32,6 @@
 	<Target Name="CollectProtos" BeforeTargets="BeforeBuild">
 		<Exec Command="node ..\..\proto-cloner\dist\update-proto-dir.js proto-chain.json"></Exec>
 		<Delete Files="./proto/osmosis/cosmwasmpool/v1beta1/tx.proto" />
-		<Delete Files="./proto/osmosis/cosmwasmpool/v1beta1/gov.proto" />
-		<Delete Files="./proto/osmosis/cosmwasmpool/v1beta1/query.proto" />
 	</Target>
 
 	<ItemGroup>
