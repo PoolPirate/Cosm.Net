@@ -18,19 +18,15 @@ internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Quer
 }
 internal partial class AuthzModule : IModule<AuthzModule, Cosmos.Authz.V1Beta1.Query.QueryClient> { }
 internal partial class BankModule : IModule<BankModule, Cosmos.Bank.V1Beta1.Query.QueryClient> { }
-//Module not exposed on this chain
-//internal partial class CircuitModule : IModule<CircuitModule, Cosmos.Circuit.V1.Query.QueryClient> { }
-//Module not exposed on this chain
-//internal partial class ConsensusModule : IModule<ConsensusModule, Cosmos.Consensus.V1.Query.QueryClient> { }
+internal partial class CircuitModule : IModule<CircuitModule, Cosmos.Circuit.V1.Query.QueryClient> { }
+internal partial class ConsensusModule : IModule<ConsensusModule, Cosmos.Consensus.V1.Query.QueryClient> { }
 internal partial class DistributionModule : IModule<DistributionModule, Cosmos.Staking.V1Beta1.Query.QueryClient> { }
 internal partial class EvidenceModule : IModule<EvidenceModule, Cosmos.Evidence.V1Beta1.Query.QueryClient> { }
 internal partial class FeeGrantModule : IModule<FeeGrantModule, Cosmos.Feegrant.V1Beta1.Query.QueryClient> { }
 internal partial class GovModule : IModule<GovModule, Cosmos.Gov.V1Beta1.Query.QueryClient> { }
 internal partial class MintModule : IModule<MintModule, Cosmos.Mint.V1Beta1.Query.QueryClient> { }
-//Module not exposed on this chain
-//internal partial class NftModule : IModule<NftModule, Cosmos.Nft.V1Beta1.Query.QueryClient> { }
+internal partial class NftModule : IModule<NftModule, Cosmos.Nft.V1Beta1.Query.QueryClient> { }
 internal partial class ParamsModule : IModule<ParamsModule, Cosmos.Params.V1Beta1.Query.QueryClient> { }
-//Module not exposed on this chain
 //internal partial class ProtocolPoolModule : IModule<ProtocolPoolModule, Cosmos.Protocolpool.V1.Query.QueryClient> { }
 internal partial class SlashingModule : IModule<SlashingModule, Cosmos.Slashing.V1Beta1.Query.QueryClient> { }
 internal partial class StakingModule : IModule<StakingModule, Cosmos.Staking.V1Beta1.Query.QueryClient> { }
@@ -68,7 +64,7 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
             response.GasInfo.GasUsed,
             response.Result.Events
                 .Select(x => new TxEvent(
-                    null, x.Type, x.Attributes.Select(y => new TxEventAttribute(y.Key.ToStringUtf8(), y.Value.ToStringUtf8())).ToArray()))
+                    null, x.Type, x.Attributes.Select(y => new TxEventAttribute(y.Key, y.Value)).ToArray()))
                 .ToArray()
         );
     }
@@ -80,9 +76,9 @@ internal partial class TxModule : IModule<TxModule, Cosmos.Tx.V1Beta1.Service.Se
         var events = tx.TxResponse.Logs.Count < 2
             ? tx.TxResponse.Events.Select(e =>
             {
-                var msgIndexRaw = e.Attributes.LastOrDefault(x => x.Key.ToStringUtf8() == "msg_index")?.Value;
-                return new TxEvent(msgIndexRaw is null ? null : int.Parse(msgIndexRaw.ToStringUtf8()), e.Type,
-                    e.Attributes.Select(a => new TxEventAttribute(a.Key.ToStringUtf8(), a.Value.ToStringUtf8())).ToList().AsReadOnly());
+                var msgIndexRaw = e.Attributes.LastOrDefault(x => x.Key == "msg_index")?.Value;
+                return new TxEvent(msgIndexRaw is null ? null : int.Parse(msgIndexRaw), e.Type,
+                    e.Attributes.Select(a => new TxEventAttribute(a.Key, a.Value)).ToList().AsReadOnly());
             })
             : tx.TxResponse.Logs.SelectMany(
                 x => x.Events.Select(

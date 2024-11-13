@@ -2,9 +2,98 @@
   "repoDir": "lib",
   "chainRepoPath": "noble",
   "chainRepoName": "github.com/noble-assets/noble",
-  "commitHash": "56f08ad2d6c8baec66617202f0463f66c9b0fdfe",
+  "commitHash": "2592437d3813860037a6b885a88321421bf67198",
   "protoDir": "proto",
+  "hasNoProtos": true,
   "protoDependencies": [
+    {
+      "name": "github.com/noble-assets/authority",
+      "isExternal": false,
+      "dirName": "authority",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/noble-assets/forwarding",
+      "isExternal": false,
+      "dirName": "forwarding",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/noble-assets/globalfee",
+      "isExternal": false,
+      "dirName": "globalfee",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/noble-assets/halo",
+      "isExternal": false,
+      "dirName": "halo",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/circlefin/noble-cctp",
+      "isExternal": false,
+      "dirName": "noble-cctp",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/circlefin/noble-fiattokenfactory",
+      "isExternal": false,
+      "dirName": "noble-fiattokenfactory",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/monerium/module-noble",
+      "isExternal": false,
+      "dirName": "module-noble",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/ondoprotocol/usdy-noble",
+      "isExternal": false,
+      "dirName": "usdy-noble",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
     {
       "name": "github.com/cosmos/cosmos-proto",
       "isExternal": false,
@@ -39,20 +128,20 @@
       ]
     },
     {
-      "name": "github.com/confio/ics23",
+      "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
       "protoDirs": [
         {
-          "in": ".",
+          "in": "proto",
           "out": "."
         }
       ]
     },
     {
-      "name": "github.com/tendermint/tendermint",
+      "name": "github.com/cosmos/cosmos-proto",
       "isExternal": false,
-      "dirName": "tendermint",
+      "dirName": "cosmos-proto",
       "protoDirs": [
         {
           "in": "proto",
