@@ -28,12 +28,11 @@ public static class GeneratorDiagnostics
     );
 
     public static readonly DiagnosticDescriptor SchemaFileMalformed = new DiagnosticDescriptor(
-    "CWG0002",
-    "Schema file could not be parsed",
-    "Schema file could not be parsed. An exception occured: {0}.",
-    DiagnosticCategory.Usage,
-    DiagnosticSeverity.Warning,
-    true
-);
-
+        "CWG0002",
+        "Schema file could not be parsed",
+        "Schema file could not be parsed. An exception occured: {0}.",
+        DiagnosticCategory.Usage,
+        DiagnosticSeverity.Warning,
+        true
+    );
 }

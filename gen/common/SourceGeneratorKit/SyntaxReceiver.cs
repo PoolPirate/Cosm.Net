@@ -27,9 +27,6 @@ public class SyntaxReceiver : ISyntaxContextReceiver
             case PropertyDeclarationSyntax propertyDeclarationSyntax:
                 OnVisitPropertyDeclaration(propertyDeclarationSyntax, context.SemanticModel);
                 break;
-            case FieldDeclarationSyntax fieldDeclarationSyntax:
-                OnVisitFieldDeclaration(fieldDeclarationSyntax, context.SemanticModel);
-                break;
             case ClassDeclarationSyntax classDeclarationSyntax:
                 OnVisitClassDeclaration(classDeclarationSyntax, context.SemanticModel);
                 break;
@@ -69,31 +66,6 @@ public class SyntaxReceiver : ISyntaxContextReceiver
 
     protected virtual bool ShouldCollectMethodSymbol(IMethodSymbol methodSymbol)
         => true;
-
-    protected virtual void OnVisitFieldDeclaration(FieldDeclarationSyntax fieldDeclarationSyntax, SemanticModel model)
-    {
-        if(!CollectFieldSymbol)
-        {
-            return;
-        }
-
-        if(!ShouldCollectFieldDeclaration(fieldDeclarationSyntax))
-        {
-            return;
-        }
-
-        if(model.GetDeclaredSymbol(fieldDeclarationSyntax) is not IFieldSymbol fieldSymbol)
-        {
-            return;
-        }
-
-        if(!ShouldCollectFieldSymbol(fieldSymbol))
-        {
-            return;
-        }
-
-        Fields.Add(fieldSymbol);
-    }
 
     protected virtual bool ShouldCollectFieldDeclaration(FieldDeclarationSyntax fieldDeclarationSyntax)
         => true;
