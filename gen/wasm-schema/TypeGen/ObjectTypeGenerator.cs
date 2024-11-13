@@ -71,7 +71,7 @@ public class ObjectTypeGenerator
             .FirstOrDefault(x => x.Value == schema).Key;
 
         string typeName = definitionName 
-            ?? (schema.Title.IndexOf(' ') != -1
+            ?? (schema.Title?.IndexOf(' ') != -1
                 ? null
                 : schema.Title)
             ?? (schema.RequiredProperties.Count == 1 && schema.Properties.Count == 1 //Nested message

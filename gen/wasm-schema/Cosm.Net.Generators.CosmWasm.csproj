@@ -1,40 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-	<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-	<Nullable>enable</Nullable>
-	<IsRoslynComponent>true</IsRoslynComponent>
-	<LangVersion>latest</LangVersion>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Title>Cosm.Net.Generators.CosmWasm</Title>
-	<Authors>Playwo</Authors>
-	<Company></Company>
-	<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	<RootNamespace>Cosm.Net.Generators.CosmWasm</RootNamespace>
-	<IncludeBuildOutput>false</IncludeBuildOutput>
-	<Version>1.4.0</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<Nullable>enable</Nullable>
+		<IsRoslynComponent>true</IsRoslynComponent>
+		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Cosm.Net.Generators.CosmWasm</Title>
+		<Authors>Playwo</Authors>
+		<Company></Company>
+		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>Cosm.Net.Generators.CosmWasm</RootNamespace>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<Version>1.4.1</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-	<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Cosm.Net.Generators.Common" Version="1.4.0" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Namotion.Reflection" Version="2.1.2" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="NJsonSchema" Version="10.9.0" PrivateAssets="all" GeneratePathProperty="true" />
-	<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" PrivateAssets="all" />
-	<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all">
-		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		<PrivateAssets>all</PrivateAssets>
-	</PackageReference>
-		
-	<PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" GeneratePathProperty="true" />
-	<PackageReference Include="System.Text.Json" Version="8.0.0" GeneratePathProperty="true" />
-  </ItemGroup>
-	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="System.IO.Pipelines" Version="9.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="Namotion.Reflection" Version="3.1.1" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="NJsonSchema" Version="11.0.2" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="NJsonSchema.Annotations" Version="11.0.2" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="System.Text.Encodings.Web" Version="9.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+
+		<PackageReference Include="Cosm.Net.Generators.Common" Version="1.4.1" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Cosm.Net.Core" Version="1.4.1" />
+	</ItemGroup>
+
 	<PropertyGroup>
 		<GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
 	</PropertyGroup>
@@ -42,17 +45,17 @@
 	<Target Name="GetDependencyTargetPaths">
 		<ItemGroup>
 			<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-			<None Include="$(PKGCosm_Net_Generators_Common)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 			
-			<None Include="$(PKGNamotion_Reflection)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-			<None Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-			<None Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 			<None Include="$(PKGMicrosoft_Bcl_HashCode)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 			<None Include="$(PKGMicrosoft_Bcl_AsyncInterfaces)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+			<None Include="$(PKGSystem_Io_Pipelines)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 			<None Include="$(PKGNamotion_Reflection)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-			<None Include="$(PKGNJsonSchema)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 			<None Include="$(PKGNewtonsoft_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-			<None Include="$(PKGNamotion_Reflection)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+			<None Include="$(PKGNJsonSchema)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+			<None Include="$(PKGNJsonSchema_Annotations)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+			<None Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+			<None Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+			<None Include="$(PKGCosm_Net_Generators_Common)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		</ItemGroup>
 	</Target>
 </Project>

@@ -50,7 +50,7 @@ public class ContractAPISchema
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"ResponseSchema {responseKey} could not be parsed", ex);
+                throw new InvalidOperationException($"ResponseSchema {responseKey} could not be parsed: {ex.Message}", ex);
             }
         }
 

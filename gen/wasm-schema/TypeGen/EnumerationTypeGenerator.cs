@@ -34,7 +34,7 @@ public class EnumerationTypeGenerator
                 throw new NotSupportedException("Enumeration must only contain one value per entry");
             }
 
-            string enumerationValue = enumerationSchema.Enumeration.Single().ToString()
+            string enumerationValue = enumerationSchema.Enumeration.Single()?.ToString()
                 ?? throw new NotSupportedException("Enumeration Values cannot be null");
 
             enumerationBuilder.AddValue(
@@ -82,7 +82,7 @@ public class EnumerationTypeGenerator
             var enumValueName = enumType == RustEnumType.String
                 ? enumerationSchema.Enumeration.Count != 1
                     ? throw new NotSupportedException("EnumerationType must only contain one value per entry")
-                    : enumerationSchema.Enumeration.Single().ToString()
+                    : enumerationSchema.Enumeration.Single()!.ToString()
                 : enumerationSchema.ActualProperties.Count != 1
                     ? throw new NotSupportedException("EnumerationType must have only one ActualProperty per entry")
                     : enumerationSchema.ActualProperties.Single().Key;
@@ -198,7 +198,7 @@ public class EnumerationTypeGenerator
             .FirstOrDefault(x => x.Value == schema).Key;
 
         string typeName = definitionName
-            ?? (schema.Title.IndexOf(' ') != -1
+            ?? (schema.Title?.IndexOf(' ') != -1
                 ? null
                 : schema.Title)
             ?? (schema.RequiredProperties.Count == 1 && schema.Properties.Count == 1 //Nested message

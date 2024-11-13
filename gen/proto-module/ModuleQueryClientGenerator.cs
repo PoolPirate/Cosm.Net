@@ -23,7 +23,8 @@ public class ModuleQueryClientGenerator : IIncrementalGenerator
             )
             .Where(moduleSymbol => 
                 moduleSymbol is not null && 
-                moduleSymbol.AllInterfaces.Any(static x => x.Name == "ICosmModule"))
+                moduleSymbol.AllInterfaces.Any(static x => x.Name == "ICosmModule")
+            )
             .Select((x, _) => x!);
 
         var msgClassesProvider = context.SyntaxProvider
