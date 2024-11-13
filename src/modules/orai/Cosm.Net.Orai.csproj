@@ -13,7 +13,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.3.2.424+orai.v0.42.4</Version>
+		<Version>1.3.2.500+orai.v0.50.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -38,7 +38,6 @@
 		<Protobuf Include="./proto/cosmos_proto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/amino/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/gogoproto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
-		<Protobuf Include="./proto/proofs.proto" ProtoRoot="./proto" GrpcServices="None" />
 
 		<Protobuf Include="./proto/cosmos/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />

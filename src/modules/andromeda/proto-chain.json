@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "andromedad",
   "chainRepoName": "github.com/andromedaprotocol/andromedad",
-  "commitHash": "56677646ff34011a4f34006ccc4bf0727384ea79",
+  "commitHash": "d4a545873e26f920f26e5ce54798f580e9846c9d",
   "protoDir": "proto",
   "protoDependencies": [
     {

@@ -1,21 +1,10 @@
 ﻿{
   "repoDir": "lib",
-  "chainRepoPath": "orai",
-  "chainRepoName": "github.com/oraichain/orai",
-  "commitHash": "fbc32fd41ec5633edd2336a01209225a6b4c837a",
+  "chainRepoPath": "wasmd",
+  "chainRepoName": "github.com/oraichain/wasmd",
+  "commitHash": "a71fabc622f20aa4a13f3995e24ffdf70bfc6c5c",
   "protoDir": "proto",
   "protoDependencies": [
-    {
-      "name": "github.com/CosmWasm/wasmd",
-      "isExternal": false,
-      "dirName": "wasmd",
-      "protoDirs": [
-        {
-          "in": "proto",
-          "out": "."
-        }
-      ]
-    },
     {
       "name": "github.com/cosmos/cosmos-proto",
       "isExternal": false,
@@ -50,20 +39,9 @@
       ]
     },
     {
-      "name": "github.com/confio/ics23",
+      "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
-      "protoDirs": [
-        {
-          "in": ".",
-          "out": "."
-        }
-      ]
-    },
-    {
-      "name": "github.com/tendermint/tendermint",
-      "isExternal": false,
-      "dirName": "tendermint",
       "protoDirs": [
         {
           "in": "proto",
