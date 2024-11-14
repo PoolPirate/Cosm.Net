@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "sei-chain",
   "chainRepoName": "github.com/sei-protocol/sei-chain",
-  "commitHash": "895159d3d1a4e3cda1914313baa01e9aa02a7bf0",
+  "commitHash": "38418afec33d898588133cf5697090d7e2a87b37",
   "protoDir": "proto",
   "protoDependencies": [
     {
