@@ -120,6 +120,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Osmosis-Indexer", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.DungeonChain", "src\modules\dungeon-chain\Cosm.Net.DungeonChain.csproj", "{983B6715-B511-4BB1-83A7-75BD01DB1D21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Mantra", "src\modules\mantra\Cosm.Net.Mantra.csproj", "{7B931825-E0A9-4702-B6AD-D2158D05B998}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -318,6 +320,10 @@ Global
 		{983B6715-B511-4BB1-83A7-75BD01DB1D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{983B6715-B511-4BB1-83A7-75BD01DB1D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{983B6715-B511-4BB1-83A7-75BD01DB1D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B931825-E0A9-4702-B6AD-D2158D05B998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B931825-E0A9-4702-B6AD-D2158D05B998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B931825-E0A9-4702-B6AD-D2158D05B998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B931825-E0A9-4702-B6AD-D2158D05B998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -372,6 +378,7 @@ Global
 		{B143BCD9-E15A-439E-AF64-C9A6B77F0DF7} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{0C2B668B-4D64-4DA8-AE90-4F7855C0342B} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{983B6715-B511-4BB1-83A7-75BD01DB1D21} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{7B931825-E0A9-4702-B6AD-D2158D05B998} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
