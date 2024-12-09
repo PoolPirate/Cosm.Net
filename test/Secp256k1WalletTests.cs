@@ -9,7 +9,7 @@ public class Secp256k1WalletTests
     [Fact]
     public void Should_Derive_Correct_Pubkey()
     {
-        var wallet = new Secp256k1Wallet(Mnemonic);
+        var wallet = new CosmosWallet(Mnemonic);
         Assert.Equal(CosmosAddress, wallet.GetAddress("cosmos"));
     }
 }

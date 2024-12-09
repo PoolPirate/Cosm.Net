@@ -7,7 +7,6 @@ using Cosm.Net.Signer;
 using Cosm.Net.Tx;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
-using Org.BouncyCastle.X509;
 
 namespace Cosm.Net.Client;
 internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
