@@ -1,12 +1,6 @@
 ﻿namespace Cosm.Net.Models;
-public class TxSimulation
+public class TxSimulation(ulong gasUsed, IReadOnlyList<TxEvent> events)
 {
-    public ulong GasUsed { get; }
-    public IReadOnlyList<TxEvent> Events { get; }
-
-    public TxSimulation(ulong gasUsed, IReadOnlyList<TxEvent> events)
-    {
-        GasUsed = gasUsed;
-        Events = events;
-    }
+    public ulong GasUsed { get; } = gasUsed;
+    public IReadOnlyList<TxEvent> Events { get; } = events;
 }

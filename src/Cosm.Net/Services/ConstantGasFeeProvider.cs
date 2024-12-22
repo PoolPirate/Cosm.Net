@@ -18,7 +18,7 @@ internal class ConstantGasFeeProvider : IGasFeeProvider<ConstantGasFeeProvider.C
         GasFeeDenom = configuration.GasFeeDenom;
     }
 
-    public ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted)
+    public ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted, CancellationToken cancellationToken = default)
         => ValueTask.FromResult(new Coin(GasFeeDenom, 
             (ulong) Math.Ceiling(gasWanted * _gasPrice)));
 

@@ -2,6 +2,7 @@
 using Cosm.Net.Models;
 using Google.Protobuf;
 using Grpc.Core;
+using System.Numerics;
 
 namespace Cosm.Net.Modules;
 //internal partial class AccountModule : IModule<AccountModule,Cosmos.Accounts.V1.Query.QueryClient> { }
@@ -84,7 +85,16 @@ internal partial class TxModule : IModule<TxModule,Cosmos.Tx.V1Beta1.Service.Ser
                     e => new TxEvent((int) x.MsgIndex, e.Type, e.Attributes.Select(
                         a => new TxEventAttribute(a.Key, a.Value)).ToList().AsReadOnly())));
 
-        return new TxExecution(tx.TxResponse.Code == 0, txHash, tx.TxResponse.Height, tx.Tx.Body.Memo, events.ToArray());
+        return new TxExecution(
+            tx.TxResponse.Code, 
+            txHash, 
+            tx.TxResponse.Height, 
+            tx.TxResponse.RawLog, 
+            tx.Tx.Body.Memo, 
+            tx.Tx.AuthInfo.Fee.GasLimit,
+            tx.Tx.AuthInfo.Fee.Amount.Select(x => new Coin(x.Denom, BigInteger.Parse(x.Amount))).ToArray(),
+            events.ToArray()
+        );
     }
 }
 internal partial class UpgradeModule : IModule<UpgradeModule,Cosmos.Upgrade.V1Beta1.Query.QueryClient> { }

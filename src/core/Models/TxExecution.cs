@@ -1,18 +1,13 @@
 ﻿namespace Cosm.Net.Models;
-public class TxExecution
+public class TxExecution(int code, string txHash, long blockNumber, string rawLog, string memo, ulong gasWanted, Coin[] txFees, TxEvent[] events)
 {
-    public bool Success { get; }
-    public string TxHash { get; }
-    public long BlockNumber { get; }
-    public string Memo { get; }
-    public TxEvent[] Events { get; }
-
-    public TxExecution(bool success, string txHash, long blockNumber, string memo, TxEvent[] events)
-    {
-        Success = success;
-        TxHash = txHash;
-        BlockNumber = blockNumber;
-        Memo = memo;
-        Events = events;
-    }
+    public bool Success => Code == 0;
+    public int Code { get; } = code;
+    public string TxHash { get; } = txHash;
+    public long BlockNumber { get; } = blockNumber;
+    public string RawLog { get; } = rawLog;
+    public string Memo { get; } = memo;
+    public ulong GasWanted { get; } = gasWanted;
+    public Coin[] TxFees { get; } = txFees;
+    public TxEvent[] Events { get; } = events;
 }

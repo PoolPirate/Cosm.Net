@@ -13,11 +13,11 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
 		<LangVersion>preview</LangVersion>
-		<Version>1.4.1</Version>
+		<Version>1.4.33</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.4.1" PrivateAssets="all" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.4.3" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.67.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

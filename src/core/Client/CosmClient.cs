@@ -89,12 +89,31 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         }
     }
 
-    public Task<TxSimulation> SimulateAsync(ICosmTx tx)
+    public Task<TxSimulation> SimulateAsync(ICosmTx tx, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
-        return _txScheduler!.SimulateTxAsync(tx);
+        return _txScheduler!.SimulateTxAsync(tx, cancellationToken);
     }
 
+    public ValueTask<Coin> EstimateTxFeesAsync(ulong gasWanted, CancellationToken cancellationToken = default)
+    {
+        AssertReady(true);
+        return _gasFeeProvider!.GetFeeForGasAsync(gasWanted, cancellationToken);
+    }
+
+    public async Task<TxEstimation> SimulateAndEstimateTxFeesAsync(ICosmTx tx, double? gasMultiplier = null, 
+        ulong? gasOffset = null, CancellationToken cancellationToken = default)
+    {
+        AssertReady(true);
+        var simulation = await SimulateAsync(tx, cancellationToken);
+        ulong gasWanted = _gasFeeProvider!.ApplyGasBuffers(simulation.GasUsed, gasMultiplier, gasOffset);
+        var txFee = await _gasFeeProvider.GetFeeForGasAsync(gasWanted, cancellationToken);
+        return new TxEstimation(simulation.Events, gasWanted, txFee);
+    }
+
+    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, Coin txFee,
+        DateTime? deadline = default, CancellationToken cancellationToken = default)
+        => PublishTxAsync(tx, gasWanted, [txFee], deadline, cancellationToken); 
     public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees,
         DateTime? deadline = default, CancellationToken cancellationToken = default)
     {

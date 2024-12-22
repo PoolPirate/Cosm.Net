@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Encoding;
+using Cosm.Net.Signer;
 using Keysmith.Net.BIP;
 using Keysmith.Net.EC;
 using Keysmith.Net.Wallet;
@@ -6,9 +7,10 @@ using Org.BouncyCastle.Crypto.Digests;
 using System.Security.Cryptography;
 
 namespace Cosm.Net.Wallet;
-public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>
+public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>, IOfflineSigner
 {
     public byte[] AddressBytes { get; private set; }
+    public byte[] PublicKey => _compressedPublicKey;
 
     public CosmosWallet(ReadOnlySpan<byte> privateKey)
         :base(Secp256k1.Instance, privateKey)
@@ -41,4 +43,9 @@ public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>
     public string GetAddress(string prefix)
         => Bech32.EncodeAddress(prefix, AddressBytes)
             ?? throw new InvalidOperationException("Creating address failed");
+
+    public bool SignMessage(ReadOnlySpan<byte> message, Span<byte> signatureOutput)
+        => TrySign(message, signatureOutput);
+    public byte[] SignMessage(ReadOnlySpan<byte> message)
+        => Sign(message);
 }
