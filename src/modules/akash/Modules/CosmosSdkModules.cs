@@ -3,6 +3,7 @@ using Cosm.Net.Models;
 using Google.Protobuf;
 using Grpc.Core;
 using Org.BouncyCastle.Asn1.Crmf;
+using System.Numerics;
 
 namespace Cosm.Net.Modules;
 //internal partial class AccountModule : IModule<AccountModule, Cosmos.Accounts.V1.Query.QueryClient> { }

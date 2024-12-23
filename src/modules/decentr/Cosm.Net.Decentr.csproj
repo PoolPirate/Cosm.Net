@@ -12,7 +12,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.4.33.164+decentr.v1.6.4</Version>
+		<Version>1.4.3.164+decentr.v1.6.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -12,7 +12,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.4.33.254+band.v2.5.4</Version>
+		<Version>1.4.3.254+band.v2.5.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

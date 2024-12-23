@@ -3,6 +3,7 @@ using Cosm.Net.Models;
 using Cosm.Net.Services;
 using Google.Protobuf;
 using Grpc.Core;
+using System.Numerics;
 
 namespace Cosm.Net.Modules;
 //Module not exposed on this chain

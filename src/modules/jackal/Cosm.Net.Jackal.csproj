@@ -13,7 +13,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.4.33.411+jackal.v4.1.1</Version>
+		<Version>1.4.3.411+jackal.v4.1.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

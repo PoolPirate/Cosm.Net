@@ -13,7 +13,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.4.33.14+agoric.upgrade-14</Version>
+		<Version>1.4.3.14+agoric.upgrade-14</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

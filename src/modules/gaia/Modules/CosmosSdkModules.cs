@@ -2,9 +2,9 @@
 using Cosm.Net.Models;
 using Google.Protobuf;
 using Grpc.Core;
+using System.Numerics;
 
 namespace Cosm.Net.Modules;
-//Module not exposed on this chain
 //internal partial class AccountModule : IModule<AccountModule, Cosmos.Accounts.V1.Query.QueryClient> { }
 internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Query.QueryClient>, IAuthModuleAdapter
 {
