@@ -45,7 +45,16 @@ public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>, IOfflineSigner
             ?? throw new InvalidOperationException("Creating address failed");
 
     public bool SignMessage(ReadOnlySpan<byte> message, Span<byte> signatureOutput)
-        => TrySign(message, signatureOutput);
+    {
+        Span<byte> hashBuffer = stackalloc byte[32];
+        SHA256.TryHashData(message, hashBuffer, out _);
+        return TrySign(hashBuffer, signatureOutput);
+    }
+
     public byte[] SignMessage(ReadOnlySpan<byte> message)
-        => Sign(message);
+    {
+        Span<byte> hashBuffer = stackalloc byte[32];
+        SHA256.TryHashData(message, hashBuffer, out _);
+        return Sign(hashBuffer);
+    }
 }
