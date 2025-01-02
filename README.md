@@ -77,7 +77,7 @@ Besides the config required for the read-only client you'll also needs to call a
 
 ```cs
 //Define your wallet, fully matches Cosmos spec used in wallets like Keplr
-var wallet = new Secp256k1Wallet("totally my mnemonic phrase")
+var wallet = new CosmosWallet("totally my mnemonic phrase")
 
 //Create tx client builder and attach it to the previously connected chain client
 var txClient = new CosmTxClientBuilder()
