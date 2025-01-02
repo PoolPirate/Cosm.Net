@@ -54,7 +54,7 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
         return gasPricee18 / GasPriceDenom;
     }
 
-    public async ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted)
+    public async ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted, CancellationToken cancellationToken = default)
     {
         if(_currentBaseGasPrice.HasValue)
         {

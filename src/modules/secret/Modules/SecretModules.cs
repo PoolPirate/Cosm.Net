@@ -115,5 +115,4 @@ internal partial class ComputeModule : IModule<ComputeModule,Secret.Compute.V1Be
     }
 }
 internal partial class EmergencyButtonModule : IModule<EmergencyButtonModule,Secret.Emergencybutton.V1Beta1.Query.QueryClient> { }
-internal partial class InterTxModule : IModule<InterTxModule,Secret.Intertx.V1Beta1.Query.QueryClient> { }
 internal partial class RegistrationModule : IModule<RegistrationModule,Secret.Registration.V1Beta1.Query.QueryClient> { }
