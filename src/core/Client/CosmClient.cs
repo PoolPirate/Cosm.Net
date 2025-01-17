@@ -160,7 +160,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     {
         AssertReady(false);
         return _provider.GetService<TModule>()
-                ?? throw new InvalidOperationException("Module not installed!");
+            ?? throw new InvalidOperationException("Module not installed!");
     }
 
     public IEnumerable<(Type, IModule)> GetAllModules()

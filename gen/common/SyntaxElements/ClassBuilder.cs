@@ -133,6 +133,8 @@ public class ClassBuilder : ITypeBuilder
 
     public string Build(bool generateFieldConstructor = false, bool generateInterface = false, string? interfaceName = null)
     {
+        interfaceName = interfaceName ?? $"I{_name}";
+
         var bodySb = new StringBuilder();
         var baseTypeSb = new StringBuilder();
 
@@ -157,7 +159,7 @@ public class ClassBuilder : ITypeBuilder
 
         if(generateInterface)
         {
-            orderedBaseTypes.Add(new BaseType($"I{_name}", true));
+            orderedBaseTypes.Add(new BaseType(interfaceName, true));
         }
 
         for(int i = 0; i < orderedBaseTypes.Count; i++)
@@ -182,7 +184,7 @@ public class ClassBuilder : ITypeBuilder
         if(generateInterface)
         {
             outputSb.AppendLine(
-                new InterfaceBuilder(interfaceName ?? $"I{_name}")
+                new InterfaceBuilder(interfaceName)
                 .AddFunctions(_functions)
                 .AddBaseTypes(_baseTypes)
                 .WithIsPartial(_isPartial)

@@ -77,7 +77,5 @@ public class CosmWasmTypeGenerator
     }
 
     private string GetContractClassName(string contractInterfaceName)
-        => contractInterfaceName.StartsWith("I")
-            ? contractInterfaceName.Substring(1)
-            : $"{contractInterfaceName}Implementation";
+        => $"{contractInterfaceName}_Generated_Implementation";
 }

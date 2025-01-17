@@ -8,6 +8,6 @@ public static class ICosmClientExtensions
 {
     public static TContract Contract<TContract>(this ICosmClient client, string contractAddress, string? codeHash = null)
         where TContract : IContract
-        => client.AsInternal().ServiceProvider.GetRequiredService<ContractSchemaStore>()
-            .InstantiateContract<TContract>(contractAddress, codeHash);
+        => client.AsInternal().ServiceProvider.GetRequiredService<IContractFactory>()
+            .Create<TContract>(contractAddress, codeHash);
 }
