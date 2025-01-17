@@ -15,7 +15,7 @@ public class SequentialTxScheduler : ITxScheduler
 {
     private readonly Channel<QueueEntry> _txChannel;
     private readonly ITxEncoder _txEncoder;
-    private readonly IOfflineSigner _signer;
+    private readonly ICosmSigner _signer;
     private readonly IAuthModuleAdapter _authAdapter;
     private readonly IChainConfiguration _chainConfiguration;
     private readonly ITxModuleAdapter _txModuleAdapater;
@@ -25,7 +25,7 @@ public class SequentialTxScheduler : ITxScheduler
     public ulong AccountNumber { get; private set; }
     public ulong CurrentSequence { get; private set; }
 
-    public SequentialTxScheduler(ITxEncoder txEncoder, IOfflineSigner signer, IAuthModuleAdapter authAdapter,
+    public SequentialTxScheduler(ITxEncoder txEncoder, ICosmSigner signer, IAuthModuleAdapter authAdapter,
         IChainConfiguration chainConfiguration, ITxModuleAdapter txModuleAdapater, IGasFeeProvider gasFeeProvider, ITxPublisher txPublisher)
     {
         _txChannel = Channel.CreateUnbounded<QueueEntry>(new UnboundedChannelOptions()

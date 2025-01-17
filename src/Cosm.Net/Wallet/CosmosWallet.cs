@@ -7,27 +7,29 @@ using Org.BouncyCastle.Crypto.Digests;
 using System.Security.Cryptography;
 
 namespace Cosm.Net.Wallet;
-public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>, IOfflineSigner
+public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>, ICosmSigner
 {
-    public byte[] AddressBytes { get; private set; }
-    public byte[] PublicKey => _compressedPublicKey;
+    private readonly byte[] _addressBytes;
+
+    public ReadOnlySpan<byte> AddressBytes => _addressBytes;
+    public ReadOnlySpan<byte> PublicKey => _compressedPublicKey;
 
     public CosmosWallet(ReadOnlySpan<byte> privateKey)
         :base(Secp256k1.Instance, privateKey)
     {
-        AddressBytes = GenerateAddress();
+        _addressBytes = GenerateAddress();
     }
 
     public CosmosWallet(string mnemonic, string passphrase = "", int accountIndex = 0)
         :base(Secp256k1.Instance, mnemonic, passphrase, BIP44.Cosmos(accountIndex))
     {
-        AddressBytes = GenerateAddress();
+        _addressBytes = GenerateAddress();
     }
 
     public CosmosWallet(string mnemonic, string passphrase = "", params ReadOnlySpan<uint> derivationPath)
         : base(Secp256k1.Instance, mnemonic, passphrase, derivationPath)
     {
-        AddressBytes = GenerateAddress();
+        _addressBytes = GenerateAddress();
     }
 
     private byte[] GenerateAddress()
@@ -41,7 +43,7 @@ public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>, IOfflineSigner
     }
 
     public string GetAddress(string prefix)
-        => Bech32.EncodeAddress(prefix, AddressBytes)
+        => Bech32.EncodeAddress(prefix, _addressBytes)
             ?? throw new InvalidOperationException("Creating address failed");
 
     public bool SignMessage(ReadOnlySpan<byte> message, Span<byte> signatureOutput)

@@ -142,16 +142,16 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     /// <param name="signer">The signer instance to use</param>
     /// <param name="overrideExisting">If this should override an existing signer</param>
     /// <returns></returns>
-    public CosmClientBuilder WithSigner(IOfflineSigner signer, bool overrideExisting = false)
+    public CosmClientBuilder WithSigner(ICosmSigner signer, bool overrideExisting = false)
     {
-        if(_services.Any(x => x.ServiceType == typeof(IOfflineSigner)))
+        if(_services.Any(x => x.ServiceType == typeof(ICosmSigner)))
         {
             if(!overrideExisting)
             {
-                throw new InvalidOperationException($"{nameof(IOfflineSigner)} already set.");
+                throw new InvalidOperationException($"{nameof(ICosmSigner)} already set.");
             }
 
-            _ = _services.Replace(new ServiceDescriptor(typeof(IOfflineSigner), signer));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ICosmSigner), signer));
         }
         else
         {
@@ -482,9 +482,9 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     {
         AssertValidReadClientServices();
 
-        if(!_services.Any(x => x.ServiceType == typeof(IOfflineSigner)))
+        if(!_services.Any(x => x.ServiceType == typeof(ICosmSigner)))
         {
-            throw new InvalidOperationException($"No {nameof(IOfflineSigner)} set. Make sure to call {nameof(WithSigner)} before building the client.");
+            throw new InvalidOperationException($"No {nameof(ICosmSigner)} set. Make sure to call {nameof(WithSigner)} before building the client.");
         }
         if(!_services.Any(x => x.ServiceType == typeof(ITxScheduler)))
         {

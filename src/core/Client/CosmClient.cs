@@ -71,7 +71,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         catch(RpcException e)
             when(e.StatusCode == StatusCode.NotFound && e.Status.Detail.StartsWith("account") && e.Status.Detail.EndsWith("not found"))
         {
-            var signer = _provider.GetRequiredService<IOfflineSigner>();
+            var signer = _provider.GetRequiredService<ICosmSigner>();
             throw new Exception($"Your account {signer.GetAddress(Chain.Bech32Prefix)} was not found on chain. " +
                 "Cosmos chains create accounts when they receive funds for the first time.");
         }

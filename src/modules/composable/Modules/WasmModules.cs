@@ -14,13 +14,13 @@ namespace Cosm.Net.Modules;
 internal partial class WasmModule : IModule<WasmModule, Cosmwasm.Wasm.V1.Query.QueryClient>, IWasmAdapater
 {
     private readonly IChainConfiguration _chain;
-    private readonly IOfflineSigner? _signer;
+    private readonly ICosmSigner? _signer;
 
     public WasmModule(CallInvoker callInvoker, IChainConfiguration chain, IServiceProvider provider)
     {
         _client = new Cosmwasm.Wasm.V1.Query.QueryClient(callInvoker);
         _chain = chain;
-        _signer = provider.GetService<IOfflineSigner>();
+        _signer = provider.GetService<ICosmSigner>();
     }
 
     IWasmTxMessage IWasmAdapater.EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)

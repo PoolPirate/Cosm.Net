@@ -1,10 +1,15 @@
 ﻿namespace Cosm.Net.Signer;
-public interface IOfflineSigner
+public interface ICosmSigner
 {
     /// <summary>
     /// Public key of this signer
     /// </summary>
-    public byte[] PublicKey { get; }
+    public ReadOnlySpan<byte> PublicKey { get; }
+
+    /// <summary>
+    /// The unencoded bytes that make up the address of this signer.
+    /// </summary>
+    public ReadOnlySpan<byte> AddressBytes { get; }
 
     /// <summary>
     /// Get a Bech32 encoded address from the public key given a prefix.

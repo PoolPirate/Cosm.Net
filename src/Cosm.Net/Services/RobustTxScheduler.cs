@@ -19,13 +19,13 @@ public class RobustTxScheduler : ITxScheduler
     private readonly IChainConfiguration _chainConfiguration;
     private readonly IGasFeeProvider _gasFeeProvider;
     private readonly Channel<QueueEntry> _pendingTxChannel;
-    private readonly IOfflineSigner _signer;
+    private readonly ICosmSigner _signer;
 
     private readonly ITxEncoder _txEncoder;
     private readonly ITxModuleAdapter _txModuleAdapater;
     private readonly ITxPublisher _txPublisher;
 
-    public RobustTxScheduler(ITxEncoder txEncoder, IOfflineSigner signer, IAuthModuleAdapter authAdapter,
+    public RobustTxScheduler(ITxEncoder txEncoder, ICosmSigner signer, IAuthModuleAdapter authAdapter,
         IChainConfiguration chainConfiguration, ITxModuleAdapter txModuleAdapater, IGasFeeProvider gasFeeProvider,
         ITxPublisher txPublisher)
     {

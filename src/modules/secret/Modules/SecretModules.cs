@@ -17,7 +17,7 @@ using System.Text.Json.Nodes;
 namespace Cosm.Net.Modules;
 internal partial class ComputeModule : IModule<ComputeModule,Secret.Compute.V1Beta1.Query.QueryClient>, IWasmAdapater
 {
-    private readonly IOfflineSigner? _signer;
+    private readonly ICosmSigner? _signer;
     private readonly IChainConfiguration _chain;
     private readonly SecretEncryptionProvider _encryptor;
 
@@ -26,7 +26,7 @@ internal partial class ComputeModule : IModule<ComputeModule,Secret.Compute.V1Be
         _client = new Secret.Compute.V1Beta1.Query.QueryClient(callInvoker);
         _chain = chain;
         _encryptor = encryptor;
-        _signer = provider.GetService<IOfflineSigner>();
+        _signer = provider.GetService<ICosmSigner>();
     }
 
     IWasmTxMessage IWasmAdapater.EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
