@@ -184,8 +184,7 @@ async function tryCheckoutVersionLocally(repoUrl, repoPath, version) {
         return true;
     }
     if (version == "latest" && repoUrl == currentRepoUrl) {
-        console.log(`Found clone of ${repoUrl} locally, pulling...`);
-        await execAndWait(`cd ${repoPath} && git reset --hard && git pull`);
+        console.log(`Found clone of ${repoUrl} locally. No specific version requirement configured, skipping...`);
         return true;
     }
     const versionParts = version.split("-");
