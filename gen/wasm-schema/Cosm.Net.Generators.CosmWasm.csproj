@@ -15,7 +15,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net.Generators.CosmWasm</RootNamespace>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<Version>1.4.4</Version>
+		<Version>$(AssemblyVersion)</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -29,13 +29,13 @@
 		<PackageReference Include="System.Text.Encodings.Web" Version="9.0.0" PrivateAssets="all" GeneratePathProperty="true" />
 		<PackageReference Include="System.Text.Json" Version="9.0.0" PrivateAssets="all" GeneratePathProperty="true" />
 
-		<PackageReference Include="Cosm.Net.Generators.Common" Version="1.4.4" PrivateAssets="all" GeneratePathProperty="true" />
+		<PackageReference Include="Cosm.Net.Generators.Common" Version="$(AssemblyVersion)" PrivateAssets="all" GeneratePathProperty="true" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Cosm.Net.Core" Version="1.4.4" />
+		<PackageReference Include="Cosm.Net.Core" Version="$(AssemblyVersion)" />
 	</ItemGroup>
 
 	<PropertyGroup>

@@ -12,12 +12,12 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>1.4.4.2124+terra.v2.12.4</Version>
+		<Version>$(AssemblyVersion).2124+terra.v2.12.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net" Version="1.4.4" />
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.4.4" PrivateAssets="all" />
+		<PackageReference Include="Cosm.Net" Version="$(AssemblyVersion)" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="$(AssemblyVersion)" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.67.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

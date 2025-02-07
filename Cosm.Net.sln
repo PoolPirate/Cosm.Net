@@ -124,6 +124,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Mantra", "src\modu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Nibiru", "src\modules\nibiru\Cosm.Net.Nibiru.csproj", "{F5D7FF88-CFAA-461A-A765-0AFB9BC26411}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Elys", "src\modules\elys\Cosm.Net.Elys.csproj", "{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -330,6 +332,10 @@ Global
 		{F5D7FF88-CFAA-461A-A765-0AFB9BC26411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5D7FF88-CFAA-461A-A765-0AFB9BC26411}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5D7FF88-CFAA-461A-A765-0AFB9BC26411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -386,6 +392,7 @@ Global
 		{983B6715-B511-4BB1-83A7-75BD01DB1D21} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{7B931825-E0A9-4702-B6AD-D2158D05B998} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{F5D7FF88-CFAA-461A-A765-0AFB9BC26411} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
