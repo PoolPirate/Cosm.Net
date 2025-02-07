@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\version.props" />
 
-  <PropertyGroup>
+	<PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,8 +11,8 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
     <PackageReference Include="Nano.Bech32" Version="1.1.0" />
-	<PackageReference Include="Cosm.Net" Version="1.0.4" />
-	<PackageReference Include="Cosm.Net.Secret" Version="1.0.4" />
+	<PackageReference Include="Cosm.Net" Version="$(AssemblyVersion)" />
+	<PackageReference Include="Cosm.Net.Secret" Version="$(AssemblyVersion)" />
   </ItemGroup>
 
 </Project>

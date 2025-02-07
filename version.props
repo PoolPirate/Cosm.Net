@@ -1,6 +1,8 @@
 <Project>
-  <PropertyGroup>
-    <VersionPrefix>1.4.5</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyVersion>1.4.5</AssemblyVersion>
+
+		<VersionPrefix>1.4.5</VersionPrefix>
+		<VersionSuffix></VersionSuffix>
+	</PropertyGroup>
 </Project>

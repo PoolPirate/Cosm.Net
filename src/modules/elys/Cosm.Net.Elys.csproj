@@ -14,12 +14,12 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).102+mars.v1.0.2</Version>
+		<Version>$(AssemblyVersion).161+elys.v1.6.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cosm.Net" Version="$(AssemblyVersion)" />
-		<PackageReference Include="Cosm.Net.Generators.Proto" Version="$(AssemblyVersion)" PrivateAssets="all" />
+		<PackageReference Include="Cosm.Net" Version="1.4.4" />
+		<PackageReference Include="Cosm.Net.Generators.Proto" Version="1.4.4" PrivateAssets="all" />
 		<PackageReference Include="Grpc.Tools" Version="2.67.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -39,12 +39,12 @@
 		<Protobuf Include="./proto/cosmos_proto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/amino/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/gogoproto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
-		<Protobuf Include="./proto/proofs.proto" ProtoRoot="./proto" GrpcServices="None" />
-		
+
 		<Protobuf Include="./proto/cosmos/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
-		<Protobuf Include="./proto/cosmwasm/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+
 		<Protobuf Include="./proto/ibc/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/elys/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>

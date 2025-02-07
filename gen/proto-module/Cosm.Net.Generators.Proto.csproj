@@ -1,21 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\version.props" />
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	  <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-	  <Nullable>enable</Nullable>
-	  <IsRoslynComponent>true</IsRoslynComponent>
-	  <LangVersion>latest</LangVersion>
-	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <Title>Cosm.Net.Generators.Proto</Title>
-	  <Authors>Playwo</Authors>
-	  <Company></Company>
-	  <PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
-	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	  <RootNamespace>Cosm.Net.Generators.Proto</RootNamespace>
-	  <IncludeBuildOutput>false</IncludeBuildOutput>
-	  <Version>$(AssemblyVersion)</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<Nullable>enable</Nullable>
+		<IsRoslynComponent>true</IsRoslynComponent>
+		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Cosm.Net.Generators.Proto</Title>
+		<Authors>Playwo</Authors>
+		<Company></Company>
+		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RootNamespace>Cosm.Net.Generators.Proto</RootNamespace>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<Version>$(AssemblyVersion)</Version>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Cosm.Net.Generators.Common" Version="$(AssemblyVersion)" PrivateAssets="all" GeneratePathProperty="true" />

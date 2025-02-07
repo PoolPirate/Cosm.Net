@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\version.props" />
 
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Cosm.Net</Title>
 		<Authors>Playwo</Authors>
@@ -27,7 +29,7 @@
 		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
 		<PackageReference Include="TupleAsJsonArray" Version="1.0.2" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\core\Cosm.Net.Core.csproj" />
 	</ItemGroup>
