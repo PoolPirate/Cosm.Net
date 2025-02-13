@@ -13,8 +13,9 @@ internal partial class AuthModule : IModule<AuthModule, Cosmos.Auth.V1Beta1.Quer
         DateTime? deadline, CancellationToken cancellationToken)
     {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
-        var account = Cosmos.Auth.V1Beta1.BaseAccount.Parser.ParseFrom(accountData.Account.Value);
-        return new AccountData(account.AccountNumber, account.Sequence);
+        return accountData.Account.TryUnpack<Cosmos.Auth.V1Beta1.BaseAccount>(out var baseAccount)
+            ? new AccountData(baseAccount.AccountNumber, baseAccount.Sequence)
+            : throw new InvalidOperationException($"Cannot parse account type: {accountData.Account.TypeUrl}");
     }
 }
 internal partial class AuthzModule : IModule<AuthzModule, Cosmos.Authz.V1Beta1.Query.QueryClient> { }

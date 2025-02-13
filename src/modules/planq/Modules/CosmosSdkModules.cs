@@ -12,6 +12,11 @@ internal partial class AuthModule : IModule<AuthModule,Cosmos.Auth.V1Beta1.Query
         DateTime? deadline, CancellationToken cancellationToken)
     {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
+
+        return accountData.Account.TryUnpack<Cosmos.Auth.V1Beta1.BaseAccount>(out var baseAccount)
+            ? new AccountData(baseAccount.AccountNumber, baseAccount.Sequence)
+            : throw new InvalidOperationException($"Cannot parse account type: {accountData.Account.TypeUrl}");
+
         var account = Ethermint.Types.V1.EthAccount.Parser.ParseFrom(accountData.Account.Value);
         return new AccountData(account.BaseAccount.AccountNumber, account.BaseAccount.Sequence);
     }

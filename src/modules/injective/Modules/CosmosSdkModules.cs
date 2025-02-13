@@ -13,16 +13,14 @@ internal partial class AuthModule : IModule<AuthModule,Cosmos.Auth.V1Beta1.Query
     {
         var accountData = await AccountAsync(address, headers, deadline, cancellationToken);
 
-        if(accountData.Account.TypeUrl == $"/{(global::Injective.Types.V1Beta1.EthAccount.Descriptor.FullName)}")
+        if (accountData.Account.TryUnpack<Injective.Types.V1Beta1.EthAccount>(out var ethAccount))
         {
-            var account =Injective.Types.V1Beta1.EthAccount.Parser.ParseFrom(accountData.Account.Value);
-            return new AccountData(account.BaseAccount.AccountNumber, account.BaseAccount.Sequence);
+            return new AccountData(ethAccount.BaseAccount.AccountNumber, ethAccount.BaseAccount.Sequence);
         }
-        else
-        {
-            var account =Cosmos.Auth.V1Beta1.BaseAccount.Parser.ParseFrom(accountData.Account.Value);
-            return new AccountData(account.AccountNumber, account.Sequence);
-        }
+        //
+        return accountData.Account.TryUnpack<Cosmos.Auth.V1Beta1.BaseAccount>(out var baseAccount)
+            ? new AccountData(baseAccount.AccountNumber, baseAccount.Sequence)
+            : throw new InvalidOperationException($"Cannot parse account type: {accountData.Account.TypeUrl}");
     }
 }
 internal partial class AuthzModule : IModule<AuthzModule,Cosmos.Authz.V1Beta1.Query.QueryClient> { }

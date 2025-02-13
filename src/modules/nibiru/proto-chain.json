@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "nibiru",
   "chainRepoName": "github.com/NibiruChain/nibiru",
-  "commitHash": "7e6ad5d654a251a3acedfd535d586e487c848d42",
+  "commitHash": "fbcca386905d33051c7c5946d7d8338cef964062",
   "protoDir": "proto",
   "protoDependencies": [
     {

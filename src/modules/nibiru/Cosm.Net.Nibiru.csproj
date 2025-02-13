@@ -14,7 +14,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).105+nibiru.v1.0.5</Version>
+		<Version>$(AssemblyVersion).200+nibiru.v2.0.0-p1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
