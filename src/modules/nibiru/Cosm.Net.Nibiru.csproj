@@ -44,6 +44,9 @@
 		<Protobuf Include="./proto/cosmwasm/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/ibc/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+	
+		<Protobuf Include="./proto/eth/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/nibiru/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>
