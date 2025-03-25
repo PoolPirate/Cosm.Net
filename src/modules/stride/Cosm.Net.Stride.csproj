@@ -9,6 +9,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Cosm.Net</Title>
 		<Authors>Playwo</Authors>
+		<PackageIcon>logo.png</PackageIcon>
 		<Company></Company>
 		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
 		<IncludeSymbols>True</IncludeSymbols>
@@ -55,5 +56,7 @@
 		<EmbeddedResource Remove="proto\**" />
 		<None Remove="lib\**" />
 		<None Remove="proto\**" />
+
+		<None Include="../../../resources/logo.png" Pack="true" PackagePath="" />
 	</ItemGroup>
 </Project>

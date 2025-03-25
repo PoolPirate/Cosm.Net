@@ -10,6 +10,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Cosm.Net.Generators.Proto</Title>
 		<Authors>Playwo</Authors>
+		<PackageIcon>logo.png</PackageIcon>
 		<Company></Company>
 		<PackageProjectUrl>https://github.com/PoolPirate/Cosm.Net</PackageProjectUrl>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -28,15 +29,11 @@
 		<PackageReference Include="Cosm.Net.Core" Version="$(AssemblyVersion)" />
 	</ItemGroup>
 
-	<PropertyGroup>
-		<GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
-	</PropertyGroup>
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="$(PKGCosm_Net_Generators_Common)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 
-	<Target Name="GetDependencyTargetPaths">
-		<ItemGroup>
-			<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-			<None Include="$(PKGCosm_Net_Generators_Common)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-		</ItemGroup>
-	</Target>
+		<None Include="../../resources/logo.png" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>
