@@ -20,6 +20,7 @@
       "name": "github.com/osmosis-labs/osmosis",
       "isExternal": false,
       "dirName": "osmosis",
+      "branchNameExcludes": "osmomath",
       "protoDirs": [
         {
           "in": "proto",
@@ -50,12 +51,12 @@
       ]
     },
     {
-      "name": "github.com/confio/ics23",
+      "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
       "protoDirs": [
         {
-          "in": ".",
+          "in": "proto",
           "out": "."
         }
       ]

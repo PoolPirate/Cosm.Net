@@ -6,6 +6,7 @@ export type Repo = {
   isExternal: boolean;
   forceExternal: boolean | undefined;
   externalVersion: string | undefined;
+  branchNameExcludes: string | undefined;
   dirName: string;
   protoDirs: ProtoDir[];
 };

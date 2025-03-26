@@ -63,8 +63,23 @@ async function main(configPath) {
             await checkoutVersion(protoChain, repo, "latest");
         }
         else {
-            const replacementLine = lines.find((x) => (x.startsWith(`${repo.name}`) && x.includes("=>")) ||
+            let replacementLines = lines.filter((x) => (x.startsWith(`${repo.name}`) && x.includes("=>")) ||
                 x.includes(`${repo.name} =>`));
+            if (replacementLines.length > 0) {
+                const filteredLines = replacementLines.filter(x => repo.branchNameExcludes == undefined || !x.includes(repo.branchNameExcludes));
+                if (filteredLines.length == 0) {
+                    console.error(`None of the replacements for ${repo.name} don't contain forbidden content ${repo.branchNameExcludes}`);
+                    process.exit(1);
+                }
+                replacementLines = filteredLines;
+            }
+            if (replacementLines.length > 1) {
+                console.error(`Found more than one replacement for ${repo.name}, consider adding "branchNameExcludes"!`);
+                process.exit(1);
+            }
+            const replacementLine = replacementLines.length == 1
+                ? replacementLines[0]
+                : null;
             if (replacementLine != null) {
                 console.warn(`Found replacement for repo ${repo.name} in go.mod: ${replacementLine}`);
                 const replacement = replacementLine.split("=>")[1].trim();

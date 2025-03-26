@@ -31,6 +31,7 @@
       "name": "github.com/cosmos/ibc-go",
       "isExternal": false,
       "dirName": "ibc-go",
+      "branchNameExcludes": "modules",
       "protoDirs": [
         {
           "in": "proto",

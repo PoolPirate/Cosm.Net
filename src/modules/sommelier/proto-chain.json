@@ -28,12 +28,12 @@
       ]
     },
     {
-      "name": "github.com/confio/ics23",
+      "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
       "protoDirs": [
         {
-          "in": ".",
+          "in": "proto",
           "out": "."
         }
       ]

@@ -41,14 +41,13 @@
 		<Protobuf Include="./proto/cosmos_proto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/amino/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
 		<Protobuf Include="./proto/gogoproto/**/*.proto" ProtoRoot="./proto" GrpcServices="None" />
-		<Protobuf Include="./proto/proofs.proto" ProtoRoot="./proto" GrpcServices="None" />
 		
 		<Protobuf Include="./proto/cosmos/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/tendermint/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/ibc/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 
 		<Protobuf Include="./proto/osmosis/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
-		<Protobuf Include="./proto/dymension/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/dymensionxyz/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>
