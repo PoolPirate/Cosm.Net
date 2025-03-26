@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "celestia-app",
   "chainRepoName": "github.com/celestiaorg/celestia-app",
-  "commitHash": "48173df3dc78f9348eedb3796f29ef9e9e5dc584",
+  "commitHash": "5b6032731ca5653707434b4408c7fd5a53608012",
   "protoDir": "proto",
   "hasNoProtos": true,
   "protoDependencies": [

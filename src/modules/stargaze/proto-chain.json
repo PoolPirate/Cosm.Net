@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "stargaze",
   "chainRepoName": "github.com/public-awesome/stargaze",
-  "commitHash": "6e4498f1f68545156a673086725963320f580534",
+  "commitHash": "308487c985fdb096aeb00e865f4c738fdd724ec8",
   "protoDir": "proto",
   "protoDependencies": [
     {

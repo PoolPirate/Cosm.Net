@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "omniflixhub",
   "chainRepoName": "github.com/OmniFlix/omniflixhub",
-  "commitHash": "66309803543c8856a995825d659d4525decf9078",
+  "commitHash": "07c66aa407bea30b35726b679509cb9097af7987",
   "protoDir": "proto",
   "protoDependencies": [
     {

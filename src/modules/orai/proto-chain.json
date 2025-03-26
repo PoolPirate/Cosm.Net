@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "wasmd",
   "chainRepoName": "github.com/oraichain/wasmd",
-  "commitHash": "a71fabc622f20aa4a13f3995e24ffdf70bfc6c5c",
+  "commitHash": "4c6ba77f376d08903df6cdea5288bad2cf383360",
   "protoDir": "proto",
   "protoDependencies": [
     {

@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).1410+comdex.v14.1.0</Version>
+		<Version>$(AssemblyVersion).1530+comdex.v15.3.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

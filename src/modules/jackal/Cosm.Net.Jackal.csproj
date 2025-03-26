@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).411+jackal.v4.1.1</Version>
+		<Version>$(AssemblyVersion).450+jackal.v4.5.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

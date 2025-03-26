@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).65+nolus.v0.6.5</Version>
+		<Version>$(AssemblyVersion).73+nolus.v0.7.3</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

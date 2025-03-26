@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).102+axelar.v1.0.2</Version>
+		<Version>$(AssemblyVersion).121+axelar.v1.2.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

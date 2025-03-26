@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "dymension",
   "chainRepoName": "github.com/dymensionxyz/dymension",
-  "commitHash": "b0e997d6b921666b7c4da4e121a87a2652ed0d2a",
+  "commitHash": "b77a9e11a4e890135274effd48e318c17e231e25",
   "protoDir": "proto",
   "protoDependencies": [
     {

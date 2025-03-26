@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "node",
   "chainRepoName": "github.com/akash-network/node",
-  "commitHash": "f417f49214eafaf9181d258d429950d3591ae601",
+  "commitHash": "58411565057bdfbdd33b5b50a4599b8f1d2692b7",
   "protoDir": "proto",
   "hasNoProtos": true,
   "protoDependencies": [

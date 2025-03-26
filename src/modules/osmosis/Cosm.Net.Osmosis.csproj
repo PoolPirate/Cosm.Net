@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).2601+osmosis.v26.0.1</Version>
+		<Version>$(AssemblyVersion).2805+osmosis.v28.0.5</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "axelar-core",
   "chainRepoName": "github.com/axelarnetwork/axelar-core",
-  "commitHash": "379ce5125168bd2f21814acd4b3c6110cdad9b61",
+  "commitHash": "cbf773678d2dc26820f30cd260e8ffc704879e4d",
   "protoDir": "proto",
   "protoDependencies": [
     {

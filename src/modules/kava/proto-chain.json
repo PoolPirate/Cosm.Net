@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "kava",
   "chainRepoName": "github.com/Kava-Labs/kava",
-  "commitHash": "667e532aaafaab216d874ff670fb299d9b951375",
+  "commitHash": "d9ce773f62418183beac2e9168c7cfafa30bc508",
   "protoDir": "proto",
   "protoDependencies": [
     {

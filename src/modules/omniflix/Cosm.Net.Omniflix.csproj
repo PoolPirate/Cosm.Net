@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).501+omniflix.v5.0.1</Version>
+		<Version>$(AssemblyVersion).521+omniflix.v5.2.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

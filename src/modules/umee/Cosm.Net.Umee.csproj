@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).660+umee.v6.6.0</Version>
+		<Version>$(AssemblyVersion).673+umee.v6.7.3</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

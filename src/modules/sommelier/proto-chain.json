@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "sommelier",
   "chainRepoName": "github.com/PeggyJV/sommelier",
-  "commitHash": "25bf250b9f9b2819f81f78bd856f60871d5139bd",
+  "commitHash": "5df3fa980f5b47f9b28dc14d65a687af42a0b187",
   "protoDir": "proto",
   "protoDependencies": [
     {

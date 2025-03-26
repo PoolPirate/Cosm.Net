@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "comdex",
   "chainRepoName": "github.com/comdex-official/comdex",
-  "commitHash": "7841a9e06926a46cd2ac48ffb095e78a3afd0b81",
+  "commitHash": "4bc7e3860b048db4386519226c1e961f38c65df2",
   "protoDir": "proto",
   "protoDependencies": [
     {

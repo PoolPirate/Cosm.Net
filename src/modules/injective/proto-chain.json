@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "injective-core",
   "chainRepoName": "github.com/OpenDeFiFoundation/injective-core",
-  "commitHash": "30a0a8964aa79bbe6f6c58cdb3580224ba243d6a",
+  "commitHash": "dd7622fefa17a954fe9bb9614aa3776da4cd605c",
   "protoDir": "proto",
   "protoDependencies": [
     {

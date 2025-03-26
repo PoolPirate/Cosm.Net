@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).360+akash.v0.36.0</Version>
+		<Version>$(AssemblyVersion).380+akash.v0.38.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

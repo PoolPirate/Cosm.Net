@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "mantrachain",
   "chainRepoName": "github.com/MANTRA-Chain/mantrachain",
-  "commitHash": "3eaa0f3b73868603e319aaadcedebf35289a46d4",
+  "commitHash": "94cbe1c715bb8ed4807f54aff86fa05f0b2d5ee4",
   "protoDir": "proto",
   "protoDependencies": [
     {

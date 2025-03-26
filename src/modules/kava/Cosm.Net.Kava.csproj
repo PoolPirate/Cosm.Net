@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).0260+kava.v0.26.0</Version>
+		<Version>$(AssemblyVersion).0280+kava.v0.28.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
