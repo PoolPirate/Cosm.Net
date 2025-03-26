@@ -114,6 +114,36 @@ public class RobustTxScheduler : ITxScheduler
         }
     }
 
+    private bool TryCreateAndSignTx(QueueEntry entry, out SignedTx signedTx)
+    {
+        var signDoc = _txEncoder.GetSignSignDoc(
+            entry.Tx,
+            ByteString.CopyFrom(_signer.PublicKey),
+            entry.GasWanted,
+            entry.TxFees,
+            AccountNumber,
+            CurrentSequence
+        );
+
+        Span<byte> signatureBuffer = stackalloc byte[64];
+
+        int signDocSize = signDoc.CalculateSize();
+        Span<byte> signDocBuffer = signDocSize < 8192
+            ? stackalloc byte[signDocSize]
+            : new byte[signDocSize];
+
+        signDoc.WriteTo(signDocBuffer);
+
+        if(!_signer.SignMessage(signDocBuffer, signatureBuffer))
+        {
+            signedTx = null!;
+            return false;
+        }
+
+        signedTx = new SignedTx(entry.Tx, entry.GasWanted, entry.TxFees, CurrentSequence, _signer.PublicKey, signatureBuffer);
+        return true;
+    }
+
     private async Task ProcessTxAsync(QueueEntry entry)
     {
         ulong generatedWithSequence = ulong.MaxValue;
@@ -125,17 +155,12 @@ public class RobustTxScheduler : ITxScheduler
         {
             if(generatedWithSequence != CurrentSequence)
             {
-                byte[] signDoc = _txEncoder.GetSignSignDoc(
-                    entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasWanted, entry.TxFees, AccountNumber, CurrentSequence
-                );
-                
-                if(!_signer.SignMessage(signDoc, signature))
+                if(!TryCreateAndSignTx(entry, out signedTx))
                 {
                     entry.CompletionSource.SetException(new NotSupportedException());
                     return;
                 }
 
-                signedTx = new SignedTx(entry.Tx, entry.GasWanted, entry.TxFees, CurrentSequence, _signer.PublicKey, signature);
                 generatedWithSequence = CurrentSequence;
             }
 
