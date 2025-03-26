@@ -175,7 +175,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             if(!overrideExisting)
             {
-                throw new InvalidOperationException("ITxScheduler already registered");
+                throw new InvalidOperationException($"{nameof(ITxScheduler)} already registered");
             }
 
             _ = _services.Replace(new ServiceDescriptor(typeof(ITxScheduler), typeof(TTxScheduler), ServiceLifetime.Singleton));
@@ -237,7 +237,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             if(!overrideExisting)
             {
-                throw new InvalidOperationException("ITxEncoder already registered");
+                throw new InvalidOperationException($"{nameof(ITxEncoder)} already registered");
             }
 
             _ = _services.Replace(new ServiceDescriptor(typeof(ITxEncoder), typeof(TTxEncoder), ServiceLifetime.Singleton));
@@ -289,10 +289,10 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             if(!overrideExisting)
             {
-                throw new InvalidOperationException("ITxPublisher already registered");
+                throw new InvalidOperationException($"{nameof(ITxPublisher)} already registered");
             }
 
-            _ = _services.Replace(new ServiceDescriptor(typeof(ITxPublisher), typeof(ITxPublisher), ServiceLifetime.Singleton));
+            _ = _services.Replace(new ServiceDescriptor(typeof(ITxPublisher), typeof(TTxPublisher), ServiceLifetime.Singleton));
         }
         else
         {
@@ -341,7 +341,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             if(!overrideExisting)
             {
-                throw new InvalidOperationException("IGasFeeProvider already registered");
+                throw new InvalidOperationException($"{nameof(IGasFeeProvider)} already registered");
             }
 
             _ = _services.Replace(new ServiceDescriptor(typeof(IGasFeeProvider), typeof(TGasFeeProvider), ServiceLifetime.Singleton));
@@ -393,7 +393,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             if(!overrideExisting)
             {
-                throw new InvalidOperationException("ITxConfirmer already registered");
+                throw new InvalidOperationException($"{nameof(ITxConfirmer)} already registered");
             }
 
             _ = _services.Replace(new ServiceDescriptor(typeof(ITxConfirmer), typeof(TTxConfirmer), ServiceLifetime.Singleton));
