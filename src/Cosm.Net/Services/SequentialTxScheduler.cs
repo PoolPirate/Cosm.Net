@@ -91,10 +91,16 @@ public class SequentialTxScheduler : ITxScheduler
         {
             entry.CompletionSource.SetCanceled(entry.CancellationToken);
             return;
-        } 
+        }
+
+        Span<byte> signature = stackalloc byte[64];
 
         byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasWanted, entry.TxFees, AccountNumber, CurrentSequence);
-        byte[] signature = _signer.SignMessage(signDoc);
+        if (!_signer.SignMessage(signDoc, signature))
+        {
+            entry.CompletionSource.SetException(new NotSupportedException());
+            return;
+        }
 
         var signedTx = new SignedTx(entry.Tx, entry.GasWanted, entry.TxFees, CurrentSequence, _signer.PublicKey, signature);
 

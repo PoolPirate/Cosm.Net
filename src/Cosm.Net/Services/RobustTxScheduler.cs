@@ -119,12 +119,21 @@ public class RobustTxScheduler : ITxScheduler
         ulong generatedWithSequence = ulong.MaxValue;
         SignedTx signedTx = null!;
 
+        Span<byte> signature = stackalloc byte[64];
+
         for(int i = 0; i < 3; i++)
         {
             if(generatedWithSequence != CurrentSequence)
             {
-                byte[] signDoc = _txEncoder.GetSignSignDoc(entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasWanted, entry.TxFees, AccountNumber, CurrentSequence);
-                byte[] signature = _signer.SignMessage(signDoc);
+                byte[] signDoc = _txEncoder.GetSignSignDoc(
+                    entry.Tx, ByteString.CopyFrom(_signer.PublicKey), entry.GasWanted, entry.TxFees, AccountNumber, CurrentSequence
+                );
+                
+                if(!_signer.SignMessage(signDoc, signature))
+                {
+                    entry.CompletionSource.SetException(new NotSupportedException());
+                    return;
+                }
 
                 signedTx = new SignedTx(entry.Tx, entry.GasWanted, entry.TxFees, CurrentSequence, _signer.PublicKey, signature);
                 generatedWithSequence = CurrentSequence;
