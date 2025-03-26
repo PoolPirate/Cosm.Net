@@ -20,6 +20,7 @@ public class RobustTxScheduler : ITxScheduler
     private readonly IGasFeeProvider _gasFeeProvider;
     private readonly Channel<QueueEntry> _pendingTxChannel;
     private readonly ICosmSigner _signer;
+    private readonly ByteString _signerPubkey;
 
     private readonly ITxEncoder _txEncoder;
     private readonly ITxModuleAdapter _txModuleAdapater;
@@ -44,11 +45,14 @@ public class RobustTxScheduler : ITxScheduler
         _gasFeeProvider = gasFeeProvider;
         _txPublisher = txPublisher;
 
+        _signerPubkey = ByteString.CopyFrom(_signer.PublicKey);
+
         _ = Task.Run(BackgroundTxProcessor);
     }
 
     public ulong AccountNumber { get; private set; }
     public ulong CurrentSequence { get; private set; }
+
 
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
@@ -68,7 +72,7 @@ public class RobustTxScheduler : ITxScheduler
         {
             try
             {
-                var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), sequence, _gasFeeProvider.GasFeeDenom);
+                var encodedTx = _txEncoder.EncodeTx(tx, _signerPubkey, sequence, _gasFeeProvider.GasFeeDenom);
                 return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
             }
             catch(RpcException ex)
@@ -118,7 +122,7 @@ public class RobustTxScheduler : ITxScheduler
     {
         var signDoc = _txEncoder.GetSignSignDoc(
             entry.Tx,
-            ByteString.CopyFrom(_signer.PublicKey),
+            _signerPubkey,
             entry.GasWanted,
             entry.TxFees,
             AccountNumber,

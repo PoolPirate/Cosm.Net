@@ -16,6 +16,7 @@ public class SequentialTxScheduler : ITxScheduler
     private readonly Channel<QueueEntry> _txChannel;
     private readonly ITxEncoder _txEncoder;
     private readonly ICosmSigner _signer;
+    private readonly ByteString _signerPubkey;
     private readonly IAuthModuleAdapter _authAdapter;
     private readonly IChainConfiguration _chainConfiguration;
     private readonly ITxModuleAdapter _txModuleAdapater;
@@ -43,6 +44,8 @@ public class SequentialTxScheduler : ITxScheduler
         _gasFeeProvider = gasFeeProvider;
         _txPublisher = txPublisher;
 
+        _signerPubkey = ByteString.CopyFrom(_signer.PublicKey);
+
         _ = Task.Run(BackgroundTxProcessor);
     }
 
@@ -58,7 +61,7 @@ public class SequentialTxScheduler : ITxScheduler
 
     public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, CancellationToken cancellationToken)
     {
-        var encodedTx = _txEncoder.EncodeTx(tx, ByteString.CopyFrom(_signer.PublicKey), CurrentSequence, _gasFeeProvider.GasFeeDenom);
+        var encodedTx = _txEncoder.EncodeTx(tx, _signerPubkey, CurrentSequence, _gasFeeProvider.GasFeeDenom);
         return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
     }
 
@@ -89,7 +92,7 @@ public class SequentialTxScheduler : ITxScheduler
     {
         var signDoc = _txEncoder.GetSignSignDoc(
             entry.Tx,
-            ByteString.CopyFrom(_signer.PublicKey),
+            _signerPubkey,
             entry.GasWanted,
             entry.TxFees,
             AccountNumber,
