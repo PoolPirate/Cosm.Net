@@ -122,6 +122,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Nibiru", "src\modu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Elys", "src\modules\elys\Cosm.Net.Elys.csproj", "{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Xion", "src\modules\xion\Cosm.Net.Xion.csproj", "{C67F0F18-36AE-4CEF-BD65-0121C4788ABA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -324,6 +326,10 @@ Global
 		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C67F0F18-36AE-4CEF-BD65-0121C4788ABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C67F0F18-36AE-4CEF-BD65-0121C4788ABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C67F0F18-36AE-4CEF-BD65-0121C4788ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C67F0F18-36AE-4CEF-BD65-0121C4788ABA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -379,6 +385,7 @@ Global
 		{7B931825-E0A9-4702-B6AD-D2158D05B998} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{F5D7FF88-CFAA-461A-A765-0AFB9BC26411} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{A0B0DB1F-0C6C-49C8-B345-7DBCEE0DDD7C} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{C67F0F18-36AE-4CEF-BD65-0121C4788ABA} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
