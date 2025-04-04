@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Client.Internal;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Tx;
@@ -11,6 +12,11 @@ public interface ICosmClient
     /// Information about the chain that this client is connected to.
     /// </summary>
     public IChainConfiguration Chain { get; }
+
+    /// <summary>
+    /// Gets an adapter to the chains native bank module.
+    /// </summary>
+    public IBankAdapter Bank { get; }
 
     /// <summary>
     /// Initializes the client. Must be called before using any other methods.

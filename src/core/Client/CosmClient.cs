@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Adapters;
+using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
@@ -25,6 +26,8 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     public IChainConfiguration Chain => _chainConfig;
     IServiceProvider IInternalCosmClient.ServiceProvider => _provider;
 
+    public IBankAdapter Bank => Module<IBankAdapter>();
+
     internal CosmClient(IServiceProvider provider, IEnumerable<Type> moduleTypes, ChainConfiguration chainConfiguration, bool isTxClient)
     {
         _provider = provider;
@@ -43,7 +46,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        var tendermintAdapter = _provider.GetRequiredService<ITendermintModuleAdapter>();
+        var tendermintAdapter = _provider.GetRequiredService<IInternalTendermintAdapter>();
 
         string chainId = await tendermintAdapter.GetChainId(cancellationToken: cancellationToken);
         _chainConfig.Initialize(chainId);
@@ -142,7 +145,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         AssertReady(false);
         try
         {
-            return await Module<ITxModuleAdapter>().GetTxByHashAsync(txHash, headers, deadline, cancellationToken);
+            return await Module<IInternalTxAdapter>().GetTxByHashAsync(txHash, headers, deadline, cancellationToken);
         }
         catch(RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
         {

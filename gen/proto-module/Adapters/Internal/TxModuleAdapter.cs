@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Generators.Proto.Adapters;
+﻿namespace Cosm.Net.Generators.Proto.Adapters.Internal;
 public static class TxModuleAdapter
 {
     public const string Code =
@@ -11,11 +11,11 @@ public static class TxModuleAdapter
         using Grpc.Core;
         using System.Numerics;
 
-        namespace Cosm.Net.Adapters;
+        namespace Cosm.Net.Adapters.Internal;
 
-        internal class TxModuleAdapter(ITxModule txModule) : ITxModuleAdapter
+        internal class TxModuleAdapter(ITxModule txModule) : IInternalTxAdapter
         {
-            async Task<TxSubmission> ITxModuleAdapter.BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers,
+            public async Task<TxSubmission> BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers,
                 DateTime? deadline, CancellationToken cancellationToken)
             {
                 var signMode = mode switch
@@ -29,7 +29,8 @@ public static class TxModuleAdapter
                 var response = await txModule.BroadcastTxAsync(txBytes, signMode, headers, deadline, cancellationToken);
                 return new TxSubmission(response.TxResponse.Code, response.TxResponse.Txhash, response.TxResponse.RawLog);
             }
-            async Task<TxSimulation> ITxModuleAdapter.SimulateAsync(ByteString txBytes, Metadata? headers,
+
+            public async Task<TxSimulation> SimulateAsync(ByteString txBytes, Metadata? headers,
                 DateTime? deadline, CancellationToken cancellationToken)
             {
                 var response = await txModule.SimulateAsync(txBytes, headers, deadline, cancellationToken);
@@ -46,7 +47,7 @@ public static class TxModuleAdapter
                 );
             }
 
-            async Task<TxExecution> ITxModuleAdapter.GetTxByHashAsync(string txHash,
+            public async Task<TxExecution> GetTxByHashAsync(string txHash,
                 Metadata? headers, DateTime? deadline, CancellationToken cancellationToken)
             {
                 var tx = await txModule.GetTxAsync(txHash, headers, deadline, cancellationToken);

@@ -11,14 +11,14 @@ using Grpc.Core;
 using System.Text.Json.Nodes;
 
 namespace Cosm.Net.Adapters;
-public class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration chain, SecretEncryptionProvider encryptor, IComputeModule computeModule) : IWasmAdapater
+public class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration chain, SecretEncryptionProvider encryptor, IComputeModule computeModule) : IInternalWasmAdapter
 {
     private readonly ICosmSigner? _signer = signer;
     private readonly IChainConfiguration _chain = chain;
     private readonly SecretEncryptionProvider _encryptor = encryptor;
     private readonly IComputeModule _computeModule = computeModule;
 
-    IWasmTxMessage IWasmAdapater.EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
+    IWasmTxMessage IInternalWasmAdapter.EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
     {
         if(_signer is null)
         {
@@ -50,7 +50,7 @@ public class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration chain
 
         return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, requestJson, context);
     }
-    async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
+    async Task<ByteString> IInternalWasmAdapter.SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
     {
         if(contract.CodeHash is null)
         {

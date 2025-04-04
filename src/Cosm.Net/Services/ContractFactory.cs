@@ -1,14 +1,14 @@
-﻿using Cosm.Net.Adapters;
+﻿using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Models;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Cosm.Net.Services;
-internal class ContractFactory(IWasmAdapater wasmAdapater) : IContractFactory
+internal class ContractFactory(IInternalWasmAdapter wasmAdapater) : IContractFactory
 {
     private readonly Lock _lock = new Lock();
-    private readonly IWasmAdapater _wasmAdapter = wasmAdapater;
+    private readonly IInternalWasmAdapter _wasmAdapter = wasmAdapater;
     private readonly Dictionary<Type, Func<string, string?, IContract>> _factoryDelegates = [];
 
     public TContract Create<TContract>(string address, string? codeHash)
@@ -50,7 +50,7 @@ internal class ContractFactory(IWasmAdapater wasmAdapater) : IContractFactory
 
         if(RuntimeFeature.IsDynamicCodeCompiled)
         {
-            var ctor = contractType.GetConstructor([typeof(IWasmAdapater), typeof(string), typeof(string)])
+            var ctor = contractType.GetConstructor([typeof(IInternalWasmAdapter), typeof(string), typeof(string)])
                 ?? throw new NotSupportedException("Constructor not found.");
 
             var contractAddressParam = Expression.Parameter(typeof(string), "address");

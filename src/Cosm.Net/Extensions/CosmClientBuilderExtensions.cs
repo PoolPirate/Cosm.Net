@@ -1,4 +1,4 @@
-﻿using Cosm.Net.Adapters;
+﻿using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Client;
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Services;
@@ -20,13 +20,13 @@ public static class CosmTxClientBuilderExtensions
 
     public static CosmClientBuilder AddWasmd(this CosmClientBuilder builder)
     {
-        if(!builder.AsInternal().HasModule<IWasmAdapater>())
+        if(!builder.AsInternal().HasModule<IInternalWasmAdapter>())
         {
-            throw new InvalidOperationException($"No {nameof(IWasmAdapater)} set. Make sure to install a chain that supports wasmd before calling {nameof(AddWasmd)}");
+            throw new InvalidOperationException($"No {nameof(IInternalWasmAdapter)} set. Make sure to install a chain that supports wasmd before calling {nameof(AddWasmd)}");
         }
 
         _ = builder.AsInternal().ServiceCollection.AddSingleton<IContractFactory>(
-            provider => new ContractFactory(provider.GetRequiredService<IWasmAdapater>()));
+            provider => new ContractFactory(provider.GetRequiredService<IInternalWasmAdapter>()));
 
         return builder;
     }

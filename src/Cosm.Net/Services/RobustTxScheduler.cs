@@ -1,5 +1,4 @@
-﻿using Cosm.Net.Adapters;
-using Cosm.Net.Exceptions;
+﻿using Cosm.Net.Exceptions;
 using Cosm.Net.Models;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
@@ -10,12 +9,13 @@ using System.Threading.Channels;
 using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, ulong GasWanted, System.Collections.Generic.IEnumerable<Cosm.Net.Models.Coin> TxFees,
     System.DateTime? Deadline, System.Threading.CancellationToken CancellationToken,
     System.Threading.Tasks.TaskCompletionSource<string> CompletionSource);
+using Cosm.Net.Adapters.Internal;
 
 namespace Cosm.Net.Services;
 
 public class RobustTxScheduler : ITxScheduler
 {
-    private readonly IAuthModuleAdapter _authAdapter;
+    private readonly IInternalAuthAdapter _authAdapter;
     private readonly IChainConfiguration _chainConfiguration;
     private readonly IGasFeeProvider _gasFeeProvider;
     private readonly Channel<QueueEntry> _pendingTxChannel;
@@ -23,11 +23,11 @@ public class RobustTxScheduler : ITxScheduler
     private readonly ByteString _signerPubkey;
 
     private readonly ITxEncoder _txEncoder;
-    private readonly ITxModuleAdapter _txModuleAdapater;
+    private readonly IInternalTxAdapter _txModuleAdapater;
     private readonly ITxPublisher _txPublisher;
 
-    public RobustTxScheduler(ITxEncoder txEncoder, ICosmSigner signer, IAuthModuleAdapter authAdapter,
-        IChainConfiguration chainConfiguration, ITxModuleAdapter txModuleAdapater, IGasFeeProvider gasFeeProvider,
+    public RobustTxScheduler(ITxEncoder txEncoder, ICosmSigner signer, IInternalAuthAdapter authAdapter,
+        IChainConfiguration chainConfiguration, IInternalTxAdapter txModuleAdapater, IGasFeeProvider gasFeeProvider,
         ITxPublisher txPublisher)
     {
         _pendingTxChannel = Channel.CreateUnbounded<QueueEntry>(new UnboundedChannelOptions

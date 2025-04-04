@@ -44,7 +44,7 @@ public class CosmWasmTypeGenerator
         var contractClassBuilder = new ClassBuilder(GetContractClassName(contractInterfaceName))
             .WithVisibility(ClassVisibility.Internal)
             .WithIsPartial()
-            .AddField(new FieldBuilder("global::Cosm.Net.Adapters.IWasmAdapater", "_wasm"))
+            .AddField(new FieldBuilder("global::Cosm.Net.Adapters.Internal.IInternalWasmAdapter", "_wasm"))
             .AddProperty(new PropertyBuilder("global::System.String", "ContractAddress").WithSetterVisibility(SetterVisibility.Private))
             .AddProperty(new PropertyBuilder("global::System.String?", "CodeHash").WithSetterVisibility(SetterVisibility.Private))
             .AddBaseType("global::Cosm.Net.Models.IContract", true);

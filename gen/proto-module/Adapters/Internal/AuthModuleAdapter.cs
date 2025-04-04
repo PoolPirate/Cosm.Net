@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Generators.Proto.Adapters;
+﻿namespace Cosm.Net.Generators.Proto.Adapters.Internal;
 public static class AuthModuleAdapter
 {
     public const string Code =
@@ -9,11 +9,11 @@ public static class AuthModuleAdapter
         using Cosm.Net.Modules;
         using Grpc.Core;
 
-        namespace Cosm.Net.Adapters;
+        namespace Cosm.Net.Adapters.Internal;
 
-        internal class AuthModuleAdapter(IAuthModule authModule) : IAuthModuleAdapter
+        internal class AuthModuleAdapter(IAuthModule authModule) : IInternalAuthAdapter
         {
-            async Task<AccountData> IAuthModuleAdapter.GetAccountAsync(string address, Metadata? headers,
+            public async Task<AccountData> GetAccountAsync(string address, Metadata? headers,
                 DateTime? deadline, CancellationToken cancellationToken)
             {
                 var accountData = await authModule.AccountAsync(address, headers, deadline, cancellationToken);

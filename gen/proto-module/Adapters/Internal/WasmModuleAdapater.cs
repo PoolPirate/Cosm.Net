@@ -1,11 +1,10 @@
-﻿namespace Cosm.Net.Generators.Proto.Adapters;
+﻿namespace Cosm.Net.Generators.Proto.Adapters.Internal;
 public static class WasmModuleAdapater
 {
     public const string Code =
         """
         #nullable enable
 
-        using Cosm.Net.Adapters;
         using Cosm.Net.Json;
         using Cosm.Net.Models;
         using Cosm.Net.Signer;
@@ -15,14 +14,15 @@ public static class WasmModuleAdapater
         using Microsoft.Extensions.DependencyInjection;
         using System.Text.Json.Nodes;
 
-        namespace Cosm.Net.Modules;
-        internal class WasmModuleAdapter(IWasmModule wasmModule, IChainConfiguration chain, IServiceProvider provider) : IWasmAdapater
+        namespace Cosm.Net.Modules.Internal;
+
+        internal class WasmModuleAdapter(IWasmModule wasmModule, IChainConfiguration chain, IServiceProvider provider) : IInternalWasmAdapter
         {
             private readonly IWasmModule _wasmModule = wasmModule;
             private readonly IChainConfiguration _chain = chain;
             private readonly ICosmSigner? _signer = provider.GetService<ICosmSigner>();
 
-            IWasmTxMessage IWasmAdapater.EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
+            public IWasmTxMessage EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
             {
                 if(_signer is null)
                 {
@@ -49,7 +49,7 @@ public static class WasmModuleAdapater
                 return new WasmTxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg, requestJson);
             }
 
-            async Task<ByteString> IWasmAdapater.SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
+            public async Task<ByteString> SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
             {
                 var response = await _wasmModule.SmartContractStateAsync(contract.ContractAddress, queryData, cancellationToken: cancellationToken);
                 return response.Data;

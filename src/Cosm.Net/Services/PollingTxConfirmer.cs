@@ -1,16 +1,16 @@
 ﻿using Cosm.Net.Models;
 using Cosm.Net.Exceptions;
 using Cosm.Net.Tx;
-using Cosm.Net.Adapters;
 using Grpc.Core;
+using Cosm.Net.Adapters.Internal;
 
 namespace Cosm.Net.Services;
 public class PollingTxConfirmer : ITxConfirmer
 {
-    private readonly ITxModuleAdapter _txModuleAdapater;
+    private readonly IInternalTxAdapter _txModuleAdapater;
     private IChainConfiguration _chainConfiguration;
 
-    public PollingTxConfirmer(ITxModuleAdapter txModuleAdapater)
+    public PollingTxConfirmer(IInternalTxAdapter txModuleAdapater)
     {
         _txModuleAdapater = txModuleAdapater;
         _chainConfiguration = null!;

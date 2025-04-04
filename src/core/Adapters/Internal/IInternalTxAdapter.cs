@@ -3,8 +3,8 @@ using Cosm.Net.Modules;
 using Google.Protobuf;
 using Grpc.Core;
 
-namespace Cosm.Net.Adapters;
-public interface ITxModuleAdapter : IModule
+namespace Cosm.Net.Adapters.Internal;
+public interface IInternalTxAdapter : IModule
 {
     public Task<TxSimulation> SimulateAsync(ByteString txBytes, Metadata? headers = default,
         DateTime? deadline = default, CancellationToken cancellationToken = default);

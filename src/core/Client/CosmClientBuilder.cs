@@ -1,4 +1,4 @@
-﻿using Cosm.Net.Adapters;
+﻿using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Configuration;
 using Cosm.Net.Modules;
@@ -452,17 +452,17 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
             throw new InvalidOperationException($"No {nameof(ChainInfo)} set. Make sure to install a chain before building the client.");
         }
 
-        if(!_services.Any(x => x.ServiceType == typeof(IAuthModuleAdapter)))
+        if(!_services.Any(x => x.ServiceType == typeof(IInternalAuthAdapter)))
         {
-            throw new InvalidOperationException($"No {nameof(IAuthModuleAdapter)} set. Make sure to install a chain before building the client.");
+            throw new InvalidOperationException($"No {nameof(IInternalAuthAdapter)} set. Make sure to install a chain before building the client.");
         }
-        if(!_services.Any(x => x.ServiceType == typeof(ITendermintModuleAdapter)))
+        if(!_services.Any(x => x.ServiceType == typeof(IInternalTendermintAdapter)))
         {
-            throw new InvalidOperationException($"No {nameof(ITendermintModuleAdapter)} set. Make sure to install a chain before building the client.");
+            throw new InvalidOperationException($"No {nameof(IInternalTendermintAdapter)} set. Make sure to install a chain before building the client.");
         }
-        if(!_services.Any(x => x.ServiceType == typeof(ITxModuleAdapter)))
+        if(!_services.Any(x => x.ServiceType == typeof(IInternalTxAdapter)))
         {
-            throw new InvalidOperationException($"No {nameof(ITxModuleAdapter)} set. Make sure to install a chain before building the client.");
+            throw new InvalidOperationException($"No {nameof(IInternalTxAdapter)} set. Make sure to install a chain before building the client.");
         }
     }
 

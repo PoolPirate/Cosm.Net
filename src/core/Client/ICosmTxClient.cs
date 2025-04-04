@@ -1,4 +1,5 @@
-﻿using Cosm.Net.Client.Internal;
+﻿using Cosm.Net.Adapters;
+using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Tx;
 

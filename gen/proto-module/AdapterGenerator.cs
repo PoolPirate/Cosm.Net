@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using Cosm.Net.Generators.Proto.Adapters;
+using Cosm.Net.Generators.Proto.Adapters.Internal;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -94,6 +95,7 @@ public class EventAttributeKeyTypeGenerator : IIncrementalGenerator
         context.AddSource("TxModuleAdapter.generated.cs", txModuleCode);
         context.AddSource("AuthModuleAdapter.generated.cs", AuthModuleAdapter.Code);
         context.AddSource("TendermintModuleAdapter.generated.cs", TendermintModuleAdapter.Code);
+        context.AddSource("BankModuleAdapter.generated.cs", BankModuleAdapter.Code);
 
         if (cosmWasmNamespaces.Length != 0)
         {

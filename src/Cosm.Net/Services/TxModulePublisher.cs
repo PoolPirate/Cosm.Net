@@ -1,12 +1,12 @@
-﻿using Cosm.Net.Adapters;
+﻿using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Tx;
 
 namespace Cosm.Net.Services;
-public class TxModulePublisher(ITxModuleAdapter txModule, ITxEncoder txEncoder)
+public class TxModulePublisher(IInternalTxAdapter txModule, ITxEncoder txEncoder)
     : ITxPublisher
 {
-    private readonly ITxModuleAdapter _txModule = txModule;
+    private readonly IInternalTxAdapter _txModule = txModule;
     private readonly ITxEncoder _txEncoder = txEncoder;
 
     public async Task<TxSubmission> PublishTxAsync(ISignedCosmTx tx, DateTime? deadline, CancellationToken cancellationToken) 
