@@ -14,7 +14,7 @@ public static class WasmModuleAdapater
         using Microsoft.Extensions.DependencyInjection;
         using System.Text.Json.Nodes;
 
-        namespace Cosm.Net.Modules.Internal;
+        namespace Cosm.Net.Adapters.Internal;
 
         internal class WasmModuleAdapter(IWasmModule wasmModule, IChainConfiguration chain, IServiceProvider provider) : IInternalWasmAdapter
         {
