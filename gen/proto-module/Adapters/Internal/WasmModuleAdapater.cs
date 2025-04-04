@@ -7,6 +7,7 @@ public static class WasmModuleAdapater
 
         using Cosm.Net.Json;
         using Cosm.Net.Models;
+        using Cosm.Net.Modules;
         using Cosm.Net.Signer;
         using Cosm.Net.Tx;
         using Cosm.Net.Tx.Msg;
