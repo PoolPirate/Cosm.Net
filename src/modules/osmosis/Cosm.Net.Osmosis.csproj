@@ -16,6 +16,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
 		<Version>$(AssemblyVersion).2805+osmosis.v28.0.5</Version>
+		<WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -63,6 +63,8 @@ public static class NameUtils
             "string" => "@string",
             "operator" => "@operator",
             "delegate" => "@delegate",
+            "base" => "@base",
+            "event" => "@event",
             _ => name,
         };
 

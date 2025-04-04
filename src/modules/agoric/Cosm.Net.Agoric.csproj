@@ -16,6 +16,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
 		<Version>$(AssemblyVersion).14+agoric.upgrade-14</Version>
+		<WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

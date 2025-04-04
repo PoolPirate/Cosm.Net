@@ -2,6 +2,7 @@
 using Cosm.Net.Generators.Common.SyntaxElements;
 using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,20 +18,22 @@ public static class QueryModuleProcessor
             .Select(x => x.TypeArguments[0])
             .First();
 
-    public static string GetQueryModuleGeneratedCode(INamedTypeSymbol moduleType, ITypeSymbol queryClientType,
-        IEnumerable<INamedTypeSymbol> messageTypes)
+    public static string GetQueryModuleGeneratedCode(
+        string moduleName, INamedTypeSymbol[] queryClientTypes, 
+        IEnumerable<IMethodSymbol>[] queryMethods, IEnumerable<INamedTypeSymbol> messageTypes)
     {
-        var queryMethods = GetQueryClientQueryMethods(queryClientType);
-
         var methodCodeBuilder = new StringBuilder();
         var interfaceCodeBuilder = new StringBuilder();
 
-        foreach(var method in queryMethods)
+        for(int i = 0; i < queryClientTypes.Length; i++)
         {
-            (string interfaceMethod, string methodCode) = GetQueryMethodGeneratedCode(method);
+            foreach(var method in queryMethods[i])
+            {
+                (string interfaceMethod, string methodCode) = GetQueryMethodGeneratedCode(method, i);
 
-            _ = methodCodeBuilder.AppendLine(methodCode);
-            _ = interfaceCodeBuilder.AppendLine(interfaceMethod);
+                _ = methodCodeBuilder.AppendLine(methodCode);
+                _ = interfaceCodeBuilder.AppendLine(interfaceMethod);
+            }
         }
 
         foreach(var messageType in messageTypes)
@@ -41,34 +44,46 @@ public static class QueryModuleProcessor
             _ = interfaceCodeBuilder.AppendLine(interfaceMethod);
         }
 
-        string constructorSyntax = $$"""
-            public {{moduleType.Name}}(global::Grpc.Core.CallInvoker callInvoker)
-            {
-                _client = new {{NameUtils.FullyQualifiedTypeName(queryClientType)}}(callInvoker);
-            }
-            """;
+        var usingsSection = new StringBuilder();
+        var ctorSection = new StringBuilder();
+        var fieldSection = new StringBuilder();
 
-        return
+        for(int i = 0; i < queryClientTypes.Length; i++)
+        {
+            var clientType = queryClientTypes[i];
+
+            usingsSection.AppendLine($"using global::{clientType.ContainingNamespace};");
+            ctorSection.AppendLine($"_client{i} = new {NameUtils.FullyQualifiedTypeName(clientType)}(callInvoker);");
+            fieldSection.AppendLine($"private readonly {NameUtils.FullyQualifiedTypeName(clientType)} _client{i};");
+        }
+
+        var code =
             $$"""
-            using global::Cosm.Net.Modules;
+            {{usingsSection}}
 
-            namespace {{moduleType.ContainingNamespace}};
+            namespace Cosm.Net.Modules;
 
-            public interface I{{moduleType.Name}} : IModule {
+            public interface I{{moduleName}} : IModule {
             {{interfaceCodeBuilder}}
             }
 
-            internal partial class {{moduleType.Name}} : I{{moduleType.Name}} {
-                private readonly {{NameUtils.FullyQualifiedTypeName(queryClientType)}} _client;
+            internal class {{moduleName}} : I{{moduleName}} {
+            {{fieldSection}}
 
-             {{(!moduleType.InstanceConstructors.Any(x => x.Parameters.Any()) ? constructorSyntax : "")}}
+            public {{moduleName}}(global::Grpc.Core.CallInvoker callInvoker)
+            {
+            {{ctorSection}}
+            }
+
             {{methodCodeBuilder}}
             }
 
             """;
+
+        return code;
     }
 
-    private static (string interfaceMethod, string methodCode) GetQueryMethodGeneratedCode(IMethodSymbol queryMethod)
+    private static (string interfaceMethod, string methodCode) GetQueryMethodGeneratedCode(IMethodSymbol queryMethod, int clientIndex)
     {
         var requestType = GetQueryMethodRequestType(queryMethod);
         var requestProps = GetTypeInstanceProperties(requestType);
@@ -77,17 +92,17 @@ public static class QueryModuleProcessor
         var functionBuilder = new FunctionBuilder(queryMethod.Name)
             .WithReturnType((INamedTypeSymbol) queryMethod.ReturnType);
 
-        var queryFunctionCall = new MethodCallBuilder("_client", queryMethod);
+        var queryFunctionCall = new MethodCallBuilder($"_client{clientIndex}", queryMethod);
         var requestCtorCall = new ConstructorCallBuilder((INamedTypeSymbol) requestType);
 
         foreach(var property in requestProps)
         {
             string paramName = NameUtils.ToValidVariableName(property.Name);
 
-            if (NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) property.Type) == _cosmosCoinTypeName)
+            if(NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) property.Type) == _cosmosCoinTypeName)
             {
                 _ = functionBuilder.AddArgument($"global::Cosm.Net.Models.Coin", paramName);
-                _ = requestCtorCall.AddInitializer(property, 
+                _ = requestCtorCall.AddInitializer(property,
                     $$"""
                     new {{_cosmosCoinTypeName}}() {
                         Denom = {{paramName}}.Denom,
@@ -151,7 +166,7 @@ public static class QueryModuleProcessor
                     }
                     """);
             }
-            else if (namedType.Name == "RepeatedField" && NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) namedType.TypeArguments[0]) == _cosmosCoinTypeName)
+            else if(namedType.Name == "RepeatedField" && NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) namedType.TypeArguments[0]) == _cosmosCoinTypeName)
             {
                 _ = functionBuilder.AddArgument($"global::System.Collections.Generic.IEnumerable<global::Cosm.Net.Models.Coin>", paramName);
             }
@@ -188,13 +203,6 @@ public static class QueryModuleProcessor
 
         return (functionBuilder.BuildInterfaceDefinition(), functionBuilder.BuildMethodCode());
     }
-
-    private static IEnumerable<IMethodSymbol> GetQueryClientQueryMethods(ITypeSymbol queryClientType)
-        => queryClientType.GetMembers()
-            .Where(x => x is IMethodSymbol)
-            .Cast<IMethodSymbol>()
-            .Where(x => !x.IsObsolete())
-            .Where(x => x.ReturnType.Name == "AsyncUnaryCall" || x.ReturnType.Name == "AsyncServerStreamingCall");
 
     private static ITypeSymbol GetQueryMethodRequestType(IMethodSymbol methodType)
         => methodType.Parameters[0].Type;

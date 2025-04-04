@@ -11,11 +11,7 @@ public static class ICosmClientBuilderExtensions
         => builder
             .AsInternal().UseCosmosTxStructure()
             .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(40))
-            .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
-            .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
-            .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()
-            .AsInternal().RegisterModule<ITendermintModuleAdapter, TendermintModule>()
-            .AsInternal().RegisterModule<ITxModuleAdapter, TxModule>();
+            .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly());
 
     public static CosmClientBuilder WithEIP1559MempoolGasPrice(this CosmClientBuilder builder,
         string feeDenom = "uosmo", decimal gasPriceOffset = 0, int cacheSeconds = 5)

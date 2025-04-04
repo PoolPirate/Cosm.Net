@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Configuration;
+using Cosm.Net.Modules;
 using Cosm.Net.Services;
 using Cosm.Net.Signer;
 using Cosm.Net.Tx;
@@ -109,28 +110,30 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         var types = assembly.GetTypes();
         var moduleTypes = assembly.GetTypes()
             .Where(x => x.IsClass)
-            .Select(x => new
+            .Select(moduleType => new
             {
-                ModuleType = x,
-                InterfaceType = GetModuleInterfaceFromModule(x)
+                ModuleType = moduleType,
+                InterfaceTypes = moduleType.GetInterfaces()
+                    .Where(x => typeof(IModule).IsAssignableFrom(x))
+                    .Where(x => !x.Equals(typeof(IModule)))
+                    .ToArray()
             })
-            .Where(x => x.InterfaceType is not null);
+            .Where(x => x.InterfaceTypes.Length > 0);
 
-        var registerMethod = typeof(IInternalCosmClientBuilder).GetMethod(nameof(IInternalCosmClientBuilder.RegisterModule),
-            BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-        foreach(var modTypes in moduleTypes)
+        var registerMethod = typeof(IInternalCosmClientBuilder).GetMethod(
+            nameof(IInternalCosmClientBuilder.RegisterModule),
+            BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance
+        );
+
+        foreach(var moduleType in moduleTypes)
         {
-            _ = registerMethod.MakeGenericMethod(modTypes.InterfaceType, modTypes.ModuleType).Invoke(this, []);
+            foreach(var interfaceType in moduleType.InterfaceTypes)
+            {
+                _ = registerMethod.MakeGenericMethod(interfaceType, moduleType.ModuleType).Invoke(this, []);
+            }
         }
 
         return this;
-
-        Type GetModuleInterfaceFromModule(Type moduleType)
-            => types
-                .Where(x => x.IsInterface)
-                .Where(x => x.IsAssignableFrom(moduleType))
-                .Where(x => x.Name.AsSpan().Slice(1).Equals(moduleType.Name.AsSpan(), StringComparison.Ordinal))
-                .SingleOrDefault();
     }
 
     bool IInternalCosmClientBuilder.HasModule<TIModule>()

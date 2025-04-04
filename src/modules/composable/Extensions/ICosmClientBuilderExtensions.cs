@@ -10,9 +10,5 @@ public static class ICosmClientBuilderExtensions
         => builder
             .AsInternal().UseCosmosTxStructure()
             .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(60))
-            .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
-            .AsInternal().RegisterModule<IWasmAdapater, WasmModule>()
-            .AsInternal().RegisterModule<IAuthModuleAdapter, AuthModule>()
-            .AsInternal().RegisterModule<ITendermintModuleAdapter, TendermintModule>()
-            .AsInternal().RegisterModule<ITxModuleAdapter, TxModule>();
+            .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly());
 }
