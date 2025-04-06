@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cosm.Net.Json;
+namespace Cosm.Net.Encoding.Json;
 public class RustEnumConverter<TEnum> : JsonConverter<TEnum>
     where TEnum : IRustEnum<TEnum>
 {

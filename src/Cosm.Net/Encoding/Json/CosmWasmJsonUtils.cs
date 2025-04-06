@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using TupleAsJsonArray;
 
-namespace Cosm.Net.Json;
+namespace Cosm.Net.Encoding.Json;
 public static class CosmWasmJsonUtils
 {
     public static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions()

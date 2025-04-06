@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cosm.Net.Json;
+namespace Cosm.Net.Encoding.Json;
 public class ByteArrayConverter : JsonConverter<byte[]?>
 {
     public override byte[]? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

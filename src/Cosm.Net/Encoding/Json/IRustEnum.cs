@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Cosm.Net.Json;
+namespace Cosm.Net.Encoding.Json;
 public interface IRustEnum<T>
 {
     public abstract static void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options);
