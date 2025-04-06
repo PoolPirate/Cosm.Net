@@ -96,6 +96,7 @@ public class EventAttributeKeyTypeGenerator : IIncrementalGenerator
         context.AddSource("AuthModuleAdapter.generated.cs", AuthModuleAdapter.Code);
         context.AddSource("TendermintModuleAdapter.generated.cs", TendermintModuleAdapter.Code);
         context.AddSource("BankModuleAdapter.generated.cs", BankModuleAdapter.Code);
+        context.AddSource("BlocksAdapter.generated.cs", BlocksAdapter.Code);
 
         if (cosmWasmNamespaces.Length != 0)
         {

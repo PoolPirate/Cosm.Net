@@ -1,5 +1,5 @@
 ﻿using Cosm.Net.Encoding;
-using Cosm.Net.Json;
+using Cosm.Net.Encoding.Json;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;

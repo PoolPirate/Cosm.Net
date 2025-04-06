@@ -5,7 +5,7 @@ public static class WasmModuleAdapater
         """
         #nullable enable
 
-        using Cosm.Net.Json;
+        using Cosm.Net.Encoding.Json;
         using Cosm.Net.Models;
         using Cosm.Net.Modules;
         using Cosm.Net.Signer;

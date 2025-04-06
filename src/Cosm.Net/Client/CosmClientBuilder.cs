@@ -3,8 +3,8 @@ using Cosm.Net.Client.Internal;
 using Cosm.Net.Configuration;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
-using Cosm.Net.Signer;
 using Cosm.Net.Tx;
+using Cosm.Net.Wallet;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -441,6 +441,28 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         return this;
     }
 
+    public CosmClientBuilder WithConstantGasPrice(string feeDenom, decimal gasPrice)
+        => AsInternal().WithGasFeeProvider<ConstantGasFeeProvider, ConstantGasFeeProvider.Configuration>(
+                new ConstantGasFeeProvider.Configuration(feeDenom, gasPrice));
+
+    public CosmClientBuilder UseCosmosTxStructure()
+        => AsInternal()
+            .WithTxEncoder<CosmosTxEncoder>()
+            .AsInternal().WithTxPublisher<TxModulePublisher>()
+            .AsInternal().WithTxConfirmer<PollingTxConfirmer>();
+
+    public CosmClientBuilder AddWasmd()
+    {
+        if(!AsInternal().HasModule<IInternalWasmAdapter>())
+        {
+            throw new InvalidOperationException($"No {nameof(IInternalWasmAdapter)} set. Make sure to install a chain that supports wasmd before calling {nameof(AddWasmd)}");
+        }
+
+        _ = _services.AddSingleton<IContractFactory>(
+            provider => new ContractFactory(provider.GetRequiredService<IInternalWasmAdapter>()));
+
+        return this;
+    }
     private void AssertValidReadClientServices()
     {
         if(!_services.Any(x => x.ServiceType == typeof(CallInvoker)))

@@ -20,7 +20,7 @@ public class EnumerationTypeGenerator
         string typeName = GenerateTypeName(schema, definitionsSource, nameOverride);
 
         var enumerationBuilder = new EnumerationBuilder(typeName)
-            .WithJsonConverter($"global::Cosm.Net.Json.SnakeCaseJsonStringEnumConverter<{typeName}>");
+            .WithJsonConverter($"global::Cosm.Net.Encoding.Json.SnakeCaseJsonStringEnumConverter<{typeName}>");
 
         if(schema.Description is not null)
         {
@@ -58,16 +58,16 @@ public class EnumerationTypeGenerator
 
         var baseClassBuilder = new ClassBuilder(typeName)
             .WithIsAbstract()
-            .AddBaseType($"global::Cosm.Net.Json.IRustEnum<{typeName}>", true)
-            .WithJsonConverterType($"global::Cosm.Net.Json.RustEnumConverter<{typeName}>");
+            .AddBaseType($"global::Cosm.Net.Encoding.Json.IRustEnum<{typeName}>", true)
+            .WithJsonConverterType($"global::Cosm.Net.Encoding.Json.RustEnumConverter<{typeName}>");
 
-        var baseWriteFunction = new FunctionBuilder($"global::Cosm.Net.Json.IRustEnum<{typeName}>.Write")
+        var baseWriteFunction = new FunctionBuilder($"global::Cosm.Net.Encoding.Json.IRustEnum<{typeName}>.Write")
             .WithIsStatic()
             .WithVisibility(FunctionVisibility.Omit)
             .AddArgument("global::System.Text.Json.Utf8JsonWriter", "writer")
             .AddArgument(typeName, "value")
             .AddArgument("global::System.Text.Json.JsonSerializerOptions", "options");
-        var baseReadFunction = new FunctionBuilder($"global::Cosm.Net.Json.IRustEnum<{typeName}>.ReadFromDocument")
+        var baseReadFunction = new FunctionBuilder($"global::Cosm.Net.Encoding.Json.IRustEnum<{typeName}>.ReadFromDocument")
             .WithIsStatic()
             .WithVisibility(FunctionVisibility.Omit)
             .AddArgument("global::System.Text.Json.JsonDocument", "document")
@@ -114,12 +114,12 @@ public class EnumerationTypeGenerator
                     writeCases.Add(
                         $"""
                         case {derivedTypeName}:
-                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
+                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
                             converter{derivedTypeName}.Write(writer, ({derivedTypeName}) (object) value, options);
                         """);
                     readCases.Add(
                         $"""
-                        "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(document.RootElement.ToString(), global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)!
+                        "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(document.RootElement.ToString(), global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions)!
                         """);
                     break;
                 case RustEnumType.ComplexObject:
@@ -130,14 +130,14 @@ public class EnumerationTypeGenerator
                         case {derivedTypeName}:
                             writer.WriteStartObject();
                             writer.WritePropertyName("{enumValueName}");
-                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
+                            var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
                             converter{derivedTypeName}.Write(writer, ({derivedTypeName}) (object) value, options);
                             writer.WriteEndObject();
                         """);
                     readCases.Add(
                         $"""
                         "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(
-                            document.RootElement.GetProperty("{enumValueName}").ToString(), global::Cosm.Net.Json.CosmWasmJsonUtils.SerializerOptions)!
+                            document.RootElement.GetProperty("{enumValueName}").ToString(), global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions)!
                         """);
                     break;
                 default:
@@ -158,7 +158,7 @@ public class EnumerationTypeGenerator
             """, false);
         baseReadFunction.AddStatement(
             $$"""
-            return global::Cosm.Net.Json.IRustEnum<{{typeName}}>.GetEnumKey(document) switch {
+            return global::Cosm.Net.Encoding.Json.IRustEnum<{{typeName}}>.GetEnumKey(document) switch {
             {{string.Join(",\n", readCases)}}{{(readCases.Count > 0 ? ",\n" : "")}}
             _ => throw new global::System.Text.Json.JsonException("Failed parsing rust enum type {{typeName}}")
             }

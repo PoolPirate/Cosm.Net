@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Signer;
+﻿namespace Cosm.Net.Wallet;
 public interface ICosmSigner
 {
     /// <summary>

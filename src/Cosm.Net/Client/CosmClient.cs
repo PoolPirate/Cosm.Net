@@ -4,8 +4,8 @@ using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
-using Cosm.Net.Signer;
 using Cosm.Net.Tx;
+using Cosm.Net.Wallet;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +27,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     IServiceProvider IInternalCosmClient.ServiceProvider => _provider;
 
     public IBankAdapter Bank => Module<IBankAdapter>();
+    public IBlocksAdapter Blocks => Module<IBlocksAdapter>();
 
     internal CosmClient(IServiceProvider provider, IEnumerable<Type> moduleTypes, ChainConfiguration chainConfiguration, bool isTxClient)
     {
@@ -134,7 +135,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
-        var simulation = await SimulateAsync(tx);
+        var simulation = await SimulateAsync(tx, cancellationToken);
         var gasWanted = _gasFeeProvider!.ApplyGasBuffers(simulation.GasUsed, gasMultiplier, gasOffset);
         var fee = await _gasFeeProvider.GetFeeForGasAsync(gasWanted);
         return await PublishTxAsync(tx, gasWanted, [fee], deadline, cancellationToken);
@@ -165,6 +166,10 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         return _provider.GetService<TModule>()
             ?? throw new InvalidOperationException("Module not installed!");
     }
+
+    public TContract Contract<TContract>(string contractAddress, string? codeHash = null) where TContract : IContract
+        => _provider.GetRequiredService<IContractFactory>()
+            .Create<TContract>(contractAddress, codeHash);
 
     public IEnumerable<(Type, IModule)> GetAllModules()
     {

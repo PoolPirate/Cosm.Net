@@ -2,8 +2,10 @@
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
+using Cosm.Net.Services;
 using Cosm.Net.Tx;
 using Grpc.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
 public interface ICosmClient
@@ -17,6 +19,11 @@ public interface ICosmClient
     /// Gets an adapter to the chains native bank module.
     /// </summary>
     public IBankAdapter Bank { get; }
+
+    /// <summary>
+    /// Gets an adapter to fetch block information from the native chain.
+    /// </summary>
+    public IBlocksAdapter Blocks { get; }
 
     /// <summary>
     /// Initializes the client. Must be called before using any other methods.
@@ -47,4 +54,7 @@ public interface ICosmClient
     /// <returns>TxExecution if tx is found, null otherwise</returns>
     public Task<TxExecution?> GetTxByHashAsync(string txHash,
         Metadata? headers = default, DateTime? deadline = default, CancellationToken cancellationToken = default);
+
+    public TContract Contract<TContract>(string contractAddress, string? codeHash = null)
+        where TContract : IContract;
 }

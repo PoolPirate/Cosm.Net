@@ -1,5 +1,4 @@
 ﻿using Cosm.Net.Encoding;
-using Cosm.Net.Signer;
 using Keysmith.Net.BIP;
 using Keysmith.Net.EC;
 using Keysmith.Net.Wallet;
