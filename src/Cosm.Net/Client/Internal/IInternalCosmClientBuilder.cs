@@ -19,6 +19,12 @@ public interface IInternalCosmClientBuilder
     public CosmClientBuilder WithChainInfo(string bech32Prefix, TimeSpan transactionTimeout);
 
     /// <summary>
+    /// Configures Cosm.Net to use the Cosmos default transaction encoding.
+    /// </summary>
+    /// <returns></returns>
+    public CosmClientBuilder UseCosmosTxStructure();
+
+    /// <summary>
     /// Registers an on-chain module type supported by the configured chain.
     /// </summary>
     /// <typeparam name="TIModule">Public interface of the module</typeparam>

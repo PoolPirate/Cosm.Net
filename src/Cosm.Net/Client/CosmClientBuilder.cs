@@ -445,7 +445,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         => AsInternal().WithGasFeeProvider<ConstantGasFeeProvider, ConstantGasFeeProvider.Configuration>(
                 new ConstantGasFeeProvider.Configuration(feeDenom, gasPrice));
 
-    public CosmClientBuilder UseCosmosTxStructure()
+    CosmClientBuilder IInternalCosmClientBuilder.UseCosmosTxStructure()
         => AsInternal()
             .WithTxEncoder<CosmosTxEncoder>()
             .AsInternal().WithTxPublisher<TxModulePublisher>()
