@@ -13,7 +13,7 @@ public class SignedTx : ISignedCosmTx
     public ByteString Signature { get; }
 
     public string Memo => _tx.Memo;
-    public ulong TimeoutHeight => _tx.TimeoutHeight;
+    public long TimeoutHeight => _tx.TimeoutHeight;
     public IReadOnlyList<ITxMessage> Messages => _tx.Messages;
 
     public SignedTx(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees, ulong sequence, ReadOnlySpan<byte> publicKey, ReadOnlySpan<byte> signature)

@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using Cosm.Net.Generators.Common.Extensions;
 using Cosm.Net.Generators.Common.Util;
+using Cosm.Net.Generators.Proto.Adapters;
+using Cosm.Net.Generators.Proto.Adapters.Internal;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -35,15 +38,58 @@ public class QuerierGenerator : IIncrementalGenerator
             .Collect()
             .Select((msgClasses, _) => MatchMsgAndResponsePairs(msgClasses));
 
+        var eventAttributeKeyPropertyProvider = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: (node, _) => node is ClassDeclarationSyntax classDecl && classDecl.Identifier.Text == "EventAttribute",
+                transform: (ctx, _) => GetKeyProperty(ctx)
+            )
+            .Where(x => x is not null);
+
         var compilationAndClasses = context.CompilationProvider
             .Combine(queryClientTypesProvider.Collect())
-            .Combine(msgClassesProvider);
+            .Combine(msgClassesProvider)
+            .Combine(eventAttributeKeyPropertyProvider.Collect());
 
         context.RegisterSourceOutput(compilationAndClasses, (spc, combined) =>
         {
-            var ((_, queryClients), matchedMsgClasses) = combined;
-            Execute(spc, queryClients, matchedMsgClasses);
+            var (((compilation, queryClients), matchedMsgClasses), eventKeyAttributes) = combined;
+            Execute(spc, compilation, queryClients, matchedMsgClasses, eventKeyAttributes!);
         });
+    }
+
+    public static PropertyDeclarationSyntax? GetKeyProperty(GeneratorSyntaxContext context)
+    {
+        var classDeclaration = (ClassDeclarationSyntax) context.Node;
+        var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+
+        if(classSymbol is null)
+        {
+            return null;
+        }
+        if(!classSymbol.ContainingNamespace.ToString().Contains("Tendermint.Abci"))
+        {
+            return null;
+        }
+
+        foreach(var member in classDeclaration.Members)
+        {
+            if(
+                member is PropertyDeclarationSyntax property &&
+                property.Identifier.Text == "Key"
+            )
+            {
+                return property;
+            }
+        }
+
+        return null;
+    }
+
+    public static string GetNamespace(GeneratorSyntaxContext context)
+    {
+        var classDeclaration = (ClassDeclarationSyntax) context.Node;
+        var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+        return classSymbol?.ContainingNamespace?.ToString() ?? "";
     }
 
     private static (string Name, INamedTypeSymbol Symbol)? TransformToMsgClassInfo(GeneratorSyntaxContext context, CancellationToken _)
@@ -156,13 +202,16 @@ public class QuerierGenerator : IIncrementalGenerator
         public string Version { get; } = version;
     }
 
-    private void Execute(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> queryClients, ImmutableArray<INamedTypeSymbol> msgTypes)
+    private void Execute(SourceProductionContext context, Compilation compilation,
+        ImmutableArray<INamedTypeSymbol> queryClients, ImmutableArray<INamedTypeSymbol> msgTypes,
+        ImmutableArray<PropertyDeclarationSyntax> eventAttributeKeyProperties)
     {
         var moduleIdentifiers = queryClients.Select(x =>
         {
             var (prefix, name, version) = GetModuleIdentifier(x);
             return new ModuleIdentifier([x], prefix, name, version, [GetQueryClientQueryMethods(x)]);
         }).ToList();
+        var moduleNames = new Dictionary<string, string>();
 
         foreach(var nameGroup in moduleIdentifiers.GroupBy(x => new { x.Prefix, x.Name }).ToArray())
         {
@@ -190,6 +239,11 @@ public class QuerierGenerator : IIncrementalGenerator
         {
             string uniqueModuleName = GetModuleName(moduleIdentifier, moduleIdentifiers);
 
+            foreach(var client in moduleIdentifier.ClientTypes)
+            {
+                moduleNames.Add(NameUtils.FullyQualifiedTypeName(client), uniqueModuleName);
+            }
+
             var matchingMsgTypes = msgTypes
                 .Where(msgTypeSymbol => 
                     moduleIdentifier.ClientTypes.Any(clientType =>
@@ -208,6 +262,42 @@ public class QuerierGenerator : IIncrementalGenerator
             );
 
             context.AddSource($"{uniqueModuleName}.generated.cs", SourceText.From(code, Encoding.UTF8));
+        }
+
+        if(eventAttributeKeyProperties.Length == 0)
+        {
+            throw new InvalidOperationException("Tendermint Attribute not found");
+        }
+        if(eventAttributeKeyProperties.Length > 1)
+        {
+            throw new InvalidOperationException($"Too many Tendermint Attributes found: {eventAttributeKeyProperties.Length}");
+        }
+
+        var eventKeyProperty = compilation
+            .GetSemanticModel(eventAttributeKeyProperties[0].SyntaxTree)
+            .GetTypeInfo(eventAttributeKeyProperties[0].Type);
+
+        bool useStringEvents = !eventKeyProperty.Type!.Name.Contains("ByteString");
+
+        string txModuleCode = useStringEvents
+            ? TxModuleAdapter.Code.Replace(".ToStringUtf8()", "")
+            : TxModuleAdapter.Code;
+
+        context.AddSource("TxModuleAdapter.generated.cs", txModuleCode);
+        context.AddSource("AuthModuleAdapter.generated.cs", AuthModuleAdapter.Code);
+        context.AddSource("TendermintModuleAdapter.generated.cs", TendermintModuleAdapter.Code);
+        context.AddSource("BankModuleAdapter.generated.cs", BankModuleAdapter.Code);
+        context.AddSource("BlocksAdapter.generated.cs", BlocksAdapter.Code);
+
+        var clientModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Core.Client.V1")).Value;
+        var channelModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Core.Channel.V1")).Value;
+
+        context.AddSource("IbcAdapter.generated.cs", IbcAdapter.Code(clientModuleName, channelModuleName));
+
+        var wasmModuleName = moduleNames.FirstOrDefault(x => x.Key.Contains("Cosmwasm.Wasm.V1")).Value;
+        if(wasmModuleName is not null)
+        {
+            context.AddSource("WasmModuleAdapter.generated.cs", WasmModuleAdapter.Code(wasmModuleName));
         }
     }
 

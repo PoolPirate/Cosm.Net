@@ -1,5 +1,5 @@
 ﻿namespace Cosm.Net.Generators.Proto.Adapters;
-public class BlocksAdapter
+public static class BlocksAdapter
 {
     public const string Code =
         """
@@ -12,12 +12,10 @@ public class BlocksAdapter
         namespace Cosm.Net.Adapters;
         internal class BlocksAdapter(ITendermintModule tendermintModule) : IBlocksAdapter
         {
-            private readonly ITendermintModule _tendermintModule = tendermintModule;
-
             private Block ParseBlock(Tendermint.Types.Block tendermintBlock)
             {
                 return new Block(
-                    (ulong) tendermintBlock.Header.Height,
+                    tendermintBlock.Header.Height,
                     tendermintBlock.Header.Time.ToDateTimeOffset(),
                     tendermintBlock.Header.ProposerAddress,
                     tendermintBlock.Data.Txs,
@@ -28,24 +26,24 @@ public class BlocksAdapter
             
             public async Task<Block> GetLatestAsync(Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
             {
-                var response = await _tendermintModule.GetLatestBlockAsync(metadata, deadline, cancellationToken);
+                var response = await tendermintModule.GetLatestBlockAsync(metadata, deadline, cancellationToken);
                 return ParseBlock(response.Block);
             }
             public async Task<Block> GetLatestAsync(CallOptions options)
             {
-                var response = await _tendermintModule.GetLatestBlockAsync(options);
+                var response = await tendermintModule.GetLatestBlockAsync(options);
                 return ParseBlock(response.Block);
             }
 
-            public async Task<Block> GetByHeightAsync(ulong height, Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
+            public async Task<Block> GetByHeightAsync(long height, Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
             {
-                var response = await _tendermintModule.GetBlockByHeightAsync((long) height, metadata, deadline, cancellationToken);
+                var response = await tendermintModule.GetBlockByHeightAsync((long) height, metadata, deadline, cancellationToken);
                 return ParseBlock(response.Block);
             }
 
-            public async Task<Block> GetByHeightAsync(ulong height, CallOptions options)
+            public async Task<Block> GetByHeightAsync(long height, CallOptions options)
             {
-                var response = await _tendermintModule.GetBlockByHeightAsync((long) height, options);
+                var response = await tendermintModule.GetBlockByHeightAsync((long) height, options);
                 return ParseBlock(response.Block);
             }
         }

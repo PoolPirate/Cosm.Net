@@ -8,7 +8,7 @@ public class CosmTxBuilder
 {
     private readonly List<ITxMessage> _messages;
     private string _memo = String.Empty;
-    private ulong _timeoutHeight;
+    private long _timeoutHeight;
 
     public CosmTxBuilder()
     {
@@ -53,7 +53,7 @@ public class CosmTxBuilder
     /// </summary>
     /// <param name="timeoutHeight"></param>
     /// <returns></returns>
-    public CosmTxBuilder WithTimeoutHeight(ulong timeoutHeight)
+    public CosmTxBuilder WithTimeoutHeight(long timeoutHeight)
     {
         _timeoutHeight = timeoutHeight;
         return this;

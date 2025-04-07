@@ -14,7 +14,7 @@ public interface ICosmTx
     /// <summary>
     /// The timeout height of the transaction.
     /// </summary>
-    public ulong TimeoutHeight { get; }
+    public long TimeoutHeight { get; }
 
     /// <summary>
     /// The messages attached to the transaction.

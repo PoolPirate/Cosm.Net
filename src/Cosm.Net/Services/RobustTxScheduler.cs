@@ -23,11 +23,11 @@ public class RobustTxScheduler : ITxScheduler
     private readonly ByteString _signerPubkey;
 
     private readonly ITxEncoder _txEncoder;
-    private readonly IInternalTxAdapter _txModuleAdapater;
+    private readonly IInternalTxAdapter _txModuleAdapter;
     private readonly ITxPublisher _txPublisher;
 
     public RobustTxScheduler(ITxEncoder txEncoder, ICosmSigner signer, IInternalAuthAdapter authAdapter,
-        IChainConfiguration chainConfiguration, IInternalTxAdapter txModuleAdapater, IGasFeeProvider gasFeeProvider,
+        IChainConfiguration chainConfiguration, IInternalTxAdapter txModuleAdapter, IGasFeeProvider gasFeeProvider,
         ITxPublisher txPublisher)
     {
         _pendingTxChannel = Channel.CreateUnbounded<QueueEntry>(new UnboundedChannelOptions
@@ -41,7 +41,7 @@ public class RobustTxScheduler : ITxScheduler
         _signer = signer;
         _authAdapter = authAdapter;
         _chainConfiguration = chainConfiguration;
-        _txModuleAdapater = txModuleAdapater;
+        _txModuleAdapter = txModuleAdapter;
         _gasFeeProvider = gasFeeProvider;
         _txPublisher = txPublisher;
 
@@ -73,7 +73,7 @@ public class RobustTxScheduler : ITxScheduler
             try
             {
                 var encodedTx = _txEncoder.EncodeTx(tx, _signerPubkey, sequence, _gasFeeProvider.GasFeeDenom);
-                return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
+                return await _txModuleAdapter.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
             }
             catch(RpcException ex)
                 when(ex.StatusCode == StatusCode.Unknown

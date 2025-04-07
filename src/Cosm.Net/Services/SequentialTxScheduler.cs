@@ -19,7 +19,7 @@ public class SequentialTxScheduler : ITxScheduler
     private readonly ByteString _signerPubkey;
     private readonly IInternalAuthAdapter _authAdapter;
     private readonly IChainConfiguration _chainConfiguration;
-    private readonly IInternalTxAdapter _txModuleAdapater;
+    private readonly IInternalTxAdapter _txModuleAdapter;
     private readonly IGasFeeProvider _gasFeeProvider;
     private readonly ITxPublisher _txPublisher;
 
@@ -27,7 +27,7 @@ public class SequentialTxScheduler : ITxScheduler
     public ulong CurrentSequence { get; private set; }
 
     public SequentialTxScheduler(ITxEncoder txEncoder, ICosmSigner signer, IInternalAuthAdapter authAdapter,
-        IChainConfiguration chainConfiguration, IInternalTxAdapter txModuleAdapater, IGasFeeProvider gasFeeProvider, ITxPublisher txPublisher)
+        IChainConfiguration chainConfiguration, IInternalTxAdapter txModuleAdapter, IGasFeeProvider gasFeeProvider, ITxPublisher txPublisher)
     {
         _txChannel = Channel.CreateUnbounded<QueueEntry>(new UnboundedChannelOptions()
         {
@@ -40,7 +40,7 @@ public class SequentialTxScheduler : ITxScheduler
         _signer = signer;
         _authAdapter = authAdapter;
         _chainConfiguration = chainConfiguration;
-        _txModuleAdapater = txModuleAdapater;
+        _txModuleAdapter = txModuleAdapter;
         _gasFeeProvider = gasFeeProvider;
         _txPublisher = txPublisher;
 
@@ -62,7 +62,7 @@ public class SequentialTxScheduler : ITxScheduler
     public async Task<TxSimulation> SimulateTxAsync(ICosmTx tx, CancellationToken cancellationToken)
     {
         var encodedTx = _txEncoder.EncodeTx(tx, _signerPubkey, CurrentSequence, _gasFeeProvider.GasFeeDenom);
-        return await _txModuleAdapater.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
+        return await _txModuleAdapter.SimulateAsync(encodedTx, cancellationToken: cancellationToken);
     }
 
     public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees, DateTime? deadline, CancellationToken cancellationToken)

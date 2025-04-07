@@ -28,6 +28,8 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
     public IBankAdapter Bank => Module<IBankAdapter>();
     public IBlocksAdapter Blocks => Module<IBlocksAdapter>();
+    public IAuthzAdapter Authz => Module<IAuthzAdapter>();
+    public IIbcAdapter Ibc => Module<IIbcAdapter>();
 
     internal CosmClient(IServiceProvider provider, IEnumerable<Type> moduleTypes, ChainConfiguration chainConfiguration, bool isTxClient)
     {

@@ -11,6 +11,7 @@ namespace Cosm.Net.Generators.Proto;
 public static class QueryModuleProcessor
 {
     private const string _cosmosCoinTypeName = "global::Cosmos.Base.V1Beta1.Coin";
+    private const string _ibcHeightTypeName = "global::Ibc.Core.Client.V1.Height";
 
     public static ITypeSymbol GetQueryClientType(INamedTypeSymbol moduleType)
         => moduleType.AllInterfaces
@@ -110,6 +111,17 @@ public static class QueryModuleProcessor
                     }
                     """);
             }
+            else if(NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) property.Type) == _ibcHeightTypeName)
+            {
+                _ = functionBuilder.AddArgument(_ibcHeightTypeName, paramName);
+                _ = requestCtorCall.AddInitializer(property,
+                    $$"""
+                    new {{_ibcHeightTypeName}}() {
+                        RevisionNumber = (ulong) {{paramName}}.RevisionNumber,
+                        RevisionHeight = (ulong) {{paramName}}.RevisionHeight
+                    }
+                    """);
+            }
             else
             {
                 _ = functionBuilder.AddArgument((INamedTypeSymbol) property.Type, paramName);
@@ -157,7 +169,7 @@ public static class QueryModuleProcessor
 
             if(NameUtils.FullyQualifiedTypeName(namedType) == _cosmosCoinTypeName)
             {
-                _ = functionBuilder.AddArgument($"global::Cosm.Net.Models.Coin", paramName);
+                _ = functionBuilder.AddArgument("global::Cosm.Net.Models.Coin", paramName);
                 _ = msgObjectBuilder.AddInitializer(property,
                     $$"""
                     new {{_cosmosCoinTypeName}}() {
@@ -169,6 +181,17 @@ public static class QueryModuleProcessor
             else if(namedType.Name == "RepeatedField" && NameUtils.FullyQualifiedTypeName((INamedTypeSymbol) namedType.TypeArguments[0]) == _cosmosCoinTypeName)
             {
                 _ = functionBuilder.AddArgument($"global::System.Collections.Generic.IEnumerable<global::Cosm.Net.Models.Coin>", paramName);
+            }
+            else if(NameUtils.FullyQualifiedTypeName(namedType) == _ibcHeightTypeName)
+            {
+                _ = functionBuilder.AddArgument("global::Cosm.Net.Models.Height", paramName);
+                _ = msgObjectBuilder.AddInitializer(property,
+                    $$"""
+                    new {{_ibcHeightTypeName}}() {
+                        RevisionNumber = (ulong) {{paramName}}.RevisionNumber,
+                        RevisionHeight = (ulong) {{paramName}}.RevisionHeight
+                    }
+                    """);
             }
             else
             {

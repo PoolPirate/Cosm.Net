@@ -1,8 +1,8 @@
 ﻿namespace Cosm.Net.Generators.Proto.Adapters.Internal;
-public static class WasmModuleAdapater
+public static class WasmModuleAdapter
 {
-    public const string Code =
-        """
+    public static string Code(string wasmModuleName) 
+        => $$$"""
         #nullable enable
 
         using Cosm.Net.Encoding.Json;
@@ -17,10 +17,8 @@ public static class WasmModuleAdapater
 
         namespace Cosm.Net.Adapters.Internal;
 
-        internal class WasmModuleAdapter(IWasmModule wasmModule, IChainConfiguration chain, IServiceProvider provider) : IInternalWasmAdapter
+        internal class WasmModuleAdapter(I{{{wasmModuleName}}} wasmModule, IChainConfiguration chain, IServiceProvider provider) : IInternalWasmAdapter
         {
-            private readonly IWasmModule _wasmModule = wasmModule;
-            private readonly IChainConfiguration _chain = chain;
             private readonly ICosmSigner? _signer = provider.GetService<ICosmSigner>();
 
             public IWasmTxMessage EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
@@ -35,7 +33,7 @@ public static class WasmModuleAdapater
                 {
                     Contract = contract.ContractAddress,
                     Msg = ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)),
-                    Sender = txSender ?? _signer.GetAddress(_chain.Bech32Prefix),
+                    Sender = txSender ?? _signer.GetAddress(chain.Bech32Prefix),
                 };
 
                 foreach(var coin in funds)
@@ -52,7 +50,7 @@ public static class WasmModuleAdapater
 
             public async Task<ByteString> SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
             {
-                var response = await _wasmModule.SmartContractStateAsync(contract.ContractAddress, queryData, cancellationToken: cancellationToken);
+                var response = await wasmModule.SmartContractStateAsync(contract.ContractAddress, queryData, cancellationToken: cancellationToken);
                 return response.Data;
             }
         }

@@ -26,6 +26,16 @@ public interface ICosmClient
     public IBlocksAdapter Blocks { get; }
 
     /// <summary>
+    /// Gets an adapter to the chains native authz module.
+    /// </summary>
+    public IAuthzAdapter Authz { get; }
+
+    /// <summary>
+    /// Gets an adapter to the chains native ibc modules.
+    /// </summary>
+    public IIbcAdapter Ibc { get; }
+
+    /// <summary>
     /// Initializes the client. Must be called before using any other methods.
     /// </summary>
     /// <returns></returns>

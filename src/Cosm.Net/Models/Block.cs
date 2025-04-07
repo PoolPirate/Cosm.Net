@@ -2,11 +2,11 @@
 
 namespace Cosm.Net.Models;
 public sealed class Block(
-    ulong height, DateTimeOffset timestamp, ByteString proposerAddress, 
+    long height, DateTimeOffset timestamp, ByteString proposerAddress, 
     IReadOnlyList<ByteString> txs,
     IMessage header, IMessage lastCommit)
 {
-    public ulong Height { get; } = height;
+    public long Height { get; } = height;
     public DateTimeOffset Timestamp { get; } = timestamp;
     public ByteString ProposerAddress { get; } = proposerAddress;
 

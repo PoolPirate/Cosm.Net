@@ -81,12 +81,12 @@ public class NolusTxEncoder(IChainConfiguration chainConfig) : ITxEncoder
         return authInfo;
     }
 
-    private static TxBody MakeTxBody(string memo, ulong timeoutHeight, IEnumerable<ITxMessage> txMessages)
+    private static TxBody MakeTxBody(string memo, long timeoutHeight, IEnumerable<ITxMessage> txMessages)
     {
         var body = new TxBody()
         {
             Memo = memo,
-            TimeoutHeight = timeoutHeight,
+            TimeoutHeight = (ulong) timeoutHeight,
         };
 
         foreach(var txMessage in txMessages)

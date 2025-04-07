@@ -7,12 +7,12 @@ using Cosm.Net.Adapters.Internal;
 namespace Cosm.Net.Services;
 public class PollingTxConfirmer : ITxConfirmer
 {
-    private readonly IInternalTxAdapter _txModuleAdapater;
+    private readonly IInternalTxAdapter _txModuleAdapter;
     private IChainConfiguration _chainConfiguration;
 
-    public PollingTxConfirmer(IInternalTxAdapter txModuleAdapater)
+    public PollingTxConfirmer(IInternalTxAdapter txModuleAdapter)
     {
-        _txModuleAdapater = txModuleAdapater;
+        _txModuleAdapter = txModuleAdapter;
         _chainConfiguration = null!;
     }
 
@@ -36,7 +36,7 @@ public class PollingTxConfirmer : ITxConfirmer
 
             try
             {
-                var txExecution = await _txModuleAdapater.GetTxByHashAsync(txHash, cancellationToken: cancellationToken);
+                var txExecution = await _txModuleAdapter.GetTxByHashAsync(txHash, cancellationToken: cancellationToken);
 
                 if(txExecution is not null)
                 {

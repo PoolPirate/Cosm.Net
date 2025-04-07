@@ -5,10 +5,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Cosm.Net.Services;
-internal class ContractFactory(IInternalWasmAdapter wasmAdapater) : IContractFactory
+internal class ContractFactory(IInternalWasmAdapter wasmAdapter) : IContractFactory
 {
     private readonly Lock _lock = new Lock();
-    private readonly IInternalWasmAdapter _wasmAdapter = wasmAdapater;
+    private readonly IInternalWasmAdapter _wasmAdapter = wasmAdapter;
     private readonly Dictionary<Type, Func<string, string?, IContract>> _factoryDelegates = [];
 
     public TContract Create<TContract>(string address, string? codeHash)
