@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Configuration;
+using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
 using Cosm.Net.Tx;
@@ -16,6 +17,8 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 {
     private readonly ServiceCollection _services = [];
     private readonly List<Type> _moduleTypes = [];
+    private readonly AccountParser _accountParser = new AccountParser();
+    
     private ChainInfo? _chainInfo = null;
     private GasBufferConfiguration _gasBufferConfiguration = new GasBufferConfiguration(1.2, 20000);
 
@@ -451,6 +454,13 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
             .AsInternal().WithTxPublisher<TxModulePublisher>()
             .AsInternal().WithTxConfirmer<PollingTxConfirmer>();
 
+    CosmClientBuilder IInternalCosmClientBuilder.WithAccountType<TAccount>(
+        Google.Protobuf.Reflection.MessageDescriptor descriptor, Func<TAccount, AccountData> handler)
+    {
+        _accountParser.RegisterAccountType(descriptor, handler);
+        return this;
+    }
+
     public CosmClientBuilder AddWasmd()
     {
         if(!AsInternal().HasModule<IInternalWasmAdapter>())
@@ -497,6 +507,8 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         AssertValidReadClientServices();
 
         var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix, _chainInfo!.TransactionTimeout);
+
+        _ = _services.AddSingleton(_accountParser);
         _ = _services.AddSingleton<IChainConfiguration>(chainConfig);
 
         var provider = _services.BuildServiceProvider();
@@ -542,6 +554,8 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         AssertValidTxClientServices();
 
         var chainConfig = new ChainConfiguration(_chainInfo!.Bech32Prefix, _chainInfo!.TransactionTimeout);
+
+        _ = _services.AddSingleton(_accountParser);
         _ = _services.AddSingleton<IChainConfiguration>(chainConfig);
         _ = _services.AddSingleton<IGasBufferConfiguration>(_gasBufferConfiguration);
 

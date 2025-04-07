@@ -1,5 +1,8 @@
-﻿using Cosm.Net.Modules;
+﻿using Cosm.Net.Models;
+using Cosm.Net.Modules;
 using Cosm.Net.Services;
+using Google.Protobuf;
+using Google.Protobuf.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -142,4 +145,7 @@ public interface IInternalCosmClientBuilder
     /// <returns></returns>
     public CosmClientBuilder WithTxConfirmer<TTxConfirmer>(bool overrideExisting = false)
         where TTxConfirmer : class, ITxConfirmer;
+
+    public CosmClientBuilder WithAccountType<TAccount>(MessageDescriptor descriptor, Func<TAccount, AccountData> handler)
+        where TAccount : IMessage<TAccount>;
 }
