@@ -32,7 +32,7 @@ public class SecretEncryptionTests
 
     [Fact]
     public void Should_Decrypt_Known_Output()
-    {        
+    {
         byte[] nonce = Convert.FromHexString("F8D3A8A9BAF733DA64CA1BEA7E6597AC0766011F29FB45F607A4348F185E6828");
         using var decryptor = new SecretMessageDecryptor(_encryptionProvider.CalculateTxEncryptionKey(nonce));
 

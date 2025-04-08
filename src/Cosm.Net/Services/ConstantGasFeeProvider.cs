@@ -19,10 +19,10 @@ internal class ConstantGasFeeProvider : IGasFeeProvider<ConstantGasFeeProvider.C
     }
 
     public ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted, CancellationToken cancellationToken = default)
-        => ValueTask.FromResult(new Coin(GasFeeDenom, 
+        => ValueTask.FromResult(new Coin(GasFeeDenom,
             (ulong) Math.Ceiling(gasWanted * _gasPrice)));
 
-    public ulong ApplyGasBuffers(ulong gasWanted, double? gasMultiplier = null, ulong? gasOffset = null) 
+    public ulong ApplyGasBuffers(ulong gasWanted, double? gasMultiplier = null, ulong? gasOffset = null)
         => (ulong) (gasWanted * (gasMultiplier ?? _gasBufferConfiguration.GasMultiplier))
             + (gasOffset ?? _gasBufferConfiguration.GasOffset);
 }

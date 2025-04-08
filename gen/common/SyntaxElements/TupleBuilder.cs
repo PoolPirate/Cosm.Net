@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Cosm.Net.Generators.Common.SyntaxElements;
 
@@ -42,12 +41,12 @@ public class TupleBuilder : ITypeBuilder
 
     public string Build()
     {
-        if (_elements.Count == 0)
+        if(_elements.Count == 0)
         {
             throw new InvalidOperationException("Tuple requires at least one element");
         }
 
-        return 
+        return
             $"({String.Join(",", _elements.Select(element => $"{element.Type}{(element.Name is null ? "" : $" {element.Name}")}"))})";
     }
     public SyntaxId GetSyntaxId()
@@ -63,7 +62,7 @@ public class TupleBuilder : ITypeBuilder
         {
             innerSyntaxId = innerSyntaxId.Combine(syntaxId);
         }
-      
+
         return innerSyntaxId;
     }
 }

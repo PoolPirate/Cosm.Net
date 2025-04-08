@@ -43,7 +43,7 @@ public class GeneratedTypeAggregator
 
         _types.Add(syntaxId, type switch
         {
-            ClassBuilder cb => cb.WithName(typeName), 
+            ClassBuilder cb => cb.WithName(typeName),
             EnumerationBuilder eb => eb.WithName(typeName),
             _ => type
         });

@@ -8,7 +8,7 @@ public class JsonObjectTypeGenerator
     private ObjectTypeGenerator _objectTypeGenerator = null!;
     private SchemaTypeGenerator _schemaTypeGenerator = null!;
     private TupleTypeGenerator _tupleTypeGenerator = null!;
-    
+
     public void Initialize(ObjectTypeGenerator objectTypeGenerator, SchemaTypeGenerator schemaTypeGenerator, TupleTypeGenerator tupleTypeGenerator)
     {
         _objectTypeGenerator = objectTypeGenerator;

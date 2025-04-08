@@ -5,7 +5,7 @@ using Grpc.Core;
 namespace Cosm.Net.Adapters;
 public interface IBlocksAdapter : IModule
 {
-    public Task<Block> GetLatestAsync(Metadata? metadata = null, DateTime? deadline = null,  CancellationToken cancellationToken = default);
+    public Task<Block> GetLatestAsync(Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default);
     public Task<Block> GetLatestAsync(CallOptions options);
 
     public Task<Block> GetByHeightAsync(long height, Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default);

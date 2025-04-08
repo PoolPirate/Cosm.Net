@@ -11,7 +11,7 @@ public sealed class AccountParser
     public void RegisterAccountType<T>(MessageDescriptor descriptor, Func<T, AccountData> handler)
         where T : IMessage<T>
     {
-        if (descriptor.ClrType != typeof(T))
+        if(descriptor.ClrType != typeof(T))
         {
             throw new InvalidOperationException("Descriptor does not match generic parameter");
         }

@@ -16,7 +16,7 @@ public class RustEnumConverter<TEnum> : JsonConverter<TEnum>
         return TEnum.ReadFromDocument(jsonDocument);
     }
 
-    public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options) 
+    public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
         => TEnum.Write(writer, value, options);
 }
 

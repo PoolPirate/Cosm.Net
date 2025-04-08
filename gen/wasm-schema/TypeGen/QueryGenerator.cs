@@ -97,7 +97,7 @@ public class QueryGenerator
                     .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName}, global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions)")
                     .Build());
         }
-        
+
         return function
             .AddArgument("global::System.Threading.CancellationToken", "cancellationToken", true, "default")
             .AddStatement("var encodedRequest = global::System.Text.Encoding.UTF8.GetBytes(jsonRequest.ToJsonString())")

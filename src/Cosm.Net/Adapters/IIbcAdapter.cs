@@ -1,7 +1,7 @@
-﻿using Cosm.Net.Modules;
+﻿using Cosm.Net.Models;
+using Cosm.Net.Modules;
 using Cosm.Net.Tx.Msg;
 using Google.Protobuf;
-using Cosm.Net.Models;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 
@@ -56,7 +56,7 @@ public interface IIbcAdapter : IModule
         string sourcePort,
         string sourceChannel,
         string destinationPort,
-        string destinationChannel, 
+        string destinationChannel,
         ulong sequence,
         ByteString packetData,
         Height timeoutHeight,
@@ -65,5 +65,5 @@ public interface IIbcAdapter : IModule
         Height proofHeight,
         ulong nextSequenceRecv,
         string signer
-    ); 
+    );
 }

@@ -2,7 +2,6 @@
 using Cosm.Net.Generators.Common.SyntaxElements;
 using Cosm.Net.Generators.Common.Util;
 using Microsoft.CodeAnalysis;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +19,7 @@ public static class QueryModuleProcessor
             .First();
 
     public static string GetQueryModuleGeneratedCode(
-        string moduleName, INamedTypeSymbol[] queryClientTypes, 
+        string moduleName, INamedTypeSymbol[] queryClientTypes,
         IEnumerable<IMethodSymbol>[] queryMethods, IEnumerable<INamedTypeSymbol> messageTypes)
     {
         var methodCodeBuilder = new StringBuilder();

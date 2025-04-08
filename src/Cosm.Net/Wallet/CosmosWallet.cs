@@ -14,13 +14,13 @@ public class CosmosWallet : BaseWeierstrassHdWallet<Secp256k1>, ICosmSigner
     public ReadOnlySpan<byte> PublicKey => _compressedPublicKey;
 
     public CosmosWallet(ReadOnlySpan<byte> privateKey)
-        :base(Secp256k1.Instance, privateKey)
+        : base(Secp256k1.Instance, privateKey)
     {
         _addressBytes = GenerateAddress();
     }
 
     public CosmosWallet(string mnemonic, string passphrase = "", int accountIndex = 0)
-        :base(Secp256k1.Instance, mnemonic, passphrase, BIP44.Cosmos(accountIndex))
+        : base(Secp256k1.Instance, mnemonic, passphrase, BIP44.Cosmos(accountIndex))
     {
         _addressBytes = GenerateAddress();
     }

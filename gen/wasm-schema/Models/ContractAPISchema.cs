@@ -39,7 +39,7 @@ public class ContractAPISchema
         {
             var responseKey = responseNode.Key;
 
-            if (responseNode.Value is null)
+            if(responseNode.Value is null)
             {
                 throw new InvalidOperationException($"Response {responseKey} does not contain a schema");
             }
@@ -59,7 +59,7 @@ public class ContractAPISchema
 
     public async Task<JsonSchema> GetQuerySchemaAsync()
     {
-        if (Query is null)
+        if(Query is null)
         {
             throw new InvalidOperationException("Schema is missing query property");
         }

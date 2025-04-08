@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using Cosm.Net.Generators.Common.Extensions;
+﻿using Cosm.Net.Generators.Common.Extensions;
 using Cosm.Net.Generators.Common.Util;
 using Cosm.Net.Generators.Proto.Adapters;
 using Cosm.Net.Generators.Proto.Adapters.Internal;
@@ -13,6 +6,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading;
 
 namespace Cosm.Net.Generators.Proto;
 
@@ -193,15 +193,6 @@ public class QuerierGenerator : IIncrementalGenerator
         return typeSymbol;
     }
 
-    private class ModuleIdentifier(INamedTypeSymbol[] clientTypes, string prefix, string name, string version, IMethodSymbol[][] queryMethods)
-    {
-        public INamedTypeSymbol[] ClientTypes { get; } = clientTypes;
-        public IMethodSymbol[][] QueryMethods { get; } = queryMethods;
-        public string Prefix { get; } = prefix;
-        public string Name { get; } = name;
-        public string Version { get; } = version;
-    }
-
     private void Execute(SourceProductionContext context, Compilation compilation,
         ImmutableArray<INamedTypeSymbol> queryClients, ImmutableArray<INamedTypeSymbol> msgTypes,
         ImmutableArray<PropertyDeclarationSyntax> eventAttributeKeyProperties)
@@ -215,11 +206,11 @@ public class QuerierGenerator : IIncrementalGenerator
 
         foreach(var nameGroup in moduleIdentifiers.GroupBy(x => new { x.Prefix, x.Name }).ToArray())
         {
-            if (nameGroup.Count() == 1)
+            if(nameGroup.Count() == 1)
             {
                 continue;
             }
-            if (!TryJoinQueryLists(nameGroup.SelectMany(x => x.QueryMethods)))
+            if(!TryJoinQueryLists(nameGroup.SelectMany(x => x.QueryMethods)))
             {
                 continue;
             }
@@ -245,7 +236,7 @@ public class QuerierGenerator : IIncrementalGenerator
             }
 
             var matchingMsgTypes = msgTypes
-                .Where(msgTypeSymbol => 
+                .Where(msgTypeSymbol =>
                     moduleIdentifier.ClientTypes.Any(clientType =>
                         clientType.ContainingNamespace.Equals(msgTypeSymbol.ContainingNamespace, SymbolEqualityComparer.Default)));
 
@@ -255,9 +246,9 @@ public class QuerierGenerator : IIncrementalGenerator
             }
 
             var code = QueryModuleProcessor.GetQueryModuleGeneratedCode(
-                uniqueModuleName, 
-                moduleIdentifier.ClientTypes, 
-                moduleIdentifier.QueryMethods, 
+                uniqueModuleName,
+                moduleIdentifier.ClientTypes,
+                moduleIdentifier.QueryMethods,
                 matchingMsgTypes
             );
 
@@ -313,7 +304,7 @@ public class QuerierGenerator : IIncrementalGenerator
         bool allPrefixesMatch = conflicts.All(x => x.Prefix == moduleIdentifier.Prefix);
         bool allVersionsMatch = conflicts.All(x => x.Version == moduleIdentifier.Version);
 
-        if (allPrefixesMatch && allVersionsMatch)
+        if(allPrefixesMatch && allVersionsMatch)
         {
             throw new NotSupportedException(
                 $"Unresolvable conflict: {string.Join(",", conflicts.SelectMany(x => x.ClientTypes).Select(NameUtils.FullyQualifiedTypeName))}");
@@ -387,7 +378,7 @@ public class QuerierGenerator : IIncrementalGenerator
         {
             foreach(var query in queryList)
             {
-                if (output.Any(x => x.Name == query.Name))
+                if(output.Any(x => x.Name == query.Name))
                 {
                     return false;
                 }

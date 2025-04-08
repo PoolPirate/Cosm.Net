@@ -1,7 +1,7 @@
-﻿using Miscreant;
+﻿using Cosm.Net.Modules;
+using Miscreant;
 using System.Security.Cryptography;
 using X25519;
-using Cosm.Net.Modules;
 
 namespace Cosm.Net.Services;
 public class SecretEncryptionProvider : IInitializeableService
@@ -47,7 +47,7 @@ public class SecretEncryptionProvider : IInitializeableService
 
     async ValueTask IInitializeableService.InitializeAsync(CancellationToken cancellationToken)
     {
-        if (_registrationModule is not null)
+        if(_registrationModule is not null)
         {
             var txKey = await _registrationModule.TxKeyAsync(cancellationToken: cancellationToken);
             _consensusIoPubKey = txKey.Key_.ToByteArray();

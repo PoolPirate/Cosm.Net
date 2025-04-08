@@ -1,8 +1,8 @@
-﻿using Cosm.Net.Models;
+﻿using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Exceptions;
+using Cosm.Net.Models;
 using Cosm.Net.Tx;
 using Grpc.Core;
-using Cosm.Net.Adapters.Internal;
 
 namespace Cosm.Net.Services;
 public class PollingTxConfirmer : ITxConfirmer
@@ -21,7 +21,7 @@ public class PollingTxConfirmer : ITxConfirmer
         _chainConfiguration = chainConfiguration;
     }
 
-    public async Task<TxExecution> WaitForTxConfirmationAsync(string txHash, 
+    public async Task<TxExecution> WaitForTxConfirmationAsync(string txHash,
         TimeSpan timeout, bool throwOnRevert = true, CancellationToken cancellationToken = default)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(4));
@@ -45,7 +45,7 @@ public class PollingTxConfirmer : ITxConfirmer
                         : txExecution;
                 }
             }
-            catch(RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+            catch(RpcException ex) when(ex.StatusCode == StatusCode.NotFound)
             {
                 continue;
             }

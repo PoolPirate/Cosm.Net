@@ -14,7 +14,7 @@ public class CosmTxBuilder
     {
         _messages = [];
     }
-    
+
     /// <summary>
     /// Adds a message to the transaction.
     /// </summary>

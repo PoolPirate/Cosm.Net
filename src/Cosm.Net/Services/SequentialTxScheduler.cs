@@ -1,14 +1,13 @@
-﻿using Cosm.Net.Exceptions;
+﻿using Cosm.Net.Adapters.Internal;
+using Cosm.Net.Exceptions;
 using Cosm.Net.Models;
 using Cosm.Net.Tx;
-using System.Threading.Channels;
+using Cosm.Net.Wallet;
 using Google.Protobuf;
-
+using System.Threading.Channels;
 using QueueEntry = (Cosm.Net.Tx.ICosmTx Tx, ulong GasWanted, System.Collections.Generic.IEnumerable<Cosm.Net.Models.Coin> TxFees,
     System.DateTime? Deadline, System.Threading.CancellationToken CancellationToken,
     System.Threading.Tasks.TaskCompletionSource<string> CompletionSource);
-using Cosm.Net.Adapters.Internal;
-using Cosm.Net.Wallet;
 
 namespace Cosm.Net.Services;
 public class SequentialTxScheduler : ITxScheduler
@@ -136,7 +135,7 @@ public class SequentialTxScheduler : ITxScheduler
         {
             var txSubmission = await _txPublisher.PublishTxAsync(signedTx, entry.Deadline, entry.CancellationToken);
 
-            if (txSubmission.Code != 0)
+            if(txSubmission.Code != 0)
             {
                 throw new TxPublishException(txSubmission.Code, txSubmission.RawLog);
             }

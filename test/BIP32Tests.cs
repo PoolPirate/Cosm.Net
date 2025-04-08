@@ -1,8 +1,4 @@
-﻿using Cosm.Net.Crypto;
-using Cosm.Net.Wallet.Crypto;
-using Org.BouncyCastle.Utilities.Encoders;
-
-namespace Cosm.Net.Test;
+﻿namespace Cosm.Net.Test;
 public class BIP32Tests
 {
     private static readonly string _mnemonic = "file crane delay shadow extend outdoor maximum click approve zebra alert ten";

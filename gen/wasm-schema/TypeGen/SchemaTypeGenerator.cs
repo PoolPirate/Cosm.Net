@@ -9,7 +9,7 @@ public class SchemaTypeGenerator
 
     public void Initialize(EnumerationTypeGenerator enumerationTypeGenerator, JsonObjectTypeGenerator jsonObjectTypeGenerator)
     {
-        _enumerationGenerator =  enumerationTypeGenerator;
+        _enumerationGenerator = enumerationTypeGenerator;
         _jsonObjectTypeGenerator = jsonObjectTypeGenerator;
     }
 

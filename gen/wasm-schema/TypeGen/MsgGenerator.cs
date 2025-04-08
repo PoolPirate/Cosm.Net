@@ -52,7 +52,8 @@ public class MsgGenerator
                 string argName = NameUtils.ToValidVariableName(prop.Key);
                 var argSchema = prop.Value;
 
-                return new {
+                return new
+                {
                     Type = _schemaTypeGenerator.GetOrGenerateSchemaType(argSchema, definitionsSource),
                     ArgName = argName,
                     ArgSchema = argSchema,
@@ -84,8 +85,7 @@ public class MsgGenerator
                     paramType.DefaultValue is not null, paramType.DefaultValue, argSchema.Description)
                 .AddStatement(
                 $$"""
-                if ({{argName}} != {{paramType.DefaultValue}}) {{{
-                    new MethodCallBuilder("innerJsonRequest", "Add")
+                if ({{argName}} != {{paramType.DefaultValue}}) {{{new MethodCallBuilder("innerJsonRequest", "Add")
                         .AddArgument($"\"{argName}\"")
                         .AddArgument($"global::System.Text.Json.JsonSerializer.SerializeToNode({argName}, global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions)")
                         .Build()}};

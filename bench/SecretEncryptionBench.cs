@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
 using Cosm.Net.Services;
 
 namespace Cosm.Net.Bench;
@@ -35,7 +34,7 @@ public class SecretEncryptionBench
     private static readonly byte[] DecryptionNonce = Convert.FromHexString("F8D3A8A9BAF733DA64CA1BEA7E6597AC0766011F29FB45F607A4348F185E6828");
 
     [Benchmark]
-    public SecretMessageDecryptor Secret_Create_Message_Decryptor() 
+    public SecretMessageDecryptor Secret_Create_Message_Decryptor()
         => new SecretMessageDecryptor(_encryptionProvider.CalculateTxEncryptionKey(DecryptionNonce));
 
     [Benchmark]

@@ -1,7 +1,7 @@
 ﻿namespace Cosm.Net.Generators.Proto.Adapters;
 public static class IbcAdapter
 {
-    public static string Code(string clientModuleName, string channelModuleName) 
+    public static string Code(string clientModuleName, string channelModuleName)
         => $$$"""
         #nullable enable
 

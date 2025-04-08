@@ -1,5 +1,4 @@
 ﻿using Microsoft.CodeAnalysis;
-using System.Linq;
 
 namespace Cosm.Net.Generators.Common.Extensions;
 public static class SymbolExtensions

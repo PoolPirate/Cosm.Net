@@ -123,7 +123,7 @@ public class EnumerationTypeGenerator
                         """);
                     break;
                 case RustEnumType.ComplexObject:
-                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, 
+                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder,
                         SchemaTypeGenerator.GetInnerSchema(enumerationSchema.ActualProperties.Single().Value), definitionsSource);
                     writeCases.Add(
                         $"""

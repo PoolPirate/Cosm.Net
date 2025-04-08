@@ -1,7 +1,7 @@
 ﻿namespace Cosm.Net.Generators.Proto.Adapters.Internal;
 public static class WasmModuleAdapter
 {
-    public static string Code(string wasmModuleName) 
+    public static string Code(string wasmModuleName)
         => $$$"""
         #nullable enable
 

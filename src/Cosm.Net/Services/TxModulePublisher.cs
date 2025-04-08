@@ -9,11 +9,11 @@ public class TxModulePublisher(IInternalTxAdapter txModule, ITxEncoder txEncoder
     private readonly IInternalTxAdapter _txModule = txModule;
     private readonly ITxEncoder _txEncoder = txEncoder;
 
-    public async Task<TxSubmission> PublishTxAsync(ISignedCosmTx tx, DateTime? deadline, CancellationToken cancellationToken) 
+    public async Task<TxSubmission> PublishTxAsync(ISignedCosmTx tx, DateTime? deadline, CancellationToken cancellationToken)
         => await _txModule.BroadcastTxAsync(
-            _txEncoder.EncodeTx(tx), 
-            BroadcastMode.Sync, 
-            deadline: deadline, 
+            _txEncoder.EncodeTx(tx),
+            BroadcastMode.Sync,
+            deadline: deadline,
             cancellationToken: cancellationToken
         );
 }

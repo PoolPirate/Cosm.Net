@@ -1,5 +1,4 @@
 ﻿using Cosm.Net.Client;
-using Cosm.Net.Extensions;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
@@ -32,6 +31,6 @@ public static class ICosmClientExtensions
     /// <param name="cosmClient"></param>
     /// <param name="context">The encryption context used by the transaction.</param>
     /// <returns></returns>
-    public static IMessageDescryptor GetMessageDecryptor(this ICosmClient cosmClient, SecretEncryptionContext context) 
+    public static IMessageDescryptor GetMessageDecryptor(this ICosmClient cosmClient, SecretEncryptionContext context)
         => new SecretMessageDecryptor(context.TxEncryptionKey);
 }

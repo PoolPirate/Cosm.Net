@@ -14,6 +14,6 @@ public static class DebuggerUtils
             LaunchedBefore = true;
             Debugger.Launch();
         }
-}
+    }
 #endif
 }

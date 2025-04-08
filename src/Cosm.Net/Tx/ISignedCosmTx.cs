@@ -21,7 +21,7 @@ public interface ISignedCosmTx : ICosmTx
     /// The sequence number of the sender when this transaction was signed.
     /// </summary>
     public ulong Sequence { get; }
-    
+
     /// <summary>
     /// The public key that this transaction was signed with.
     /// </summary>

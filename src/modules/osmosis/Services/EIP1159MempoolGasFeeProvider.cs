@@ -23,7 +23,7 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
     private readonly PeriodicTimer _refreshTimer;
 
     public EIP1159MempoolGasFeeProvider(Configuration configuration, IGasBufferConfiguration gasBufferConfiguration, ITxfeesModule txFeesModule)
-    {       
+    {
         _txFeesModule = txFeesModule;
         _gasBufferConfiguration = gasBufferConfiguration;
 

@@ -1,9 +1,6 @@
 ﻿using Cosm.Net.Generators.Common.SyntaxElements;
 using Cosm.Net.Generators.CosmWasm.Models;
 using NJsonSchema;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
 public class TupleTypeGenerator

@@ -4,9 +4,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System.Text.Json;
 using System.Collections.Immutable;
 using System.Text;
+using System.Text.Json;
 
 namespace Cosm.Net.Generators.CosmWasm;
 

@@ -14,7 +14,7 @@ public class SecretMessageDecryptor : IMessageDescryptor
         _aesSiv = aesSiv;
     }
 
-    public byte[] DecryptMessage(ReadOnlySpan<byte> cipherText) 
+    public byte[] DecryptMessage(ReadOnlySpan<byte> cipherText)
         => _aesSiv.Open(cipherText.ToArray(), [[]]);
 
     public void Dispose()

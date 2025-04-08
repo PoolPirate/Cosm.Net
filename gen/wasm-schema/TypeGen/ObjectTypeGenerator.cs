@@ -70,7 +70,7 @@ public class ObjectTypeGenerator
         string definitionName = definitionsSource.Definitions
             .FirstOrDefault(x => x.Value == schema).Key;
 
-        string typeName = definitionName 
+        string typeName = definitionName
             ?? (schema.Title?.IndexOf(' ') != -1
                 ? null
                 : schema.Title)

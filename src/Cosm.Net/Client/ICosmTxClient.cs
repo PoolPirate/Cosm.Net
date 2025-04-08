@@ -1,5 +1,4 @@
-﻿using Cosm.Net.Adapters;
-using Cosm.Net.Client.Internal;
+﻿using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Tx;
 
@@ -30,7 +29,7 @@ public interface ICosmTxClient : ICosmClient
     /// <param name="gasOffset">A value to add to the simulation gas.</param>    
     /// <param name="cancellationToken"></param>
     /// <returns>TxHash of the transaction</returns>
-    public Task<TxEstimation> SimulateAndEstimateTxFeesAsync(ICosmTx tx, 
+    public Task<TxEstimation> SimulateAndEstimateTxFeesAsync(ICosmTx tx,
         double? gasMultiplier = null, ulong? gasOffset = null, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -54,7 +53,7 @@ public interface ICosmTxClient : ICosmClient
     /// <param name="deadline">Deadline for the GRPC Call. Call will be aborted after the given time.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>TxHash of the transaction</returns>
-    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees, 
+    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees,
         DateTime? deadline = default, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -65,7 +64,7 @@ public interface ICosmTxClient : ICosmClient
     /// <param name="deadline">Deadline for the GRPC Call. Call will be aborted after the given time.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>TxHash of the transaction</returns>
-    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, 
+    public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted,
         DateTime? deadline = default, CancellationToken cancellationToken = default);
 
     /// <summary>

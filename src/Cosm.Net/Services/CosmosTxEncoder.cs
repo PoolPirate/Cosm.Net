@@ -20,7 +20,7 @@ public class CosmosTxEncoder(IChainConfiguration chainConfig) : ITxEncoder
             ChainId = _chainConfig.ChainId
         };
 
-    public virtual ByteString EncodeTx(ICosmTx tx, ByteString publicKey, ulong sequence, string feeDenom) 
+    public virtual ByteString EncodeTx(ICosmTx tx, ByteString publicKey, ulong sequence, string feeDenom)
         => new TxRaw()
         {
             AuthInfoBytes = MakeAuthInfo(publicKey, sequence, 0, [new Coin(feeDenom, 0)]).ToByteString(),

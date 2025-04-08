@@ -12,6 +12,6 @@ public interface IInternalTxAdapter : IModule
     public Task<TxSubmission> BroadcastTxAsync(ByteString txBytes, BroadcastMode mode,
         Metadata? headers = default, DateTime? deadline = default, CancellationToken cancellationToken = default);
 
-    public Task<TxExecution> GetTxByHashAsync(string txHash, 
+    public Task<TxExecution> GetTxByHashAsync(string txHash,
         Metadata? headers = default, DateTime? deadline = default, CancellationToken cancellationToken = default);
 }

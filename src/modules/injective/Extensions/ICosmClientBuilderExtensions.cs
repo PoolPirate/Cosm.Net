@@ -1,6 +1,4 @@
-﻿using Cosm.Net.Adapters;
-using Cosm.Net.Client;
-using Cosm.Net.Modules;
+﻿using Cosm.Net.Client;
 using Injective.Types.V1Beta1;
 using System.Reflection;
 
@@ -13,7 +11,7 @@ public static class ICosmClientBuilderExtensions
             .AsInternal().WithChainInfo(bech32Prefix, TimeSpan.FromSeconds(40))
             .AsInternal().RegisterModulesFromAssembly(Assembly.GetExecutingAssembly())
             .AsInternal().WithAccountType<EthAccount>(
-                EthAccount.Descriptor, 
+                EthAccount.Descriptor,
                 x => new Models.AccountData(x.BaseAccount.AccountNumber, x.BaseAccount.Sequence)
             );
 }

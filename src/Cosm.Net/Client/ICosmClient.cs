@@ -2,10 +2,8 @@
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
 using Cosm.Net.Modules;
-using Cosm.Net.Services;
 using Cosm.Net.Tx;
 using Grpc.Core;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Cosm.Net.Client;
 public interface ICosmClient

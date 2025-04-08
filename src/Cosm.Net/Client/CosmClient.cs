@@ -21,7 +21,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
     private readonly bool _isTxClient;
     private readonly IGasFeeProvider? _gasFeeProvider;
     private readonly ITxConfirmer? _txConfirmer;
-    private readonly ITxScheduler? _txScheduler; 
+    private readonly ITxScheduler? _txScheduler;
 
     public IChainConfiguration Chain => _chainConfig;
     IServiceProvider IInternalCosmClient.ServiceProvider => _provider;
@@ -107,7 +107,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         return _gasFeeProvider!.GetFeeForGasAsync(gasWanted, cancellationToken);
     }
 
-    public async Task<TxEstimation> SimulateAndEstimateTxFeesAsync(ICosmTx tx, double? gasMultiplier = null, 
+    public async Task<TxEstimation> SimulateAndEstimateTxFeesAsync(ICosmTx tx, double? gasMultiplier = null,
         ulong? gasOffset = null, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
@@ -119,7 +119,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
 
     public Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, Coin txFee,
         DateTime? deadline = default, CancellationToken cancellationToken = default)
-        => PublishTxAsync(tx, gasWanted, [txFee], deadline, cancellationToken); 
+        => PublishTxAsync(tx, gasWanted, [txFee], deadline, cancellationToken);
     public async Task<string> PublishTxAsync(ICosmTx tx, ulong gasWanted, IEnumerable<Coin> txFees,
         DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
@@ -133,7 +133,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         var fee = await _gasFeeProvider!.GetFeeForGasAsync(gasWanted);
         return await PublishTxAsync(tx, gasWanted, [fee], deadline, cancellationToken);
     }
-    public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, double? gasMultiplier = null, ulong? gasOffset = null, 
+    public async Task<string> SimulateAndPublishTxAsync(ICosmTx tx, double? gasMultiplier = null, ulong? gasOffset = null,
         DateTime? deadline = default, CancellationToken cancellationToken = default)
     {
         AssertReady(true);
@@ -150,7 +150,7 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
         {
             return await Module<IInternalTxAdapter>().GetTxByHashAsync(txHash, headers, deadline, cancellationToken);
         }
-        catch(RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+        catch(RpcException ex) when(ex.StatusCode == StatusCode.NotFound)
         {
             return null;
         }

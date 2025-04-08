@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Cosm.Net.Client.Internal;
 public interface IInternalCosmClientBuilder
-{    
+{
     /// <summary>
     /// Accesses the internal ServiceCollection containing modules and their dependencies.
     /// </summary>

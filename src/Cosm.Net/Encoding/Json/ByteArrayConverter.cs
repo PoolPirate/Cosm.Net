@@ -6,11 +6,11 @@ public class ByteArrayConverter : JsonConverter<byte[]?>
 {
     public override byte[]? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.Null)
+        if(reader.TokenType == JsonTokenType.Null)
         {
             return null;
         }
-        if (reader.TokenType != JsonTokenType.StartArray)
+        if(reader.TokenType != JsonTokenType.StartArray)
         {
             throw new NotSupportedException("Json Value could not be parsed into byte array");
         }
@@ -27,7 +27,7 @@ public class ByteArrayConverter : JsonConverter<byte[]?>
 
     public override void Write(Utf8JsonWriter writer, byte[]? value, JsonSerializerOptions options)
     {
-        if (value is null)
+        if(value is null)
         {
             writer.WriteNullValue();
             return;

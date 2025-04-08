@@ -18,7 +18,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     private readonly ServiceCollection _services = [];
     private readonly List<Type> _moduleTypes = [];
     private readonly AccountParser _accountParser = new AccountParser();
-    
+
     private ChainInfo? _chainInfo = null;
     private GasBufferConfiguration _gasBufferConfiguration = new GasBufferConfiguration(1.2, 20000);
 
@@ -37,7 +37,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     /// </summary>
     /// <param name="channel">The GrpcChannel to use</param>
     /// <returns></returns>
-    public CosmClientBuilder WithChannel(GrpcChannel channel) 
+    public CosmClientBuilder WithChannel(GrpcChannel channel)
         => WithCallInvoker(channel.CreateCallInvoker());
 
     /// <summary>
@@ -66,7 +66,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
     /// <returns></returns>
     public CosmClientBuilder WithDefaultTransactionTimeout(TimeSpan defaultTransactionTimeout)
     {
-        if (_chainInfo is null)
+        if(_chainInfo is null)
         {
             throw new InvalidOperationException($"No {nameof(ChainInfo)} has been set. Install a chain before calling this method.");
         }
@@ -77,7 +77,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
 
     public CosmClientBuilder WithGasBuffers(double gasMultiplier, ulong gasOffset)
     {
-        if (gasMultiplier < 1)
+        if(gasMultiplier < 1)
         {
             throw new ArgumentException("Gas Multiplier must be larger or equal to 1");
         }

@@ -2,7 +2,7 @@
 
 namespace Cosm.Net.Models;
 public sealed class Block(
-    long height, DateTimeOffset timestamp, ByteString proposerAddress, 
+    long height, DateTimeOffset timestamp, ByteString proposerAddress,
     IReadOnlyList<ByteString> txs,
     IMessage header, IMessage lastCommit)
 {
