@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Models;
+﻿namespace Cosm.Net.Models.Tx;
 public class TxEventAttribute
 {
     public string Key { get; }

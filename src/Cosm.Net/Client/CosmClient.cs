@@ -2,6 +2,7 @@
 using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
+using Cosm.Net.Models.Tx;
 using Cosm.Net.Modules;
 using Cosm.Net.Services;
 using Cosm.Net.Tx;

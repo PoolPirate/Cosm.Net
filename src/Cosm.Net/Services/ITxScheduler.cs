@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Models;
+using Cosm.Net.Models.Tx;
 using Cosm.Net.Tx;
 
 namespace Cosm.Net.Services;

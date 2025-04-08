@@ -7,6 +7,7 @@ public static class TxModuleAdapter
 
         using Cosm.Net.Modules;
         using Cosm.Net.Models;
+        using Cosm.Net.Models.Tx;
         using Google.Protobuf;
         using Grpc.Core;
         using System.Numerics;

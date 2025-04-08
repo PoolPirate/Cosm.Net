@@ -16,9 +16,9 @@ public static class BankModuleAdapter
         internal class BankAdapter(IBankModule bankModule) : IBankAdapter
         {
             public async Task<BigInteger> BalanceAsync(string address, string denom,
-                Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
+                Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
             {
-                var balance = await bankModule.BalanceAsync(address, denom, metadata, deadline, cancellationToken);
+                var balance = await bankModule.BalanceAsync(address, denom, headers, deadline, cancellationToken);
                 return BigInteger.Parse(balance.Balance.Amount);
             }
 

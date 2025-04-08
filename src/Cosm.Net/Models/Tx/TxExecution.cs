@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Models;
+﻿namespace Cosm.Net.Models.Tx;
 public class TxExecution(uint code, string txHash, long blockNumber, string rawLog, string memo, ulong gasWanted, Coin[] txFees, TxEvent[] events)
 {
     public bool Success => Code == 0;

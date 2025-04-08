@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Models;
+﻿namespace Cosm.Net.Models.Tx;
 public class TxSubmission(long code, string txHash, string rawLog)
 {
     public long Code { get; } = code;

@@ -282,8 +282,10 @@ public class QuerierGenerator : IIncrementalGenerator
 
         var clientModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Core.Client.V1")).Value;
         var channelModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Core.Channel.V1")).Value;
+        var transferModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Applications.Transfer.V1")).Value;
+        var connectionModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Core.Connection.V1")).Value;
 
-        context.AddSource("IbcAdapter.generated.cs", IbcAdapter.Code(clientModuleName, channelModuleName));
+        context.AddSource("IbcAdapter.generated.cs", IbcAdapter.Code(clientModuleName, channelModuleName, transferModuleName, connectionModuleName));
 
         var wasmModuleName = moduleNames.FirstOrDefault(x => x.Key.Contains("Cosmwasm.Wasm.V1")).Value;
         if(wasmModuleName is not null)

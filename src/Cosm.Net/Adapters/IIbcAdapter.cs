@@ -9,12 +9,12 @@ namespace Cosm.Net.Adapters;
 public interface IIbcAdapter : IModule
 {
     public Task<Height> GetLatestClientHeightAsync(
-        string clientId, Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default
+        string clientId, Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default
     );
     public Task<Height> GetLatestClientHeightAsync(string clientId, CallOptions options);
 
     public Task<ulong> NextSequenceReceiveAsync(
-        string portId, string channelId, Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default
+        string portId, string channelId, Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default
     );
     public Task<ulong> NextSequenceReceiveAsync(
         string portId, string channelId, CallOptions options
@@ -22,7 +22,7 @@ public interface IIbcAdapter : IModule
 
     public Task<IReadOnlyList<ulong>> UnreceivedAcksAsync(
         string portId, string channelId, IEnumerable<ulong> packetAckSequences,
-        Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default
+        Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default
     );
     public Task<IReadOnlyList<ulong>> UnreceivedAcksAsync(
         string portId, string channelId, IEnumerable<ulong> packetAckSequences, CallOptions options
@@ -30,11 +30,19 @@ public interface IIbcAdapter : IModule
 
     public Task<IReadOnlyList<ulong>> UnreceivedPacketsAsync(
         string portId, string channelId, IEnumerable<ulong> packetCommitmentSequences,
-        Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default
+        Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default
     );
     public Task<IReadOnlyList<ulong>> UnreceivedPacketsAsync(
         string portId, string channelId, IEnumerable<ulong> packetCommitmentSequences, CallOptions options
     );
+
+    public Task<IbcChannel> ChannelAsync(string portId, string channelId, 
+        Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default);
+    public Task<IbcChannel> ChannelAsync(string portId, string channelId, CallOptions options);
+
+    public Task<IbcConnection> ConnectionAsync(string connectionId, 
+        Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default);
+    public Task<IbcConnection> ConnectionAsync(string connectionId, CallOptions options);
 
     public ITxMessage UpdateClient(string clientId, Any clientMessage, string signer);
 
@@ -46,7 +54,7 @@ public interface IIbcAdapter : IModule
         ulong sequence,
         ByteString packetData,
         Height timeoutHeight,
-        DateTimeOffset timeoutTimestamp,
+        ulong timeoutTimestamp,
         ByteString proof,
         Height proofHeight,
         string signer
@@ -60,7 +68,7 @@ public interface IIbcAdapter : IModule
         ulong sequence,
         ByteString packetData,
         Height timeoutHeight,
-        DateTimeOffset timeoutTimestamp,
+        ulong timeoutTimestamp,
         ByteString proofUnreceived,
         Height proofHeight,
         ulong nextSequenceRecv,

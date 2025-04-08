@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Models;
+using Cosm.Net.Models.Tx;
 using Cosm.Net.Modules;
 using Google.Protobuf;
 using Grpc.Core;

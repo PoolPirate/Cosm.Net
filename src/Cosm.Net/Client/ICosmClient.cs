@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Adapters;
 using Cosm.Net.Client.Internal;
 using Cosm.Net.Models;
+using Cosm.Net.Models.Tx;
 using Cosm.Net.Modules;
 using Cosm.Net.Tx;
 using Grpc.Core;

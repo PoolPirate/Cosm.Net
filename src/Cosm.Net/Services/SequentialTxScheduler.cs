@@ -1,6 +1,7 @@
 ﻿using Cosm.Net.Adapters.Internal;
 using Cosm.Net.Exceptions;
 using Cosm.Net.Models;
+using Cosm.Net.Models.Tx;
 using Cosm.Net.Tx;
 using Cosm.Net.Wallet;
 using Google.Protobuf;

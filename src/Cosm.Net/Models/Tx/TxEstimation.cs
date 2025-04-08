@@ -1,4 +1,4 @@
-﻿namespace Cosm.Net.Models;
+﻿namespace Cosm.Net.Models.Tx;
 public class TxEstimation
 {
     public IReadOnlyList<TxEvent> Events { get; }

@@ -24,9 +24,9 @@ public static class BlocksAdapter
                 );
             }
             
-            public async Task<Block> GetLatestAsync(Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
+            public async Task<Block> GetLatestAsync(Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
             {
-                var response = await tendermintModule.GetLatestBlockAsync(metadata, deadline, cancellationToken);
+                var response = await tendermintModule.GetLatestBlockAsync(headers, deadline, cancellationToken);
                 return ParseBlock(response.Block);
             }
             public async Task<Block> GetLatestAsync(CallOptions options)
@@ -35,9 +35,9 @@ public static class BlocksAdapter
                 return ParseBlock(response.Block);
             }
 
-            public async Task<Block> GetByHeightAsync(long height, Metadata? metadata = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
+            public async Task<Block> GetByHeightAsync(long height, Metadata? headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default)
             {
-                var response = await tendermintModule.GetBlockByHeightAsync((long) height, metadata, deadline, cancellationToken);
+                var response = await tendermintModule.GetBlockByHeightAsync((long) height, headers, deadline, cancellationToken);
                 return ParseBlock(response.Block);
             }
 
