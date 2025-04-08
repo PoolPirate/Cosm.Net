@@ -255,8 +255,8 @@ async function checkoutVersion(
 
   const command =
     version == "latest"
-      ? `git clone ${repoUrl} --single-branch ${repoOutPath}`
-      : `git clone ${repoUrl} --branch ${version} --single-branch ${repoOutPath}`;
+      ? `set GIT_LFS_SKIP_SMUDGE=1 && git clone ${repoUrl} --single-branch ${repoOutPath}`
+      : `set GIT_LFS_SKIP_SMUDGE=1 && git clone ${repoUrl} --branch ${version} --single-branch ${repoOutPath}`;
 
   console.log(command);
   const res = await execAndWait(command);
