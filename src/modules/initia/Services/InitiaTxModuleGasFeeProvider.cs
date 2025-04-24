@@ -3,16 +3,14 @@ using Cosm.Net.Models;
 using Cosm.Net.Modules;
 
 namespace Cosm.Net.Services;
-internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasFeeProvider.Configuration>
+internal class InitiaTxModuleGasFeeProvider : IGasFeeProvider<InitiaTxModuleGasFeeProvider.Configuration>
 {
-    private const decimal GasPriceDenom = 1000000000000000000;
-
     public record Configuration(string GasFeeDenom, decimal GasPriceOffset, int RefreshIntervalSeconds);
 
     public string GasFeeDenom { get; }
 
     private readonly IGasBufferConfiguration _gasBufferConfiguration;
-    private readonly ITxfeesModule _txFeesModule;
+    private readonly IInitiaTxV1Module _initiaTxModule;
 
     private readonly decimal _gasPriceOffset;
     private decimal? _currentBaseGasPrice;
@@ -22,9 +20,9 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
     private readonly object _startupLock = new object();
     private readonly PeriodicTimer _refreshTimer;
 
-    public EIP1159MempoolGasFeeProvider(Configuration configuration, IGasBufferConfiguration gasBufferConfiguration, ITxfeesModule txFeesModule)
+    public InitiaTxModuleGasFeeProvider(Configuration configuration, IGasBufferConfiguration gasBufferConfiguration, IInitiaTxV1Module initiaTxModule)
     {
-        _txFeesModule = txFeesModule;
+        _initiaTxModule = initiaTxModule;
         _gasBufferConfiguration = gasBufferConfiguration;
 
         _gasPriceOffset = configuration.GasPriceOffset;
@@ -50,8 +48,8 @@ internal class EIP1159MempoolGasFeeProvider : IGasFeeProvider<EIP1159MempoolGasF
 
     private async Task<decimal> GetCurrentBaseFeeAsync(CancellationToken cancellationToken = default)
     {
-        decimal gasPricee18 = Decimal.Parse((await _txFeesModule.GetEipBaseFeeAsync(cancellationToken: cancellationToken)).BaseFee);
-        return gasPricee18 / GasPriceDenom;
+        var gasPriceResponse = await _initiaTxModule.GasPriceAsync(GasFeeDenom, cancellationToken: cancellationToken);
+        return decimal.Parse(gasPriceResponse.GasPrice.Amount);
     }
 
     public async ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted, CancellationToken cancellationToken = default)
