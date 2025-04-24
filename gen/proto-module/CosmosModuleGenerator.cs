@@ -270,9 +270,14 @@ public class QuerierGenerator : IIncrementalGenerator
 
         bool useStringEvents = !eventKeyProperty.Type!.Name.Contains("ByteString");
 
-        string txModuleCode = useStringEvents
-            ? TxModuleAdapter.Code.Replace(".ToStringUtf8()", "")
-            : TxModuleAdapter.Code;
+        var txModuleName = moduleNames.First(x => x.Key.Contains("Cosmos.Tx.V1Beta1")).Value;
+
+        string txModuleCode = TxModuleAdapter.Code(txModuleName);
+
+        if(useStringEvents)
+        {
+            txModuleCode = txModuleCode.Replace(".ToStringUtf8()", "");
+        }
 
         context.AddSource("TxModuleAdapter.generated.cs", txModuleCode);
         context.AddSource("AuthModuleAdapter.generated.cs", AuthModuleAdapter.Code);

@@ -1,8 +1,8 @@
 ﻿namespace Cosm.Net.Generators.Proto.Adapters.Internal;
 public static class TxModuleAdapter
 {
-    public const string Code =
-        """
+    public static string Code(string txModuleName) 
+        => $$"""
         #nullable enable
 
         using Cosm.Net.Modules;
@@ -14,7 +14,7 @@ public static class TxModuleAdapter
 
         namespace Cosm.Net.Adapters.Internal;
 
-        internal class TxModuleAdapter(ITxModule txModule) : IInternalTxAdapter
+        internal class TxModuleAdapter({{txModuleName}} txModule) : IInternalTxAdapter
         {
             public async Task<TxSubmission> BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers,
                 DateTime? deadline, CancellationToken cancellationToken)
