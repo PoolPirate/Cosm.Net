@@ -5,6 +5,8 @@ using Cosm.Net.Modules;
 namespace Cosm.Net.Services;
 internal class InitiaTxModuleGasFeeProvider : IGasFeeProvider<InitiaTxModuleGasFeeProvider.Configuration>
 {
+    private const decimal GasPriceDenom = 1000000000000000000;
+
     public record Configuration(string GasFeeDenom, decimal GasPriceOffset, int RefreshIntervalSeconds);
 
     public string GasFeeDenom { get; }
@@ -49,7 +51,8 @@ internal class InitiaTxModuleGasFeeProvider : IGasFeeProvider<InitiaTxModuleGasF
     private async Task<decimal> GetCurrentBaseFeeAsync(CancellationToken cancellationToken = default)
     {
         var gasPriceResponse = await _initiaTxModule.GasPriceAsync(GasFeeDenom, cancellationToken: cancellationToken);
-        return decimal.Parse(gasPriceResponse.GasPrice.Amount);
+        decimal gasPricee18 = decimal.Parse(gasPriceResponse.GasPrice.Amount);
+        return gasPricee18 / GasPriceDenom;
     }
 
     public async ValueTask<Coin> GetFeeForGasAsync(ulong gasWanted, CancellationToken cancellationToken = default)

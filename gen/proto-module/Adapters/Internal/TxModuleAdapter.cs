@@ -14,7 +14,7 @@ public static class TxModuleAdapter
 
         namespace Cosm.Net.Adapters.Internal;
 
-        internal class TxModuleAdapter({{txModuleName}} txModule) : IInternalTxAdapter
+        internal class TxModuleAdapter(I{{txModuleName}} txModule) : IInternalTxAdapter
         {
             public async Task<TxSubmission> BroadcastTxAsync(ByteString txBytes, BroadcastMode mode, Metadata? headers,
                 DateTime? deadline, CancellationToken cancellationToken)
