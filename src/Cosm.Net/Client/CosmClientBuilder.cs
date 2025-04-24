@@ -132,7 +132,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
         {
             foreach(var interfaceType in moduleType.InterfaceTypes)
             {
-                _ = registerMethod.MakeGenericMethod(interfaceType, moduleType.ModuleType).Invoke(this, []);
+                _ = registerMethod!.MakeGenericMethod(interfaceType, moduleType.ModuleType).Invoke(this, []);
             }
         }
 

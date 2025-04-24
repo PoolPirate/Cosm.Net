@@ -126,6 +126,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Saga", "src\module
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Babylon", "src\modules\babylon\Cosm.Net.Babylon.csproj", "{953D00CC-1DC4-482A-B7D9-579A2EFD1E98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Initia", "src\modules\initia\Cosm.Net.Initia.csproj", "{4952B5E1-1A8B-4972-9F89-FCA8EE568673}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -336,6 +338,10 @@ Global
 		{953D00CC-1DC4-482A-B7D9-579A2EFD1E98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{953D00CC-1DC4-482A-B7D9-579A2EFD1E98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{953D00CC-1DC4-482A-B7D9-579A2EFD1E98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4952B5E1-1A8B-4972-9F89-FCA8EE568673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4952B5E1-1A8B-4972-9F89-FCA8EE568673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4952B5E1-1A8B-4972-9F89-FCA8EE568673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4952B5E1-1A8B-4972-9F89-FCA8EE568673}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -393,6 +399,7 @@ Global
 		{C67F0F18-36AE-4CEF-BD65-0121C4788ABA} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{28AEA325-32E6-4382-BD14-E4AB13DD38E1} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{953D00CC-1DC4-482A-B7D9-579A2EFD1E98} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{4952B5E1-1A8B-4972-9F89-FCA8EE568673} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
