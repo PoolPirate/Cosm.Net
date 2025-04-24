@@ -347,7 +347,7 @@ async function tryCheckoutCommitHash(
   }
 
   let response = await execAndWait(
-    `cd ${repoDirectory} && git checkout ${commitHash}`
+    `cd ${repoDirectory} && set GIT_LFS_SKIP_SMUDGE=1 && git checkout -f ${commitHash}`
   );
 
   if (
@@ -364,7 +364,7 @@ async function tryCheckoutCommitHash(
     console.log(cloneCmd);
     await execAndWait(cloneCmd);
     response = await execAndWait(
-      `cd ${repoDirectory} && git checkout ${commitHash}`
+      `cd ${repoDirectory} && set GIT_LFS_SKIP_SMUDGE=1 && git checkout -f ${commitHash}`
     );
   }
 
@@ -373,7 +373,7 @@ async function tryCheckoutCommitHash(
     console.log(pullCommand);
     await execAndWait(pullCommand);
     response = await execAndWait(
-      `cd ${repoDirectory} && git checkout ${commitHash}`
+      `cd ${repoDirectory} && set GIT_LFS_SKIP_SMUDGE=1 && git checkout -f ${commitHash}`
     );
   }
 

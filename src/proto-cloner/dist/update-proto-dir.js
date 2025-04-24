@@ -221,7 +221,7 @@ async function tryCheckoutCommitHash(repoUrl, repoDirectory, commitHash) {
         console.log(cloneCmd);
         await execAndWait(cloneCmd);
     }
-    let response = await execAndWait(`cd ${repoDirectory} && git checkout ${commitHash}`);
+    let response = await execAndWait(`cd ${repoDirectory} && set GIT_LFS_SKIP_SMUDGE=1 && git checkout -f ${commitHash}`);
     if (response.err.includes("not a git repository") ||
         response.err.includes("unable to read tree")) {
         (0, node_fs_1.rmSync)(repoDirectory, {
@@ -232,13 +232,13 @@ async function tryCheckoutCommitHash(repoUrl, repoDirectory, commitHash) {
         const cloneCmd = `git clone ${repoUrl} ${repoDirectory}`;
         console.log(cloneCmd);
         await execAndWait(cloneCmd);
-        response = await execAndWait(`cd ${repoDirectory} && git checkout ${commitHash}`);
+        response = await execAndWait(`cd ${repoDirectory} && set GIT_LFS_SKIP_SMUDGE=1 && git checkout -f ${commitHash}`);
     }
     if (response.err.includes("reference is not a tree")) {
         const pullCommand = `cd ${repoDirectory} && git pull`;
         console.log(pullCommand);
         await execAndWait(pullCommand);
-        response = await execAndWait(`cd ${repoDirectory} && git checkout ${commitHash}`);
+        response = await execAndWait(`cd ${repoDirectory} && set GIT_LFS_SKIP_SMUDGE=1 && git checkout -f ${commitHash}`);
     }
     if (!response.err.includes("HEAD is now at")) {
         console.log(`Git output: ${response.err}`);
