@@ -16,5 +16,5 @@ public static class ICosmClientBuilderExtensions
         string feeDenom = "uinit", decimal gasPriceOffset = 0, int cacheSeconds = 5)
          => builder
             .AsInternal().WithGasFeeProvider<InitiaTxModuleGasFeeProvider, InitiaTxModuleGasFeeProvider.Configuration>(
-                new InitiaTxModuleGasFeeProvider.Configuration(feeDenom, gasPriceOffset, cacheSeconds));
+                new InitiaTxModuleGasFeeProvider.Configuration(feeDenom, gasPriceOffset, cacheSeconds), true);
 }
