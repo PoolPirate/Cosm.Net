@@ -284,6 +284,7 @@ public class QuerierGenerator : IIncrementalGenerator
         context.AddSource("TendermintModuleAdapter.generated.cs", TendermintModuleAdapter.Code);
         context.AddSource("BankModuleAdapter.generated.cs", BankModuleAdapter.Code);
         context.AddSource("BlocksAdapter.generated.cs", BlocksAdapter.Code);
+        context.AddSource("AuthzAdapter.generated.cs", AuthzAdapter.Code);
 
         var clientModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Core.Client.V1")).Value;
         var channelModuleName = moduleNames.First(x => x.Key.Contains("Ibc.Core.Channel.V1")).Value;
