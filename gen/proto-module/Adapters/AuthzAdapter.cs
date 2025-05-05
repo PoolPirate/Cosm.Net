@@ -10,7 +10,8 @@ public static class AuthzAdapter
         using Cosm.Net.Modules;
 
         namespace Cosm.Net.Adapters;
-        public class AuthzAdapter(IAuthzModule authzModule)
+
+        internal class AuthzAdapter(IAuthzModule authzModule) : IAuthzAdapter
         {
             public ITxMessage Exec(string grantee, params IEnumerable<ITxMessage> messages)
                 => authzModule.Exec(

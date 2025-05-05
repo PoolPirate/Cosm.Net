@@ -15,6 +15,7 @@ public static class IbcAdapter
         using Ibc.Lightclients.Tendermint.V1;
 
         namespace Cosm.Net.Adapters;
+
         internal class IbcAdapter(
             I{{{clientModuleName}}} ibcClientModule, 
             I{{{channelModuleName}}} ibcChannelModule, 

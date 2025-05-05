@@ -10,6 +10,7 @@ public static class BlocksAdapter
         using Cosm.Net.Models;
 
         namespace Cosm.Net.Adapters;
+
         internal class BlocksAdapter(ITendermintModule tendermintModule) : IBlocksAdapter
         {
             private Block ParseBlock(Tendermint.Types.Block tendermintBlock)
