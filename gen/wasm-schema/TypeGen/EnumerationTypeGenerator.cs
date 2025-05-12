@@ -9,6 +9,8 @@ public class EnumerationTypeGenerator
     private GeneratedTypeAggregator _typeAggregator = null!;
     private ObjectTypeGenerator _objectTypeGenerator = null!;
 
+    private readonly List<JsonSchema> _cache = [];
+
     public void Initialize(GeneratedTypeAggregator typeAggregator, ObjectTypeGenerator objectTypeGenerator)
     {
         _typeAggregator = typeAggregator;
@@ -38,8 +40,9 @@ public class EnumerationTypeGenerator
                 ?? throw new NotSupportedException("Enumeration Values cannot be null");
 
             enumerationBuilder.AddValue(
-                    NameUtils.ToValidPropertyName(enumerationValue),
-                    enumerationSchema.Description);
+                NameUtils.ToValidPropertyName(enumerationValue),
+                enumerationSchema.Description
+            );
         }
 
         return _typeAggregator.GenerateTypeHandle(enumerationBuilder);
@@ -55,6 +58,14 @@ public class EnumerationTypeGenerator
     public GeneratedTypeHandle GenerateAbstractSelectorType(JsonSchema schema, JsonSchema definitionsSource, string? nameOverride)
     {
         string typeName = GenerateTypeName(schema, definitionsSource, nameOverride);
+
+        if(_cache.Contains(schema))
+        {
+            return new GeneratedTypeHandle(typeName, null);
+        }
+
+        _cache.Add(schema);
+
 
         var baseClassBuilder = new ClassBuilder(typeName)
             .WithIsAbstract()
@@ -112,9 +123,16 @@ public class EnumerationTypeGenerator
                             $"""
                         "{enumValueName}" => new {derivedTypeName}()
                         """);
+                        baseClassBuilder.AddInnerType(derivedTypeBuilder);
                         break;
                     case RustEnumType.PrimitiveObject:
-                        _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema, definitionsSource);
+
+                        if(!_objectTypeGenerator.IsGenerating(enumerationSchema))
+                        {
+                            _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema, definitionsSource);
+                            baseClassBuilder.AddInnerType(derivedTypeBuilder);
+                        }
+
                         writeCases.Add(
                             $"""
                         case {derivedTypeName}:
@@ -127,8 +145,14 @@ public class EnumerationTypeGenerator
                         """);
                         break;
                     case RustEnumType.ComplexObject:
-                        _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder,
-                            SchemaTypeGenerator.GetInnerSchema(enumerationSchema.ActualProperties.Single().Value), definitionsSource);
+
+                        var innerSchema = SchemaTypeGenerator.GetInnerSchema(enumerationSchema.ActualProperties.Single().Value);
+                        if(!_objectTypeGenerator.IsGenerating(innerSchema))
+                        {
+                            _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, innerSchema, definitionsSource);
+                            baseClassBuilder.AddInnerType(derivedTypeBuilder);
+                        }
+
                         writeCases.Add(
                             $"""
                         case {derivedTypeName}:
@@ -148,8 +172,6 @@ public class EnumerationTypeGenerator
                         break;
                         throw new NotSupportedException($"Unsupport RustEnumType {enumType}");
                 }
-
-                baseClassBuilder.AddInnerType(derivedTypeBuilder);
             }
         }
 
@@ -176,6 +198,8 @@ public class EnumerationTypeGenerator
         {
             baseClassBuilder.WithSummaryComment(schema.Description);
         }
+
+        _cache.Remove(schema);
 
         return _typeAggregator.GenerateTypeHandle(baseClassBuilder);
     }

@@ -43,7 +43,6 @@ public class JsonObjectTypeGenerator
 
     private GeneratedTypeHandle GenerateArrayType(JsonSchema schema, JsonSchema definitionsSource)
     {
-
         if(schema.Item is null && (schema.Items is null || schema.Items.Count == 0))
         {
             throw new NotSupportedException("Unsupported schema, JsonObjectType Array, no Item type(s) set");

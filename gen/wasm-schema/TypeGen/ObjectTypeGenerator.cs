@@ -9,6 +9,8 @@ public class ObjectTypeGenerator
     private GeneratedTypeAggregator _typeAggregator = null!;
     private SchemaTypeGenerator _schemaTypeGenerator = null!;
 
+    private readonly List<JsonSchema> _cache = [];
+
     public void Initialize(GeneratedTypeAggregator typeAggregator, SchemaTypeGenerator schemaTypeGenerator)
     {
         _typeAggregator = typeAggregator;
@@ -27,14 +29,30 @@ public class ObjectTypeGenerator
         }
 
         string typeName = GenerateTypeName(schema, definitionsSource, nameOverride);
+
+        if(IsGenerating(schema))
+        {
+            return new GeneratedTypeHandle(typeName, null);
+        }
+
         var classBuilder = new ClassBuilder(typeName);
 
         return _typeAggregator.GenerateTypeHandle(
             GenerateObjectTypeContent(classBuilder, schema, definitionsSource));
     }
 
+    public bool IsGenerating(JsonSchema schema)
+        => _cache.Contains(schema);
+
     public ClassBuilder GenerateObjectTypeContent(ClassBuilder classBuilder, JsonSchema schema, JsonSchema definitionsSource)
     {
+        if(_cache.Contains(schema))
+        {
+            throw new InvalidOperationException($"Caught recursive call of same object type: {GenerateTypeName(schema, definitionsSource)}");
+        }
+
+        _cache.Add(schema);
+
         foreach(var property in schema.ActualProperties)
         {
             var propertyType = _schemaTypeGenerator.GetOrGenerateSchemaType(property.Value, definitionsSource);
@@ -61,6 +79,8 @@ public class ObjectTypeGenerator
         {
             classBuilder.WithSummaryComment(schema.Description);
         }
+
+        _cache.Remove(schema);
 
         return classBuilder;
     }
