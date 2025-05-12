@@ -5,11 +5,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Cosm.Net.Services;
-internal class ContractFactory(IInternalWasmAdapter wasmAdapter) : IContractFactory
+internal class ContractFactory(IInternalWasmAdapter wasmAdapter) : IWasmContractFactory
 {
     private readonly Lock _lock = new Lock();
     private readonly IInternalWasmAdapter _wasmAdapter = wasmAdapter;
-    private readonly Dictionary<Type, Func<string, string?, IContract>> _factoryDelegates = [];
+    private readonly Dictionary<Type, Func<string, string?, IWasmContract>> _factoryDelegates = [];
 
     public TContract Create<TContract>(string address, string? codeHash)
     {
@@ -28,7 +28,7 @@ internal class ContractFactory(IInternalWasmAdapter wasmAdapter) : IContractFact
     public void AddContractTypesFromAssembly(Assembly assembly)
     {
         var factoryDelegates = assembly.GetTypes()
-            .Where(x => x.GetInterface(nameof(IContract)) is not null)
+            .Where(x => x.GetInterface(nameof(IWasmContract)) is not null)
             .Where(x => x.IsInterface)
             .Select(x => (x, GetContractFactoryDelegate(x)));
 
@@ -41,7 +41,7 @@ internal class ContractFactory(IInternalWasmAdapter wasmAdapter) : IContractFact
         }
     }
 
-    private Func<string, string?, IContract> GetContractFactoryDelegate(Type contractInterfaceType)
+    private Func<string, string?, IWasmContract> GetContractFactoryDelegate(Type contractInterfaceType)
     {
         var assembly = contractInterfaceType.Assembly;
         var contractType = assembly.GetTypes()
@@ -63,11 +63,11 @@ internal class ContractFactory(IInternalWasmAdapter wasmAdapter) : IContractFact
                 codeHashParam
             );
 
-            return Expression.Lambda<Func<string, string?, IContract>>(newExpr, contractAddressParam, codeHashParam).Compile();
+            return Expression.Lambda<Func<string, string?, IWasmContract>>(newExpr, contractAddressParam, codeHashParam).Compile();
         }
         else
         {
-            return (contractAddress, codeHash) => (IContract) (Activator.CreateInstance(contractType, _wasmAdapter, contractAddress, codeHash)
+            return (contractAddress, codeHash) => (IWasmContract) (Activator.CreateInstance(contractType, _wasmAdapter, contractAddress, codeHash)
                 ?? throw new NotSupportedException());
         }
     }

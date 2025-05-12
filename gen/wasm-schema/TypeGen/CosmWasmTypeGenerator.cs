@@ -1,5 +1,6 @@
 ﻿using Cosm.Net.Generators.Common.SyntaxElements;
 using Cosm.Net.Generators.CosmWasm.Models;
+using Microsoft.CodeAnalysis;
 using System.Text;
 
 namespace Cosm.Net.Generators.CosmWasm.TypeGen;
@@ -34,7 +35,8 @@ public class CosmWasmTypeGenerator
         _msgGenerator = new MsgGenerator(_schemaTypeGenerator);
     }
 
-    public async Task<string> GenerateCosmWasmBindingFile(ContractAPISchema apiSchema, string contractInterfaceName, string targetNamespace)
+    public async Task<string> GenerateCosmWasmBindingFile(ContractAPISchema apiSchema, string contractInterfaceName, string targetNamespace,
+        Action<DiagnosticDescriptor, string[]> reportDiagnostic)
     {
         var responseSchemas = await apiSchema.GetResponseSchemasAsync();
 
@@ -47,17 +49,33 @@ public class CosmWasmTypeGenerator
             .AddField(new FieldBuilder("global::Cosm.Net.Adapters.Internal.IInternalWasmAdapter", "_wasm"))
             .AddProperty(new PropertyBuilder("global::System.String", "ContractAddress").WithSetterVisibility(SetterVisibility.Private))
             .AddProperty(new PropertyBuilder("global::System.String?", "CodeHash").WithSetterVisibility(SetterVisibility.Private))
-            .AddBaseType("global::Cosm.Net.Models.IContract", true);
+            .AddBaseType("global::Cosm.Net.Models.IWasmContract", true);
 
         foreach(var query in querySchema.OneOf)
         {
-            var func = _queryGenerator.GenerateQueryFunction(query, querySchema, responseSchemas);
-            contractClassBuilder.AddFunction(func);
+            try
+            {
+                var func = _queryGenerator.GenerateQueryFunction(query, querySchema, responseSchemas);
+                contractClassBuilder.AddFunction(func);
+            }
+            catch(Exception ex)
+            {
+                var propSchema = query.Properties.Single().Value;
+                reportDiagnostic(GeneratorDiagnostics.MemberGenerationFailed, [propSchema.Name, ex.Message]);
+            }
         }
         foreach(var msg in msgSchema.OneOf)
         {
-            var func = _msgGenerator.GenerateMsgFunction(msg, msgSchema, responseSchemas);
-            contractClassBuilder.AddFunction(func);
+            try
+            {
+                var func = _msgGenerator.GenerateMsgFunction(msg, msgSchema, responseSchemas);
+                contractClassBuilder.AddFunction(func);
+            }
+            catch(Exception ex)
+            {
+                var propSchema = msg.Properties.Single().Value;
+                reportDiagnostic(GeneratorDiagnostics.MemberGenerationFailed, [propSchema.Name, ex.Message]);
+            }
         }
 
         var generatedTypesSb = new StringBuilder();

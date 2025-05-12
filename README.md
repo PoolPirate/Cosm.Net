@@ -187,7 +187,7 @@ await txClient.SimulateAndPublishTxAsync(txBuilder.Build());
 	</ItemGroup>
 ```
 
-6. Create a partial interface for each contract you want to generate bindings for that inherits from `Cosm.Net.Models.IContract`
+6. Create a partial interface for each contract you want to generate bindings for that inherits from `Cosm.Net.Models.IWasmContract`
 7. Add the `ContractSchemaFilePath` Attribute to the interface and specify the filename of your schema. (Just the file name, not the path!)
 
 ```cs
@@ -196,7 +196,7 @@ using Cosm.Net.Models;
 
 namespace LevanaContracts.Factory;
 [ContractSchemaFilePath("factory.json")]
-public partial interface ILevanaFactory : IContract
+public partial interface ILevanaFactory : IWasmContract
 {
 }
 

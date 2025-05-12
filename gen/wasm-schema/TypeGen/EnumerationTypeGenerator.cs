@@ -79,54 +79,58 @@ public class EnumerationTypeGenerator
         foreach(var enumerationSchema in schema.OneOf)
         {
             var enumType = DetectRustEnumType(enumerationSchema);
-            var enumValueName = enumType == RustEnumType.String
-                ? enumerationSchema.Enumeration.Count != 1
-                    ? throw new NotSupportedException("EnumerationType must only contain one value per entry")
-                    : enumerationSchema.Enumeration.Single()!.ToString()
-                : enumerationSchema.ActualProperties.Count != 1
+
+            string[] enumValueNames = enumType switch
+            {
+                RustEnumType.String => [.. enumerationSchema.Enumeration.Select(x => x!.ToString())],
+                _ => enumerationSchema.ActualProperties.Count != 1
                     ? throw new NotSupportedException("EnumerationType must have only one ActualProperty per entry")
-                    : enumerationSchema.ActualProperties.Single().Key;
-            string derivedTypeName = $"{NameUtils.ToValidClassName(enumValueName)}{typeName}";
+                    : [enumerationSchema.ActualProperties.Single().Key]
+            };
 
-            var derivedTypeBuilder = new ClassBuilder(derivedTypeName)
-                .AddBaseType(typeName, false);
-
-            if(enumerationSchema.Description is not null)
+            foreach(string enumValueName in enumValueNames)
             {
-                derivedTypeBuilder.WithSummaryComment(enumerationSchema.Description);
-            }
+                string derivedTypeName = $"{NameUtils.ToValidClassName(enumValueName)}{typeName}";
 
-            switch(enumType)
-            {
-                case RustEnumType.String:
-                    writeCases.Add(
-                        $"""
+                var derivedTypeBuilder = new ClassBuilder(derivedTypeName)
+                    .AddBaseType(typeName, false);
+
+                if(enumerationSchema.Description is not null)
+                {
+                    derivedTypeBuilder.WithSummaryComment(enumerationSchema.Description);
+                }
+
+                switch(enumType)
+                {
+                    case RustEnumType.String:
+                        writeCases.Add(
+                            $"""
                         case {derivedTypeName}:
                             writer.WriteStringValue("{enumValueName}");
                         """);
-                    readCases.Add(
-                        $"""
+                        readCases.Add(
+                            $"""
                         "{enumValueName}" => new {derivedTypeName}()
                         """);
-                    break;
-                case RustEnumType.PrimitiveObject:
-                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema, definitionsSource);
-                    writeCases.Add(
-                        $"""
+                        break;
+                    case RustEnumType.PrimitiveObject:
+                        _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder, enumerationSchema, definitionsSource);
+                        writeCases.Add(
+                            $"""
                         case {derivedTypeName}:
                             var converter{derivedTypeName} = (global::System.Text.Json.Serialization.JsonConverter<{derivedTypeName}>) global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions.GetConverter(typeof({derivedTypeName}));
                             converter{derivedTypeName}.Write(writer, ({derivedTypeName}) (object) value, options);
                         """);
-                    readCases.Add(
-                        $"""
+                        readCases.Add(
+                            $"""
                         "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(document.RootElement.ToString(), global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions)!
                         """);
-                    break;
-                case RustEnumType.ComplexObject:
-                    _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder,
-                        SchemaTypeGenerator.GetInnerSchema(enumerationSchema.ActualProperties.Single().Value), definitionsSource);
-                    writeCases.Add(
-                        $"""
+                        break;
+                    case RustEnumType.ComplexObject:
+                        _objectTypeGenerator.GenerateObjectTypeContent(derivedTypeBuilder,
+                            SchemaTypeGenerator.GetInnerSchema(enumerationSchema.ActualProperties.Single().Value), definitionsSource);
+                        writeCases.Add(
+                            $"""
                         case {derivedTypeName}:
                             writer.WriteStartObject();
                             writer.WritePropertyName("{enumValueName}");
@@ -134,18 +138,19 @@ public class EnumerationTypeGenerator
                             converter{derivedTypeName}.Write(writer, ({derivedTypeName}) (object) value, options);
                             writer.WriteEndObject();
                         """);
-                    readCases.Add(
-                        $"""
+                        readCases.Add(
+                            $"""
                         "{enumValueName}" => global::System.Text.Json.JsonSerializer.Deserialize<{derivedTypeName}>(
                             document.RootElement.GetProperty("{enumValueName}").ToString(), global::Cosm.Net.Encoding.Json.CosmWasmJsonUtils.SerializerOptions)!
                         """);
-                    break;
-                default:
-                    break;
-                    throw new NotSupportedException($"Unsupport RustEnumType {enumType}");
-            }
+                        break;
+                    default:
+                        break;
+                        throw new NotSupportedException($"Unsupport RustEnumType {enumType}");
+                }
 
-            baseClassBuilder.AddInnerType(derivedTypeBuilder);
+                baseClassBuilder.AddInnerType(derivedTypeBuilder);
+            }
         }
 
         baseWriteFunction.AddStatement(

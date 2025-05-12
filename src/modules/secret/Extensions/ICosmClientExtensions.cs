@@ -17,7 +17,7 @@ public static class ICosmClientExtensions
     /// <param name="contractAddress"></param>
     /// <returns></returns>
     public static async Task<TContract> ContractWithCodeHashAsync<TContract>(this ICosmClient cosmClient, string contractAddress)
-        where TContract : IContract
+        where TContract : IWasmContract
     {
         var computeModule = cosmClient.Module<IComputeModule>();
         var codeHashResponse = await computeModule.CodeHashByContractAddressAsync(contractAddress);

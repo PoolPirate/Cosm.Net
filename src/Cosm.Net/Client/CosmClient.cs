@@ -170,8 +170,8 @@ internal class CosmClient : ICosmTxClient, IInternalCosmTxClient
             ?? throw new InvalidOperationException("Module not installed!");
     }
 
-    public TContract Contract<TContract>(string contractAddress, string? codeHash = null) where TContract : IContract
-        => _provider.GetRequiredService<IContractFactory>()
+    public TContract Contract<TContract>(string contractAddress, string? codeHash = null) where TContract : IWasmContract
+        => _provider.GetRequiredService<IWasmContractFactory>()
             .Create<TContract>(contractAddress, codeHash);
 
     public IEnumerable<(Type, IModule)> GetAllModules()

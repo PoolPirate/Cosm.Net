@@ -21,7 +21,7 @@ public static class WasmModuleAdapter
         {
             private readonly ICosmSigner? _signer = provider.GetService<ICosmSigner>();
 
-            public IWasmTxMessage EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
+            public IWasmTxMessage EncodeContractCall(IWasmContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
             {
                 if(_signer is null)
                 {
@@ -48,7 +48,7 @@ public static class WasmModuleAdapter
                 return new WasmTxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg, requestJson);
             }
 
-            public async Task<ByteString> SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
+            public async Task<ByteString> SmartContractStateAsync(IWasmContract contract, ByteString queryData, CancellationToken cancellationToken)
             {
                 var response = await wasmModule.SmartContractStateAsync(contract.ContractAddress, queryData, cancellationToken: cancellationToken);
                 return response.Data;

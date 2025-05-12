@@ -468,7 +468,7 @@ public sealed class CosmClientBuilder : IInternalCosmClientBuilder
             throw new InvalidOperationException($"No {nameof(IInternalWasmAdapter)} set. Make sure to install a chain that supports wasmd before calling {nameof(AddWasmd)}");
         }
 
-        _ = _services.AddSingleton<IContractFactory>(
+        _ = _services.AddSingleton<IWasmContractFactory>(
             provider => new ContractFactory(provider.GetRequiredService<IInternalWasmAdapter>()));
 
         return this;

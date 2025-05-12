@@ -16,4 +16,4 @@ CWG0002 | Usage | Warning | GeneratorDiagnostics
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 CWG0003 | Usage | Warning | GeneratorDiagnostics
-CWG0004 | Unknown | Warning | GeneratorDiagnostics
+CWG0004 | Unknown | Error | GeneratorDiagnostics

@@ -22,7 +22,7 @@ public class CosmWasmGenerator : IIncrementalGenerator
             )
             .Where(contractType =>
                 contractType is not null &&
-                contractType.AllInterfaces.Any(static x => x.Name == "IContract")
+                contractType.AllInterfaces.Any(static x => x.Name == "IWasmContract")
             )
             .Select((contractType, _) =>
             {
@@ -69,7 +69,7 @@ public class CosmWasmGenerator : IIncrementalGenerator
             return;
         }
 
-        var schemaText = schemaFile.GetText()?.ToString();
+        string? schemaText = schemaFile.GetText()?.ToString();
         if(string.IsNullOrEmpty(schemaText) || schemaText is null)
         {
             ReportDiagnostic(context, GeneratorDiagnostics.SchemaFileMalformed, contractSymbol);
@@ -91,8 +91,12 @@ public class CosmWasmGenerator : IIncrementalGenerator
         try
         {
             var generator = new CosmWasmTypeGenerator();
-            var generatedCode = generator
-                .GenerateCosmWasmBindingFile(contractSchema, contractSymbol.Name, contractSymbol.ContainingNamespace.ToString())
+            string generatedCode = generator
+                .GenerateCosmWasmBindingFile(
+                    contractSchema,
+                    contractSymbol.Name,
+                    contractSymbol.ContainingNamespace.ToString(),
+                    (diagnostic, args) => ReportDiagnostic(context, diagnostic, contractSymbol, args))
                 .GetAwaiter().GetResult();
 
             context.AddSource($"{contractSymbol.Name}.generated.cs", SourceText.From(generatedCode, Encoding.UTF8));

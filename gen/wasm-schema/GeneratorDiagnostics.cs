@@ -9,7 +9,7 @@ public static class GeneratorDiagnostics
         public const string Usage = "Usage";
     }
 
-    public static readonly DiagnosticDescriptor ExecutionFailed = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor GenerationFailed = new DiagnosticDescriptor(
         "CWG0000",
         "Generator Execution Failed",
         "An exception occured while executing CosmWasm Generator. {0}.",
@@ -45,12 +45,12 @@ public static class GeneratorDiagnostics
         true
     );
 
-    public static readonly DiagnosticDescriptor GenerationFailed = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MemberGenerationFailed = new DiagnosticDescriptor(
         "CWG0004",
-        "Exception during Generation",
-        "{0}",
+        "Exception while generating binding for member {0}",
+        "Message: {1}",
         DiagnosticCategory.Unknown,
-        DiagnosticSeverity.Warning,
+        DiagnosticSeverity.Error,
         true
     );
 }

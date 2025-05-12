@@ -18,7 +18,7 @@ internal class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration cha
     private readonly SecretEncryptionProvider _encryptor = encryptor;
     private readonly IComputeModule _computeModule = computeModule;
 
-    public IWasmTxMessage EncodeContractCall(IContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
+    public IWasmTxMessage EncodeContractCall(IWasmContract contract, JsonObject requestBody, IEnumerable<Coin> funds, string? txSender)
     {
         if(_signer is null)
         {
@@ -50,7 +50,7 @@ internal class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration cha
 
         return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, requestJson, context);
     }
-    public async Task<ByteString> SmartContractStateAsync(IContract contract, ByteString queryData, CancellationToken cancellationToken)
+    public async Task<ByteString> SmartContractStateAsync(IWasmContract contract, ByteString queryData, CancellationToken cancellationToken)
     {
         if(contract.CodeHash is null)
         {

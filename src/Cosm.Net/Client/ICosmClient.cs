@@ -65,5 +65,5 @@ public interface ICosmClient
         Metadata? headers = default, DateTime? deadline = default, CancellationToken cancellationToken = default);
 
     public TContract Contract<TContract>(string contractAddress, string? codeHash = null)
-        where TContract : IContract;
+        where TContract : IWasmContract;
 }
