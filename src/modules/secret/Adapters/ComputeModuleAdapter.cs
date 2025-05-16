@@ -29,7 +29,7 @@ internal class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration cha
             throw new InvalidOperationException("Missing CodeHash. Secret Network contracts have to be created with a codeHash set!");
         }
 
-        var requestJson = requestBody.ToJsonString(CosmWasmJsonUtils.SerializerOptions);
+        string requestJson = requestBody.ToJsonString(CosmWasmJsonUtils.SerializerOptions);
         var (encryptedMessage, context, decryptor) = EncryptMessage(
             contract.CodeHash, ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)));
         decryptor.Dispose();
@@ -61,29 +61,27 @@ internal class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration cha
 
         try
         {
-            var queryResponse = await _computeModule.QuerySecretContractAsync(contract.ContractAddress, encryptedMessage);
-            var encodedResponse = decryptor.DecryptMessage(queryResponse.Data.Span);
+            var queryResponse = await _computeModule.QuerySecretContractAsync(contract.ContractAddress, encryptedMessage, cancellationToken: cancellationToken);
+            byte[] encodedResponse = decryptor.DecryptMessage(queryResponse.Data.Span);
             return ByteString.CopyFrom(Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(encodedResponse)));
         }
-        catch(RpcException ex)
+        catch(RpcException ex) when(ex.StatusCode == StatusCode.Unknown)
         {
-            if(ex.StatusCode != StatusCode.Unknown || !ex.Status.Detail.StartsWith("encrypted: "))
+            int encryptedStartIndex = ex.Status.Detail.IndexOf("encrypted: ");
+
+            if(encryptedStartIndex == -1)
             {
                 throw;
             }
 
-            var errorParts = ex.Status.Detail.Split(":");
+            encryptedStartIndex += "encrypted: ".Length;
 
-            if(errorParts.Length != 3)
-            {
-                throw;
-            }
+            string encryptedSection = ex.Status.Detail[encryptedStartIndex..].Trim();
+            byte[] errorMessage = decryptor.DecryptMessage(Convert.FromBase64String(encryptedSection));
 
-            var encryptedErrorMessage = errorParts[1].Trim();
-            var errorMessage = decryptor.DecryptMessage(
-                Convert.FromBase64String(encryptedErrorMessage));
+            string decryptedError = $"{ex.Status.Detail[..encryptedStartIndex]}: {System.Text.Encoding.UTF8.GetString(errorMessage)}";
 
-            throw new RpcException(ex.Status, ex.Trailers, $"{errorParts[2]}: {System.Text.Encoding.UTF8.GetString(errorMessage)}");
+            throw new RpcException(new Status(ex.StatusCode, decryptedError), ex.Trailers, decryptedError);
         }
         finally
         {
@@ -99,7 +97,7 @@ internal class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration cha
         System.Text.Encoding.UTF8.GetBytes(codeHash, buffer[..codeHashBytes]);
         message.Span.CopyTo(buffer[codeHashBytes..]);
 
-        var encryptedMessage = _encryptor.EncryptMessage(buffer, out var context, out var decryptor);
+        byte[] encryptedMessage = _encryptor.EncryptMessage(buffer, out var context, out var decryptor);
         return (ByteString.CopyFrom(encryptedMessage), context, decryptor);
     }
 }
