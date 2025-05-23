@@ -19,7 +19,13 @@ public class SecretMessageDecryptor : IMessageDescryptor
 
     public void Dispose()
     {
-        _aesSiv.Dispose();
+        try
+        {
+            _aesSiv.Dispose();
+        }
+        catch
+        {
+        }
         GC.SuppressFinalize(this);
     }
 }

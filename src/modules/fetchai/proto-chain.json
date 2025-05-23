@@ -1,0 +1,98 @@
+﻿{
+  "repoDir": "lib",
+  "chainRepoPath": "fetchd",
+  "chainRepoName": "github.com/fetchai/fetchd",
+  "commitHash": "644eddd72a9281a8e4db5084099d6c75a98f7097",
+  "protoDir": "proto",
+  "hasNoProtos": true,
+  "protoDependencies": [
+    {
+      "name": "github.com/regen-network/cosmos-proto",
+      "isExternal": false,
+      "dirName": "cosmos-proto",
+      "protoDirs": [
+        {
+          "in": ".",
+          "out": "cosmos_proto"
+        }
+      ]
+    },
+    {
+      "name": "github.com/regen-network/cosmos-proto",
+      "isExternal": false,
+      "dirName": "cosmos-proto",
+      "protoDirs": [
+        {
+          "in": ".",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/tendermint/tendermint",
+      "isExternal": false,
+      "dirName": "tendermint",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/ibc-go",
+      "isExternal": false,
+      "dirName": "ibc-go",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/cosmos/cosmos-sdk",
+      "isExternal": false,
+      "dirName": "cosmos-sdk",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/confio/ics23",
+      "isExternal": false,
+      "dirName": "ics23",
+      "protoDirs": [
+        {
+          "in": ".",
+          "out": "."
+        }
+      ]
+    },
+    {
+      "name": "github.com/regen-network/protobuf",
+      "isExternal": true,
+      "dirName": "regen-protobuf",
+      "protoDirs": [
+        {
+          "in": "gogoproto",
+          "out": "gogoproto"
+        }
+      ]
+    },
+    {
+      "name": "github.com/googleapis/googleapis",
+      "isExternal": true,
+      "dirName": "googleapis",
+      "protoDirs": [
+        {
+          "in": "google",
+          "out": "google"
+        }
+      ]
+    }
+  ]
+}
