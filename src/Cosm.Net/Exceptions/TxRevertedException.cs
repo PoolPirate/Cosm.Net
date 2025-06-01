@@ -1,9 +1,6 @@
 ﻿namespace Cosm.Net.Exceptions;
 
-public class TxRevertedException : Exception
+public class TxRevertedException(string chainId, string txHash, string rawLog)
+    : Exception($"{txHash} on {chainId} reverted; RawLog={rawLog}")
 {
-    public TxRevertedException(string chainId, string txHash)
-        : base($"Transaction {txHash} on {chainId} reverted")
-    {
-    }
 }

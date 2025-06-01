@@ -41,7 +41,7 @@ public class PollingTxConfirmer : ITxConfirmer
                 if(txExecution is not null)
                 {
                     return !txExecution.Success && throwOnRevert
-                        ? throw new TxRevertedException(_chainConfiguration.ChainId, txHash)
+                        ? throw new TxRevertedException(_chainConfiguration.ChainId, txHash, txExecution.RawLog)
                         : txExecution;
                 }
             }
