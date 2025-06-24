@@ -130,6 +130,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Initia", "src\modu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.FetchAi", "src\modules\fetchai\Cosm.Net.FetchAi.csproj", "{D4FE730E-9200-4CBD-94E5-933BE6BBA5BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosm.Net.Thorchain", "src\modules\thorchain\Cosm.Net.Thorchain.csproj", "{F1F9808C-A725-4D72-A8BD-955FD97DEC0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -348,6 +350,10 @@ Global
 		{D4FE730E-9200-4CBD-94E5-933BE6BBA5BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4FE730E-9200-4CBD-94E5-933BE6BBA5BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4FE730E-9200-4CBD-94E5-933BE6BBA5BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1F9808C-A725-4D72-A8BD-955FD97DEC0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1F9808C-A725-4D72-A8BD-955FD97DEC0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1F9808C-A725-4D72-A8BD-955FD97DEC0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1F9808C-A725-4D72-A8BD-955FD97DEC0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -407,6 +413,7 @@ Global
 		{953D00CC-1DC4-482A-B7D9-579A2EFD1E98} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{4952B5E1-1A8B-4972-9F89-FCA8EE568673} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 		{D4FE730E-9200-4CBD-94E5-933BE6BBA5BF} = {756856BF-3E0E-4B95-A260-C57979EFE735}
+		{F1F9808C-A725-4D72-A8BD-955FD97DEC0C} = {756856BF-3E0E-4B95-A260-C57979EFE735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {154FEDD7-87C3-45C1-9F74-042B4DF2D2B3}
