@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).2124+terra.v2.12.4</Version>
+		<Version>$(AssemblyVersion).2173+terra.v2.17.3</Version>
 		<WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
 	</PropertyGroup>
 

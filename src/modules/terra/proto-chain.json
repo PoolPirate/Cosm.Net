@@ -1,8 +1,8 @@
 ﻿{
   "repoDir": "lib",
   "chainRepoPath": "core",
-  "chainRepoName": "github.com/terra-money/core",
-  "commitHash": "ec5e2c5ef5c76280868d9b0da22f07149c81858a",
+  "chainRepoName": "github.com/phoenix-directive/core",
+  "commitHash": "aaf738269d627e0c0efc4145df5bbeae5fa1c0c3",
   "protoDir": "proto",
   "protoDependencies": [
     {
