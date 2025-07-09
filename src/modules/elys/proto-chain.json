@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "elys",
   "chainRepoName": "github.com/elys-network/elys",
-  "commitHash": "f391838c1ca43dd8a3ed70bdac660e3656acc62e",
+  "commitHash": "38c18dcd1086dd4a02430efe889be9df168131eb",
   "protoDir": "proto",
   "protoDependencies": [
     {
