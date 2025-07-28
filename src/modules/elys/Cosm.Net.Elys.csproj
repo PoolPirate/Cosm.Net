@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).630-beta2+elys.v6.3.0</Version>
+		<Version>$(AssemblyVersion).650-beta1+elys.v6.5.0</Version>
 		<WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
 	</PropertyGroup>
 

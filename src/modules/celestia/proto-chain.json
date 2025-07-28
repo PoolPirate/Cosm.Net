@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "celestia-app",
   "chainRepoName": "github.com/celestiaorg/celestia-app",
-  "commitHash": "5b6032731ca5653707434b4408c7fd5a53608012",
+  "commitHash": "117b77cc511850eb24ac02472f0b18aec99a76cd",
   "protoDir": "proto",
   "hasNoProtos": true,
   "protoDependencies": [
@@ -40,12 +40,12 @@
       ]
     },
     {
-      "name": "github.com/confio/ics23",
+      "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
       "protoDirs": [
         {
-          "in": ".",
+          "in": "proto",
           "out": "."
         }
       ]
