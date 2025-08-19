@@ -34,11 +34,13 @@ internal class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration cha
             contract.CodeHash, ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)));
         decryptor.Dispose();
 
+        txSender ??= _signer.GetAddress(_chain.Bech32Prefix);
+
         var msg = new Secret.Compute.V1Beta1.MsgExecuteContract()
         {
             Contract = ByteString.CopyFrom(Bech32.DecodeAddress(contract.ContractAddress)),
             Msg = encryptedMessage,
-            Sender = ByteString.CopyFrom(Bech32.DecodeAddress(txSender ?? _signer.GetAddress(_chain.Bech32Prefix))),
+            Sender = ByteString.CopyFrom(Bech32.DecodeAddress(txSender)),
             CallbackCodeHash = "",
             CallbackSig = ByteString.Empty
         };
@@ -48,7 +50,7 @@ internal class ComputeModuleAdapter(ICosmSigner? signer, IChainConfiguration cha
             Denom = x.Denom
         }));
 
-        return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, requestJson, context);
+        return new SecretTxMessage<global::Secret.Compute.V1Beta1.MsgExecuteContract>(msg, txSender, requestJson, context);
     }
     public async Task<ByteString> SmartContractStateAsync(IWasmContract contract, ByteString queryData, CancellationToken cancellationToken)
     {
