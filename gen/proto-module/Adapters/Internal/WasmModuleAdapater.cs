@@ -29,11 +29,12 @@ public static class WasmModuleAdapter
                 }
 
                 var requestJson = requestBody.ToJsonString(CosmWasmJsonUtils.SerializerOptions);
+                txSender ??= _signer.GetAddress(chain.Bech32Prefix);
                 var msg = new Cosmwasm.Wasm.V1.MsgExecuteContract()
                 {
                     Contract = contract.ContractAddress,
                     Msg = ByteString.CopyFrom(System.Text.Encoding.UTF8.GetBytes(requestJson)),
-                    Sender = txSender ?? _signer.GetAddress(chain.Bech32Prefix),
+                    Sender = txSender,
                 };
 
                 foreach(var coin in funds)
@@ -45,7 +46,7 @@ public static class WasmModuleAdapter
                     });
                 }
 
-                return new WasmTxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg, requestJson);
+                return new WasmTxMessage<Cosmwasm.Wasm.V1.MsgExecuteContract>(msg, requestJson, txSender);
             }
 
             public async Task<ByteString> SmartContractStateAsync(IWasmContract contract, ByteString queryData, CancellationToken cancellationToken)

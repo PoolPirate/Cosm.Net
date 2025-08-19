@@ -8,5 +8,7 @@ public interface IWasmTxMessage<TMsg> : IWasmTxMessage
 
 public interface IWasmTxMessage : ITxMessage
 {
+    public string TxSender { get; }
+
     public string ToJson();
 }
