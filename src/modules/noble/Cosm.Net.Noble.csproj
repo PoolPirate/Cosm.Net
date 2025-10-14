@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).903+noble.v9.0.3</Version>
+		<Version>$(AssemblyVersion).1012+noble.v10.1.2</Version>
 		<WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
 	</PropertyGroup>
 

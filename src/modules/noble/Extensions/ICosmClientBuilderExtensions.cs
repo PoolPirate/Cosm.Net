@@ -1,4 +1,5 @@
 ﻿using Cosm.Net.Client;
+using Cosm.Net.Services;
 using System.Reflection;
 
 namespace Cosm.Net.Extensions;

@@ -2,7 +2,7 @@
   "repoDir": "lib",
   "chainRepoPath": "persistenceCore",
   "chainRepoName": "github.com/persistenceOne/persistenceCore",
-  "commitHash": "657fd8491dc5388c0a6324b82d2ec3990b92a836",
+  "commitHash": "f482cff1ac665709fefaa35faedb64c04c2cd8d3",
   "protoDir": "proto",
   "hasNoProtos": true,
   "protoDependencies": [
