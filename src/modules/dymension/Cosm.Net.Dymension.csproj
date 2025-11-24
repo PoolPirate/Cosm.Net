@@ -15,7 +15,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<RootNamespace>Cosm.Net</RootNamespace>
-		<Version>$(AssemblyVersion).320+dymension.v3.2.0</Version>
+		<Version>$(AssemblyVersion).401+dymension.v4.0.1</Version>
 		<WarningsAsErrors>$(WarningsAsErrors);CS8785</WarningsAsErrors>
 	</PropertyGroup>
 
@@ -49,6 +49,7 @@
 
 		<Protobuf Include="./proto/osmosis/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 		<Protobuf Include="./proto/dymensionxyz/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
+		<Protobuf Include="./proto/hyperlane/**/*.proto" ProtoRoot="./proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>

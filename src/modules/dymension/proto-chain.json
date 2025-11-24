@@ -2,9 +2,20 @@
   "repoDir": "lib",
   "chainRepoPath": "dymension",
   "chainRepoName": "github.com/dymensionxyz/dymension",
-  "commitHash": "b77a9e11a4e890135274effd48e318c17e231e25",
+  "commitHash": "e5d4321581e2303773c6c474b5be900fe0bc9bff",
   "protoDir": "proto",
   "protoDependencies": [
+    {
+      "name": "github.com/bcp-innovations/hyperlane-cosmos",
+      "isExternal": false,
+      "dirName": "hyperlane-cosmos",
+      "protoDirs": [
+        {
+          "in": "proto",
+          "out": "."
+        }
+      ]
+    },
     {
       "name": "github.com/cosmos/cosmos-proto",
       "isExternal": false,
