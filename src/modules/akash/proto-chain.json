@@ -2,21 +2,10 @@
   "repoDir": "lib",
   "chainRepoPath": "node",
   "chainRepoName": "github.com/akash-network/node",
-  "commitHash": "58411565057bdfbdd33b5b50a4599b8f1d2692b7",
+  "commitHash": "56645e3547de220f0a7562180ea69e1e8ae51c84",
   "protoDir": "proto",
   "hasNoProtos": true,
   "protoDependencies": [
-    {
-      "name": "github.com/akash-network/akash-api",
-      "isExternal": false,
-      "dirName": "akash-api",
-      "protoDirs": [
-        {
-          "in": "proto/node",
-          "out": "."
-        }
-      ]
-    },
     {
       "name": "github.com/cosmos/cosmos-proto",
       "isExternal": false,
@@ -51,9 +40,9 @@
       ]
     },
     {
-      "name": "github.com/tendermint/tendermint",
+      "name": "github.com/cometbft/cometbft",
       "isExternal": false,
-      "dirName": "tendermint",
+      "dirName": "cometbft",
       "protoDirs": [
         {
           "in": "proto",
@@ -62,12 +51,12 @@
       ]
     },
     {
-      "name": "github.com/confio/ics23",
+      "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
       "protoDirs": [
         {
-          "in": ".",
+          "in": "proto",
           "out": "."
         }
       ]
