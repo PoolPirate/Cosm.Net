@@ -50,20 +50,20 @@
       ]
     },
     {
-      "name": "github.com/confio/ics23",
+      "name": "github.com/cosmos/ics23",
       "isExternal": false,
       "dirName": "ics23",
       "protoDirs": [
         {
-          "in": ".",
+          "in": "proto",
           "out": "."
         }
       ]
     },
     {
-      "name": "github.com/tendermint/tendermint",
+      "name": "github.com/cometbft/cometbft",
       "isExternal": false,
-      "dirName": "tendermint",
+      "dirName": "cometbft",
       "protoDirs": [
         {
           "in": "proto",
